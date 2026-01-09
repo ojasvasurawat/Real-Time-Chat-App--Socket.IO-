@@ -4,7 +4,7 @@ const port = 3000;
 
 const cors = require('cors');
 app.use(cors({
-    origin: 'http://localhost:5173/'
+    origin: 'http://localhost:5173'
 }));
 
 const {Server} = require('socket.io');
@@ -30,17 +30,30 @@ const io = new Server(server, {
 //     // res.sendFile('D:/Ojasva/Projects/Real-Time Chat-App-(Socket.IO)/Frontend/Real-Time-Chat-App-Socket.io/index.html')
 // });
 
+// console.log(io)
+
+let users = []
 
 io.on('connection', (socket)=>{
     // socket.broadcast.emit('hi');
+    console.log(socket.id);
+    users.push(socket.id);
+    console.log("user list : ", users);
     console.log('a user connected');
 
-    socket.on('chat msg', (msg) => {
-        console.log('msg recived: ' + msg);
-        socket.broadcast.emit('chat message', msg);
+    socket.on('chat msg', ({msg, name, time}) => {
+        console.log('msg recived: ' + msg+" by :"+name+" at : "+time);
+        socket.broadcast.emit('chat message', {msg, name, time});
     });
 
+    socket.on('typing status', ({name, status})=>{
+        console.log(name+" is typing...");
+        socket.broadcast.emit('typ status', {name, status});
+    })
+
     socket.on('disconnect', ()=>{
+        idx = users.indexOf(socket.id);
+        users.splice(idx, 1);
         console.log('user disconnect');
     })
 });
