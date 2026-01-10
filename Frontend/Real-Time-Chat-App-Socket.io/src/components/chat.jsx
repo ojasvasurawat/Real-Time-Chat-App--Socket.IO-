@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import {io} from "socket.io-client";
 import { useLocation } from "react-router-dom";
+import Messages from "./messages";
 
 const socket = io("http://localhost:3000/");
 
@@ -11,8 +12,9 @@ export default function Chat(){
 
     const location = useLocation();
     const {name} = location.state || {};
-    let [socketStatus, setSocketStatus] = useState(false);
-    let [msgData, setMsgData] = useState("");
+
+    let [socketStatus, setSocketStatus] = useState(true);
+    let [msgData, setMsgData] = useState([]);
     const input = useRef(null);
     const messages = useRef(null);
     const toggleButton = useRef(null);
@@ -31,20 +33,20 @@ export default function Chat(){
         console.log(time);
         if(msg){
             socket.emit('chat msg', {msg, name, time});
+            setMsgData((prevData) => [...prevData, {data:msg, name:name, time:time}]);
             console.log(socket.id);
             console.log("msg emmited");
-            const item = document.createElement('p');
-            item.textContent = name+"-"+msg+`\n${time}`;
-            Object.assign(item.style, {
-                textAlign: 'right',
-            })
-            messages.current.appendChild(item);
+            // const item = document.createElement('p');
+            // item.textContent = name+"-"+msg+`\n${time}`;
+            // Object.assign(item.style, {
+            //     textAlign: 'right',
+            // })
+            // messages.current.appendChild(item);
             input.current.value = "";
         }
     }
 
     function handleChange(event){
-        setMsgData(event.target.value);
         console.log("handleChange running...");
         const status="typing"
         socket.emit('typing status', {name, status});
@@ -63,14 +65,22 @@ export default function Chat(){
         }
     }
 
+    // function disconnect(){
+    //     socket.disconnect();
+    // }
+
     useEffect(()=>{
+
+        socket.connect();
 
         const handleChatMessage = ({msg, name, time})=>{
             console.log(socket.id);
             console.log("the broadcasted message is : ",{msg, name});
-            const item = document.createElement('p');
-            item.textContent = name +"-"+msg+`\n${time}`;
-            messages.current.appendChild(item);
+            msgData.map((data)=>{console.log(data)});
+            setMsgData((prevData) => ([...prevData, {data:msg, name:name, time:time}]));
+            // const item = document.createElement('p');
+            // item.textContent = name +"-"+msg+`\n${time}`;
+            // messages.current.appendChild(item);
         }
 
         socket.on('chat message', handleChatMessage);
@@ -91,6 +101,7 @@ export default function Chat(){
         return ()=>{
             socket.off('chat message', handleChatMessage);
             socket.off('typ status', handleTypingStatus);
+            socket.disconnect();
         };
     },[])
 
@@ -102,12 +113,17 @@ export default function Chat(){
     return (
         <>
             <h3>{name}</h3>
-            <div>socket status: {socketStatus ? "connected" : "disconnected"}</div>
-            <div ref={messages} style={{height: '300px', overflowY: 'scroll'}}></div>
+            <div>socket status: {socketStatus ? "connected" : "disconnected"}</div> 
+            <div ref={messages} style={{height: '300px', overflowY: 'scroll'}}>
+                {msgData.map((data, idx)=>(
+                    <Messages key={idx} sendBy={data.name} data={data.data} time={data.time}/>
+                ))}
+            </div>
             <div>
                 <input type="text" placeholder="enter your message" ref={input} onKeyDown={handleKeyDown} onChange={handleChange}/>
                 <button onClick={submit}>Send</button>
                 <button onClick={toggleConnection}>{socketStatus ? "disconnect from socket" : "connect to socket"}</button>
+                {/* <button onClick={disconnect}>disconnect</button> */}
             </div>
         </>
     )
