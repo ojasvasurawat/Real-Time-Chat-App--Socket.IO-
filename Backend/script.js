@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require('express'); 
 const app = express();
 const port = 3000;
 
@@ -9,10 +9,10 @@ app.use(cors({
 
 const {Server} = require('socket.io');
 
-const {createServer} = require('node:http');
-const server = createServer(app);
+const {createServer} = require('node:http'); // or const http = require('node:http');
+const server = createServer(app); // const server = http.createServer(...);
 
-const {join} = require('node:path');
+// const {join} = require('node:path');
 
 const io = new Server(server, {
   connectionStateRecovery: {},
@@ -29,6 +29,12 @@ const io = new Server(server, {
 //     res.sendFile(join(__dirname, 'index.html'));
 //     // res.sendFile('D:/Ojasva/Projects/Real-Time Chat-App-(Socket.IO)/Frontend/Real-Time-Chat-App-Socket.io/index.html')
 // });
+// backend
+//  middilware
+//  api/controler(spring)-auth
+//  socket
+
+// frontend
 
 // console.log(io)
 
