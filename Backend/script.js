@@ -1,70 +1,70 @@
-const express = require('express'); 
-const app = express();
-const port = 3000;
+// const express = require('express'); 
+// const app = express();
+// const port = 3000;
 
-const cors = require('cors');
-app.use(cors({
-    origin: 'http://localhost:5173'
-}));
+// const cors = require('cors');
+// app.use(cors({
+//     origin: 'http://localhost:5173'
+// }));
 
-const {Server} = require('socket.io');
+// const {Server} = require('socket.io');
 
-const {createServer} = require('node:http'); // or const http = require('node:http');
-const server = createServer(app); // const server = http.createServer(...);
+// const {createServer} = require('node:http'); // or const http = require('node:http');
+// const server = createServer(app); // const server = http.createServer(...);
 
-// const {join} = require('node:path');
+// // const {join} = require('node:path');
 
-const io = new Server(server, {
-  connectionStateRecovery: {},
-  cors:{
-    origin:"http://localhost:5173",
-    methods:["GET","POST"],
-    credentials:true
-  }
-});
-
-// app.get('/', (req, res)=>{
-//     // res.send("<h1> hello world </h1>");
-//     // console.log(__dirname);
-//     res.sendFile(join(__dirname, 'index.html'));
-//     // res.sendFile('D:/Ojasva/Projects/Real-Time Chat-App-(Socket.IO)/Frontend/Real-Time-Chat-App-Socket.io/index.html')
+// const io = new Server(server, {
+//   connectionStateRecovery: {},
+//   cors:{
+//     origin:"http://localhost:5173",
+//     methods:["GET","POST"],
+//     credentials:true
+//   }
 // });
-// backend
-//  middilware
-//  api/controler(spring)-auth
-//  socket
 
-// frontend
+// // app.get('/', (req, res)=>{
+// //     // res.send("<h1> hello world </h1>");
+// //     // console.log(__dirname);
+// //     res.sendFile(join(__dirname, 'index.html'));
+// //     // res.sendFile('D:/Ojasva/Projects/Real-Time Chat-App-(Socket.IO)/Frontend/Real-Time-Chat-App-Socket.io/index.html')
+// // });
+// // backend
+// //  middilware
+// //  api/controler(spring)-auth
+// //  socket
 
-// console.log(io)
+// // frontend
 
-let users = []
+// // console.log(io)
 
-io.on('connection', (socket)=>{
-    // socket.broadcast.emit('hi');
-    console.log(socket.id);
-    users.push(socket.id);
-    console.log("user list : ", users);
-    console.log('a user connected');
+// let users = []
 
-    socket.on('chat msg', ({msg, name, time}) => {
-        console.log('msg recived: ' + msg+" by :"+name+" at : "+time);
-        socket.broadcast.emit('chat message', {msg, name, time});
-    });
+// io.on('connection', (socket)=>{
+//     // socket.broadcast.emit('hi');
+//     console.log(socket.id);
+//     users.push(socket.id);
+//     console.log("user list : ", users);
+//     console.log('a user connected');
 
-    socket.on('typing status', ({name, status})=>{
-        console.log(name+" is typing...");
-        socket.broadcast.emit('typ status', {name, status});
-    })
+//     socket.on('chat msg', ({msg, name, time}) => {
+//         console.log('msg recived: ' + msg+" by :"+name+" at : "+time);
+//         socket.broadcast.emit('chat message', {msg, name, time});
+//     });
 
-    socket.on('disconnect', ()=>{
-        idx = users.indexOf(socket.id);
-        users.splice(idx, 1);
-        console.log('user disconnect');
-    })
-});
+//     socket.on('typing status', ({name, status})=>{
+//         console.log(name+" is typing...");
+//         socket.broadcast.emit('typ status', {name, status});
+//     })
+
+//     socket.on('disconnect', ()=>{
+//         idx = users.indexOf(socket.id);
+//         users.splice(idx, 1);
+//         console.log('user disconnect');
+//     })
+// });
 
 
-server.listen(port, ()=>{
-    console.log("listening on port",port);
-});
+// server.listen(port, ()=>{
+//     console.log("listening on port",port);
+// });
