@@ -9,6 +9,7 @@ app.use(cors({
 const {Server} = require('socket.io');
 
 const {createServer} = require('node:http'); // or const http = require('node:http');
+const { sktMdw } = require('../middleware/middleware');
 const server = createServer(app); // const server = http.createServer(...);
 
 // const {join} = require('node:path');
@@ -19,10 +20,13 @@ const io = new Server(server, {
     origin:"http://localhost:5173",
     methods:["GET","POST"],
     credentials:true
-  }
+  },
+  path:"/chat"
 });
 
 let users = []
+
+io.use(sktMdw);
 
 io.on('connection', (socket)=>{
     // socket.broadcast.emit('hi');

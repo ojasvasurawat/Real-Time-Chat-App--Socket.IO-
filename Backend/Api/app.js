@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
 const { signUp, signIn } = require("../auth/auth");
-const auth = require("../middleware/middleware");
+const {auth} = require("../middleware/middleware");
 const {server, app} = require("../socket/socket");
 
 require("dotenv").config();
@@ -19,6 +19,9 @@ mainApp.post("/signup", signUp);
 mainApp.post("/signin", signIn);
 
 mainApp.use(auth);
+
+// mainApp.post("/chat-list");
+
 
 
 //SOCKET_PORT AND APP_PORT ARE SAME

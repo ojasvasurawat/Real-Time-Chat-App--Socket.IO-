@@ -3,10 +3,12 @@ const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
 
 const User = new Schema({
-    name:String,
+    displayName:String,
+    username:String,
     email:String,
     password:String,
     avatarUrl:String,
+    chatList:[Object]
 })
 
 const userModel = mongoose.model('users', User);

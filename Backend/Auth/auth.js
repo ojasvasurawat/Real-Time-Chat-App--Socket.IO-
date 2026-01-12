@@ -21,7 +21,13 @@ async function signUp(req,res){
         }, {
             message: "There is already an account with this email"
         }),
-        name : z.string().min(3).max(50),
+        username: z.string().min(3).max(20).regex(/^[a-zA-Z0-9_]+$/).refine(async (username)=>{
+            const existingUsername = await UserModel.findOne({username: username});
+            return !existingUsername;
+        }, {
+            message: "There is already an user with this username"
+        }),
+        displayName : z.string().min(3).max(50),
         password : z.string().min(8).max(20)
     }).strict();
 
@@ -35,13 +41,14 @@ async function signUp(req,res){
         return;
     }
 
-    const {name, email, password} = req.body;
+    const {displayName, username, email, password} = req.body;
 
     try{
         const hashdPassword = await bcrypt.hash(password, 5);
 
         await UserModel.create({
-            name: name,
+            displayName: displayName,
+            username: username,
             email: email,
             password: hashdPassword
         });
