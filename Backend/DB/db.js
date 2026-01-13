@@ -8,7 +8,7 @@ const User = new Schema({
     email:String,
     password:String,
     avatarUrl:String,
-    chatList:[Object]
+    chatList:{type:[Object], default:[]}
 })
 
 const userModel = mongoose.model('users', User);

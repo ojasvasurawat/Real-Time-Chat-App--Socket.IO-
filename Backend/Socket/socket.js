@@ -35,14 +35,21 @@ io.on('connection', (socket)=>{
     console.log("user list : ", users);
     console.log('a user connected');
 
-    socket.on('chat msg', ({msg, name, time}) => {
+    socket.on('join', (room)=>{
+        socket.join(room);
+        console.log("room ",room," joined!!");
+    })
+
+    socket.on('chat msg', ({msg, name, time, room}) => {
         console.log('msg recived: ' + msg+" by :"+name+" at : "+time);
-        socket.broadcast.emit('chat message', {msg, name, time});
+        // socket.broadcast.emit('chat message', {msg, name, time});
+        socket.to(room).emit('chat message', {msg, name, time});
     });
 
-    socket.on('typing status', ({name, status})=>{
+    socket.on('typing status', ({name, status, room})=>{
         console.log(name+" is typing...");
-        socket.broadcast.emit('typ status', {name, status});
+        // socket.broadcast.emit('typ status', {name, status});
+        socket.to(room).emit('typ status', {name, status});
     })
 
     socket.on('disconnect', ()=>{
