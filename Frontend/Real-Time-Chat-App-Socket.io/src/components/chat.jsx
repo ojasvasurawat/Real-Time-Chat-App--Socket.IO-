@@ -5,7 +5,7 @@ import {io} from "socket.io-client";
 import { useLocation } from "react-router-dom";
 import Messages from "./messages";
 
-const socket = io("http://localhost:3000/");
+const socket = io("http://localhost:3000/chat");
 
 
 export default function Chat(){
