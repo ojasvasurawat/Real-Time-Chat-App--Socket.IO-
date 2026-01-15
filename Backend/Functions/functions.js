@@ -57,5 +57,4 @@ async function addChat(req,res){
 module.exports = {
     getChatList,
     addChat,
-    enterRoom
 };

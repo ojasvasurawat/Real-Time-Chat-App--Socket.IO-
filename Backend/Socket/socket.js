@@ -21,27 +21,27 @@ const io = new Server(server, {
     methods:["GET","POST"],
     credentials:true
   },
-  path:"/chat"
+//   path:"/chat"
 });
 
 let users = []
 
 io.use(sktMdw);
 
-io.on('connection', (socket)=>{
+io.of("/chat").on('connection', (socket)=>{
     // socket.broadcast.emit('hi');
     console.log(socket.id);
     users.push(socket.id);
     console.log("user list : ", users);
     console.log('a user connected');
 
-    socket.on('join', (room)=>{
+    socket.on('join', ({room})=>{
         socket.join(room);
-        console.log("room ",room," joined!!");
+        console.log("room ",room," joined!! by: "+socket.id);
     })
 
     socket.on('chat msg', ({msg, name, time, room}) => {
-        console.log('msg recived: ' + msg+" by :"+name+" at : "+time);
+        console.log('msg recived: ' + msg+" by: "+name+" at: "+time+" in room: "+room);
         // socket.broadcast.emit('chat message', {msg, name, time});
         socket.to(room).emit('chat message', {msg, name, time});
     });

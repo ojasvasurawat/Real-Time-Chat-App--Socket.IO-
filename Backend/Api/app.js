@@ -23,7 +23,7 @@ mainApp.use(auth);
 
 mainApp.get("/chat-list", getChatList);
 mainApp.post("/add-chat", addChat);
-mainApp.post("/chat", enterRoom);
+// mainApp.post("/")
 
 
 
