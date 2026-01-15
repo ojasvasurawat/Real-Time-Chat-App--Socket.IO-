@@ -20,6 +20,8 @@ export default function SignIn(){
         }
 
         console.log(backendUrl);
+        console.log(signinEmail);
+        console.log(signinEmail.type);
 
         const response = await axios.post(`${backendUrl}/signin`, {
             email: signinEmail,
