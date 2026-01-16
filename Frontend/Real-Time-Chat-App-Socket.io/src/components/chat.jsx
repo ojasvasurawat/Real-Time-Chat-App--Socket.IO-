@@ -8,10 +8,10 @@ import Messages from "./messages";
 const socket = io("http://localhost:3000/chat");
 
 
-export default function Chat(){
+export default function Chat({messagesData}){
 
-    const location = useLocation();
-    const {name} = location.state || {};
+    // const location = useLocation();
+    // const {name} = location.state || {};
 
     let [socketStatus, setSocketStatus] = useState(true);
     let [msgData, setMsgData] = useState([]);
@@ -68,6 +68,15 @@ export default function Chat(){
     // function disconnect(){
     //     socket.disconnect();
     // }
+
+    useEffect(()=>{
+        console.log(messagesData);
+        messagesData?.map((message)=>{ 
+            setMsgData(
+                (prevData) => ([...prevData, {data:message.content, name:message.sender, time:message.createdAt}])
+            ) 
+        })
+    },[messagesData])
 
     useEffect(()=>{
 
