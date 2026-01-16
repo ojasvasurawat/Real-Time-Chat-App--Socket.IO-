@@ -4,7 +4,7 @@ const axios = require("axios");
 const { signUp, signIn } = require("../auth/auth");
 const {auth} = require("../middleware/middleware");
 const {server, app} = require("../socket/socket");
-const {addChat, getChatList, enterRoom} = require("../Functions/functions")
+const {addChat, getChatList, enterRoom, getChatMessages} = require("../Functions/functions")
 
 require("dotenv").config();
 
@@ -23,6 +23,7 @@ mainApp.use(auth);
 
 mainApp.get("/chat-list", getChatList);
 mainApp.post("/add-chat", addChat);
+mainApp.get("/chat-messages", getChatMessages);
 // mainApp.post("/")
 
 

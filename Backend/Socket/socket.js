@@ -1,4 +1,5 @@
-const express = require('express'); 
+const {z} = require("zod");
+const express = require('express');
 const app = express();
 
 const cors = require('cors');
@@ -10,6 +11,7 @@ const {Server} = require('socket.io');
 
 const {createServer} = require('node:http'); // or const http = require('node:http');
 const { sktMdw } = require('../middleware/middleware');
+const { MessageModle } = require('../db/db');
 const server = createServer(app); // const server = http.createServer(...);
 
 // const {join} = require('node:path');
@@ -40,10 +42,16 @@ io.of("/chat").on('connection', (socket)=>{
         console.log("room ",room," joined!! by: "+socket.id);
     })
 
-    socket.on('chat msg', ({msg, name, time, room}) => {
+    socket.on('chat msg', async ({msg, name, time, room}) => {
         console.log('msg recived: ' + msg+" by: "+name+" at: "+time+" in room: "+room);
+        await MessageModle.create({
+            roomId:room,
+            sender:name,
+            content:msg,
+            readBy:[]
+        })
         // socket.broadcast.emit('chat message', {msg, name, time});
-        socket.to(room).emit('chat message', {msg, name, time});
+        socket.to(room).emit('chat message', {msg, name, time, room});
     });
 
     socket.on('typing status', ({name, status, room})=>{

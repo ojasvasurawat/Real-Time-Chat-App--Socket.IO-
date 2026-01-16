@@ -1,4 +1,4 @@
-const { UserModel } = require("../db/db");
+const { UserModel, MessageModel } = require("../db/db");
 
 async function getChatList(req,res){
     const ObjectId = req.ObjectId;
@@ -41,20 +41,22 @@ async function addChat(req,res){
 }
 
 
-// i think this should happen in frontend in on click logic
-// async function enterRoom(req, res){
-//     const ObjectId = req.ObjectId;
-//     const user = await UserModel.findOne({_id: ObjectId});
-//     console.log(user);
-//     const {roomId} = req.body;
-//     const socket = io('http://localhost:3000');
-//     socket.emit('join', roomId);
-//     res.json({
-//         message:"joined room successfuly"
-//     })
-// }
+async function getChatMessages(req,res){
+    const ObjectId = req.ObjectId;
+    const user = await UserModel.findOne({_id: ObjectId});
+    console.log(user);
+    // // const {roomId} = req.body; wrong because Backend getChatMessages is expecting req.body, but GET requests have no body
+    const roomId = req.query.roomId;
+    const messages = await MessageModel.find({ roomId: roomId }).sort({ createdAt: 1 });
+    console.log(messages);
+    res.json({
+        "messages": messages
+    })
+}
+
 
 module.exports = {
     getChatList,
     addChat,
+    getChatMessages
 };

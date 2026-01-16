@@ -11,7 +11,25 @@ const User = new Schema({
     chatList:{type:[Object], default:[]}
 })
 
+const Message = new Schema({
+    roomId:String,
+    sender:String,
+    content:String,
+    readBy:[
+      {
+        username: String,
+        readAt: Date,
+      }
+    ],
+    },
+    {
+        timestamps: true,
+    }
+)
+
 const userModel = mongoose.model('users', User);
+const messageModel = mongoose.model('messages', Message);
 module.exports={
     UserModel:userModel,
+    MessageModel:messageModel
 }
