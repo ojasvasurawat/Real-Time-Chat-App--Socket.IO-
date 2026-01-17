@@ -11,7 +11,7 @@ const {Server} = require('socket.io');
 
 const {createServer} = require('node:http'); // or const http = require('node:http');
 const { sktMdw } = require('../middleware/middleware');
-const { MessageModle } = require('../db/db');
+const { MessageModel } = require('../db/db');
 const server = createServer(app); // const server = http.createServer(...);
 
 // const {join} = require('node:path');
@@ -42,9 +42,15 @@ io.of("/chat").on('connection', (socket)=>{
         console.log("room ",room," joined!! by: "+socket.id);
     })
 
+    socket.on("leave", ({ room }) => {
+        socket.leave(room);
+        console.log("room ",room," leaved!! by: "+socket.id);
+    });
+
+
     socket.on('chat msg', async ({msg, name, time, room}) => {
         console.log('msg recived: ' + msg+" by: "+name+" at: "+time+" in room: "+room);
-        await MessageModle.create({
+        await MessageModel.create({
             roomId:room,
             sender:name,
             content:msg,
