@@ -1,11 +1,10 @@
 import { useRef } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
-import {io} from "socket.io-client";
+import { socket } from "../socket";
 import { useLocation } from "react-router-dom";
 import Messages from "./messages";
 
-const socket = io("http://localhost:3000/chat");
 
 
 export default function Chat({messagesData}){
@@ -26,13 +25,17 @@ export default function Chat({messagesData}){
         }
     }
 
+    const room = messagesData[0]?.roomId;
+    const name = messagesData[0]?.sender;
+
     function submit(){
-        const msg = input.current.value
-        // console.log(msg);
+        
+        const msg = input.current.value;
+        console.log(room);
         const time = Date().slice(16,21);
         console.log(time);
         if(msg){
-            socket.emit('chat msg', {msg, name, time});
+            socket.emit('chat msg', {msg, name, time, room});
             setMsgData((prevData) => [...prevData, {data:msg, name:name, time:time}]);
             console.log(socket.id);
             console.log("msg emmited");
@@ -49,7 +52,9 @@ export default function Chat({messagesData}){
     function handleChange(event){
         console.log("handleChange running...");
         const status="typing"
-        socket.emit('typing status', {name, status});
+        if(room){
+            socket.emit('typing status', {name, status, room});
+        }
     }
 
     function toggleConnection(){
@@ -82,7 +87,9 @@ export default function Chat({messagesData}){
 
         socket.connect();
 
-        const handleChatMessage = ({msg, name, time})=>{
+        console.log(socket.id);
+
+        const handleChatMessage = ({msg, name, time, room})=>{
             console.log(socket.id);
             console.log("the broadcasted message is : ",{msg, name});
             msgData.map((data)=>{console.log(data)});
@@ -94,7 +101,7 @@ export default function Chat({messagesData}){
 
         socket.on('chat message', handleChatMessage);
 
-        const handleTypingStatus = ({name, status})=>{
+        const handleTypingStatus = ({name, status, room})=>{
             console.log(name+" is typing...");
             const typingBox = document.createElement('p');
             // typingBox.className("typingStatus");
