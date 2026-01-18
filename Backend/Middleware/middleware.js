@@ -37,6 +37,7 @@ function sktMdw(socket, next){
             // const userId = user.id;
             // console.log(userId);
             // req.ObjectId = userId;
+            socket.ObjectId = user.id;
             next();
         }
         else{

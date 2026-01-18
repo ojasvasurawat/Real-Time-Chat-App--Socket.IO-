@@ -1,62 +1,142 @@
-const { UserModel, MessageModel } = require("../db/db");
+const { UserModel, ChatModel, MessageModel } = require("../db/db");
+const mongoose = require("mongoose");
 
 async function getChatList(req,res){
-    const ObjectId = req.ObjectId;
-    const user = await UserModel.findOne({_id: ObjectId});
-    console.log(user);
-    const chatList = user.chatList;
-    if(user){
+
+    try{
+        const userId = req.ObjectId;
+        const chats = await ChatModel.find({participants: userId}).populate("participants", "username, avatarUrl").sort({updatedAt: -1});
         res.json({
-            chatList
-        })
+            chats
+        });
     }
-    else{
-        res.status(404).send("user is not authenticated")
+    catch(err){
+        console.log(err)
+        res.json({
+            message:"Failed to fetch chat list.", 
+            error: err
+        });
     }
 }
 
 async function addChat(req,res){
-    const ObjectId = req.ObjectId;
-    const user = await UserModel.findOne({_id: ObjectId});
-    console.log(user);
-    const {chatUsername} = req.body;
-    chatUser = await UserModel.findOne({username: chatUsername});
-    if(!chatUser){
+
+    try{
+        const userId = req.ObjectId;
+        const {chatUsername} = req.body;
+
+        const currentUser = await UserModel.findById(userId);
+        const chatUser = await UserModel.findOne({ username: chatUsername });
+
+        if(!chatUser){
+            return res.json({
+                message: "User not found"
+            })
+        }
+
+        if (chatUser._id.equals(userId)) {
+            return res.json({
+                message: "Cannot chat with yourself" 
+            });
+        }
+
+        const existingChat = await ChatModel.findOne({
+            isGroup: false,
+            participants: { $all: [userId, chatUser._id]}
+        });
+
+        if (existingChat) {
+            return res.json({ chat: existingChat });
+        }
+
+        const chat = await ChatModel.create({
+            isGroup: false,
+            participants: [userId, chatUser._id]
+        });
+
         res.json({
-            message: "user not found"
+            chat
+        })
+    }
+    catch(err){
+        console.log(err);
+        res.status(500).json({
+            message: "Failed to create chat"
         });
     }
-    if( user.chatList.find(u => u.chatUsername === chatUsername) ){
-        res.status(404).send("chat already exists")
-        return;
-    }
-    const roomId = user.username+"-"+chatUsername
-    user.chatList.push({chatUsername: chatUsername, roomId: roomId});
-    chatUser.chatList.push({chatUsername: user.username, roomId: roomId});
-    const chatList = user.chatList;
-    const chatUserChatList = chatUser.chatList;
-    await UserModel.updateOne({_id: ObjectId}, {$set:{chatList: chatList}});
-    await UserModel.updateOne({_id: chatUser._id}, {$set:{chatList: chatUserChatList}});
-    res.json({ chatList, chatUserChatList });
 }
 
 
 async function getChatMessages(req,res){
-    const ObjectId = req.ObjectId;
-    const user = await UserModel.findOne({_id: ObjectId});
-    console.log(user);
-    // // const {roomId} = req.body; wrong because Backend getChatMessages is expecting req.body, but GET requests have no body
-    const roomId = req.query.roomId;
-    const messages = await MessageModel.find({ roomId: roomId }).sort({ createdAt: 1 });
-    console.log(messages);
-    res.json({
-        "messages": messages
-    })
+
+    try{
+        const userId = req.ObjectId;
+        const {chatId} = req.query;
+
+        if (!mongoose.Types.ObjectId.isValid(chatId)) {
+            return res.json({ message: "Invalid chatId" });
+        }
+
+        const chat = await ChatModel.findOne({
+            _id: chatId,
+            participants: userId
+        });
+
+        if(!chat){
+            return res.json({ message: "you are not in this chat"})
+        }
+
+        const messages = await MessageModel.find({
+            chat: chatId
+        }).populate("sender", "displayName avatarUrl").sort({ createAt: 1});
+
+        res.json({
+            messages
+        })
+    }
+    catch(err){
+        console.log(err)
+        res.json({
+            message: "Error occure while fetching messages",
+            error: err
+        })
+    }
+}
+
+async function createGroup(req,res){
+    try{
+        const userId = req.ObjectId;
+        const {groupName, participantUsernames} = req.body;
+
+        const participants = await UserModel.find({
+            username: { $in: participantUsernames}
+        });
+        const participantIds = participants.map(user => user._id);
+        participantIds.push(userId);
+
+        const groupChat = await ChatModel.create({
+            name: groupName,
+            isGroup: true,
+            participants: participantIds
+        });
+
+        res.json({
+            chat: groupChat
+        })
+    }
+    catch(err){
+        console.log(err);
+        res.json({
+            message: "error in creating group",
+            error: err
+        })
+    }
 }
 
 
 module.exports = {
     getChatList,
     addChat,
-    getChatMessages
+    getChatMessages,
+    createGroup
 };

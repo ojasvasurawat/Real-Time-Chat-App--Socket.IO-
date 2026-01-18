@@ -1,10 +1,9 @@
 const express = require("express");
 const cors = require("cors");
-const axios = require("axios");
 const { signUp, signIn } = require("../auth/auth");
 const {auth} = require("../middleware/middleware");
 const {server, app} = require("../socket/socket");
-const {addChat, getChatList, enterRoom, getChatMessages} = require("../Functions/functions")
+const {addChat, getChatList, getChatMessages, createGroup} = require("../Functions/functions")
 
 require("dotenv").config();
 
@@ -24,7 +23,7 @@ mainApp.use(auth);
 mainApp.get("/chat-list", getChatList);
 mainApp.post("/add-chat", addChat);
 mainApp.get("/chat-messages", getChatMessages);
-// mainApp.post("/")
+mainApp.post("/create-group", createGroup)
 
 
 

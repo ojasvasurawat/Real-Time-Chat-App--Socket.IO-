@@ -1,4 +1,3 @@
-const {z} = require("zod");
 const express = require('express');
 const app = express();
 
@@ -31,40 +30,46 @@ let users = []
 io.use(sktMdw);
 
 io.of("/chat").on('connection', (socket)=>{
+
+    const userId = socket.ObjectId;
     // socket.broadcast.emit('hi');
     console.log(socket.id);
     users.push(socket.id);
     console.log("user list : ", users);
     console.log('a user connected');
 
-    socket.on('join', ({room})=>{
-        socket.join(room);
-        console.log("room ",room," joined!! by: "+socket.id);
+    socket.on('join', ({chatId})=>{
+        socket.join(chatId);
+        console.log("room ",chatId," joined!! by: "+socket.id);
     })
 
-    socket.on("leave", ({ room }) => {
-        socket.leave(room);
-        console.log("room ",room," leaved!! by: "+socket.id);
+    socket.on("leave", ({ chatId }) => {
+        socket.leave(chatId);
+        console.log("room ",chatId," leaved!! by: "+socket.id);
     });
 
 
-    socket.on('chat msg', async ({msg, name, time, room}) => {
-        console.log('msg recived: ' + msg+" by: "+name+" at: "+time+" in room: "+room);
-        await MessageModel.create({
-            roomId:room,
-            sender:name,
-            content:msg,
-            readBy:[]
-        })
-        // socket.broadcast.emit('chat message', {msg, name, time});
-        socket.to(room).emit('chat message', {msg, name, time, room});
+    socket.on('chat msg', async ({chatId, content}) => {
+        try{
+            console.log('msg recived: ' + content+" in room: "+chatId);
+            const message = await MessageModel.create({
+                chat: chatId,
+                sender: userId,
+                content: content
+            })
+            // socket.broadcast.emit('chat message', {msg, name, time});
+            socket.to(chatId).emit('chat message', {chatId, content});
+        }
+        catch(err){
+            console.log("error in chat msg listner : ", err);
+        }
     });
 
-    socket.on('typing status', ({name, status, room})=>{
-        console.log(name+" is typing...");
-        // socket.broadcast.emit('typ status', {name, status});
-        socket.to(room).emit('typ status', {name, status});
-    })
+    // socket.on('typing status', ({name, status, room})=>{
+    //     console.log(name+" is typing...");
+    //     // socket.broadcast.emit('typ status', {name, status});
+    //     socket.to(room).emit('typ status', {name, status});
+    // })
 
     socket.on('disconnect', ()=>{
         idx = users.indexOf(socket.id);
