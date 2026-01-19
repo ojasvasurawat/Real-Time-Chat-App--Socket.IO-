@@ -28,7 +28,8 @@ function auth(req, res, next){
 }
 
 function sktMdw(socket, next){
-    const token = socket.handshake.headers.authorization;
+    // console.log("inside socket middleware");
+    const token = socket.handshake.auth?.token || socket.handshake.headers?.authorization;
 
     if(token){
         const user = jwt.verify(token, JWT_SECRET);
@@ -38,6 +39,7 @@ function sktMdw(socket, next){
             // console.log(userId);
             // req.ObjectId = userId;
             socket.ObjectId = user.id;
+            // console.log("user ",user," cleared middleware");
             next();
         }
         else{

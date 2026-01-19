@@ -10,7 +10,7 @@ const {Server} = require('socket.io');
 
 const {createServer} = require('node:http'); // or const http = require('node:http');
 const { sktMdw } = require('../middleware/middleware');
-const { MessageModel } = require('../db/db');
+const { UserModel, MessageModel } = require('../db/db');
 const server = createServer(app); // const server = http.createServer(...);
 
 // const {join} = require('node:path');
@@ -27,7 +27,8 @@ const io = new Server(server, {
 
 let users = []
 
-io.use(sktMdw);
+// io.use(sktMdw); // this woas wrong it 
+io.of("/chat").use(sktMdw) // insted use this for namespace middleware
 
 io.of("/chat").on('connection', (socket)=>{
 
@@ -43,13 +44,13 @@ io.of("/chat").on('connection', (socket)=>{
         console.log("room ",chatId," joined!! by: "+socket.id);
     })
 
-    socket.on("leave", ({ chatId }) => {
+    socket.on('leave', ({chatId}) => {
         socket.leave(chatId);
         console.log("room ",chatId," leaved!! by: "+socket.id);
     });
 
 
-    socket.on('chat msg', async ({chatId, content}) => {
+    socket.on('chat msg', async ({chatId, content, time}) => {
         try{
             console.log('msg recived: ' + content+" in room: "+chatId);
             const message = await MessageModel.create({
@@ -58,7 +59,11 @@ io.of("/chat").on('connection', (socket)=>{
                 content: content
             })
             // socket.broadcast.emit('chat message', {msg, name, time});
-            socket.to(chatId).emit('chat message', {chatId, content});
+            const getSender = async ()=>{
+                return await UserModel.findById(userId);
+            }
+            const sender = getSender();
+            socket.to(chatId).emit('chat message', {chatId, content, sender, time});
         }
         catch(err){
             console.log("error in chat msg listner : ", err);
