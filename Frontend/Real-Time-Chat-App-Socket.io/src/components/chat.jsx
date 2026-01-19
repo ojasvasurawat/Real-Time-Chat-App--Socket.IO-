@@ -1,13 +1,15 @@
+import axios from 'axios';
 import { useRef } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { socket } from "../socket";
 import { useLocation } from "react-router-dom";
 import Messages from "./messages";
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 
 
-export default function Chat({messagesData}){
+export default function Chat({chatId}){
 
     // const location = useLocation();
     // const {name} = location.state || {};
@@ -25,18 +27,18 @@ export default function Chat({messagesData}){
         }
     }
 
-    const room = messagesData[0]?.roomId;
-    const name = messagesData[0]?.sender;
+    // const room = messagesData[0]?.roomId;
+    // const name = messagesData[0]?.sender;
 
     function submit(){
         
-        const msg = input.current.value;
-        console.log(room);
-        const time = Date().slice(16,21);
+        const content = input.current.value;
+        console.log(chatId);
+        const time = Date();
         console.log(time);
-        if(msg){
-            socket.emit('chat msg', {msg, name, time, room});
-            setMsgData((prevData) => [...prevData, {data:msg, name:name, time:time}]);
+        if(content){
+            socket.emit('chat msg', {chatId, content, time});
+            // setMsgData((prevData) => [...prevData, {content:msg, name:name, time:time}]);//----------------------------
             console.log(socket.id);
             console.log("msg emmited");
             // const item = document.createElement('p');
@@ -75,13 +77,26 @@ export default function Chat({messagesData}){
     // }
 
     useEffect(()=>{
-        console.log(messagesData);
-        messagesData?.map((message)=>{ 
-            setMsgData(
-                (prevData) => ([...prevData, {data:message.content, name:message.sender, time:message.createdAt}])
-            ) 
-        })
-    },[messagesData])
+        
+        const getChatMessages = async ()=>{
+            const response = await axios.get(`${backendUrl}/chat-messages?chatId=${chatId}`,{
+                headers:{
+                    'Content-Type': 'application/json',
+                    'authorization': localStorage.getItem('authorization')
+                }
+            })
+            const messagesData = response.data.messages;
+            console.log(messagesData);
+            messagesData?.map((message)=>{ 
+                setMsgData(
+                    (prevData) => ([...prevData, {content:message.content, name:message.sender.displayName, time:message.createdAt}])
+                ) 
+            })
+        }
+
+        getChatMessages();
+        
+    },[chatId])
 
     useEffect(()=>{
 
@@ -89,11 +104,11 @@ export default function Chat({messagesData}){
 
         console.log(socket.id);
 
-        const handleChatMessage = ({msg, name, time, room})=>{
+        const handleChatMessage = ({chatId, content, sender, time})=>{
             console.log(socket.id);
-            console.log("the broadcasted message is : ",{msg, name});
+            console.log("the broadcasted message is : ",content);
             msgData.map((data)=>{console.log(data)});
-            setMsgData((prevData) => ([...prevData, {data:msg, name:name, time:time}]));
+            setMsgData((prevData) => ([...prevData, {content:content, name:sender, time:time}]));
             // const item = document.createElement('p');
             // item.textContent = name +"-"+msg+`\n${time}`;
             // messages.current.appendChild(item);
@@ -132,7 +147,7 @@ export default function Chat({messagesData}){
             <div>socket status: {socketStatus ? "connected" : "disconnected"}</div> 
             <div ref={messages} style={{height: '300px', overflowY: 'scroll'}}>
                 {msgData.map((data, idx)=>(
-                    <Messages key={idx} sendBy={data.name} data={data.data} time={data.time}/>
+                    <Messages key={idx} sendBy={data.name} data={data.content} time={data.time}/>
                 ))}
             </div>
             <div>

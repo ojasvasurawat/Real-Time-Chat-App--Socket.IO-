@@ -6,7 +6,7 @@ import { useEffect } from "react";
 
 export default function Chats(){
 
-    const [dataFromChild, setDataFromChild] = useState([]);
+    const [dataFromChild, setDataFromChild] = useState("");
 
     // Callback function to receive data from the child
     const handleChildData = (childData) => {
@@ -15,7 +15,7 @@ export default function Chats(){
 
     useEffect(()=>{
         // handleChildData();
-        console.log("the data is: "+dataFromChild[1]?.content);
+        console.log("the chat id is: "+dataFromChild);
     },[dataFromChild])
 
     return(
@@ -25,7 +25,7 @@ export default function Chats(){
                 <ChatList sendDataToParent={handleChildData}/>
             </div>
             <div>
-                <Chat messagesData={dataFromChild}/>
+                <Chat chatId={dataFromChild}/>
             </div>
         </>
     )

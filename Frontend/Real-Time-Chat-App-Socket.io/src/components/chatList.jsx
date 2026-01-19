@@ -12,31 +12,33 @@ export default function ChatList(props){
     const [currentRoom, setCurrentRoom] = useState(null);
     
 
-    const handleChat = async(roomId)=>{
+    const handleChat = async(chatId)=>{
+
+        console.log("handle chat",chatId);
 
         if (currentRoom) {
-            socket.emit("leave", { room: currentRoom });
+            socket.emit('leave', {currentRoom});
         }
-        console.log(roomId)
+        console.log(chatId)
 
-        socket.emit('join', {room:roomId});
-        setCurrentRoom(roomId);
+        socket.emit('join', {chatId});
+        setCurrentRoom(chatId);
 
 
-        const response = await axios.get(`${backendUrl}/chat-messages`,{
-            params:{roomId},
-            headers:{
-                'Content-Type': 'application/json',
-                'authorization': localStorage.getItem('authorization')
-            }
-        });
+        // const response = await axios.get(`${backendUrl}/chat-messages`,{
+        //     params:{chatId},
+        //     headers:{
+        //         'Content-Type': 'application/json',
+        //         'authorization': localStorage.getItem('authorization')
+        //     }
+        // });
 
-        const messages = response.data.messages;
+        // const messages = response.data.messages;
         // console.log(messages);
         // setChatMessages(messages);
         // sendData();
 
-        props.sendDataToParent(response.data.messages);
+        props.sendDataToParent(chatId);
     }
 
     // useEffect(()=>{
@@ -56,8 +58,8 @@ export default function ChatList(props){
                     'authorization': localStorage.getItem('authorization')
                 }
             });
-            // console.log(response.data.chatList);
-            setChatList(response.data.chatList);
+            console.log(response.data.chats);
+            setChatList(response.data.chats);
         }
         fetchChatList();
         
@@ -67,7 +69,7 @@ export default function ChatList(props){
         <>
             <div>
                 {chatList.map(chat=>(
-                    <div onClick={()=>handleChat(chat.roomId)} key={chat.roomId}>{chat.chatUsername}</div>
+                    <div onClick={()=>handleChat(chat._id)} key={chat._id}>{chat.name}</div>
                 ))}
             </div>
         </>
