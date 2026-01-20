@@ -9,7 +9,7 @@ const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 
 
-export default function Chat({chatId}){
+export default function Chat({chatId, userData}){
 
     // const location = useLocation();
     // const {name} = location.state || {};
@@ -38,7 +38,7 @@ export default function Chat({chatId}){
         console.log(time);
         if(content){
             socket.emit('chat msg', {chatId, content, time});
-            // setMsgData((prevData) => [...prevData, {content:msg, name:name, time:time}]);//----------------------------
+            setMsgData((prevData) => [...prevData, {content:content, name:userData.username, time:time}]);//----------------------------
             console.log(socket.id);
             console.log("msg emmited");
             // const item = document.createElement('p');
@@ -89,7 +89,7 @@ export default function Chat({chatId}){
             console.log(messagesData);
             messagesData?.map((message)=>{ 
                 setMsgData(
-                    (prevData) => ([...prevData, {content:message.content, name:message.sender.displayName, time:message.createdAt}])
+                    (prevData) => ([...prevData, {content:message.content, name:message.sender.username, time:message.createdAt}])
                 ) 
             })
         }

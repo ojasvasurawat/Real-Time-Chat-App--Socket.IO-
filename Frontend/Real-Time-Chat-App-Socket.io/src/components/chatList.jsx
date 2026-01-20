@@ -5,7 +5,7 @@ import { socket } from '../socket';
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 
-export default function ChatList(props){
+export default function ChatList({sendDataToParent, userData}){
 
     const [chatList, setChatList] = useState([]);
     const [chatMessages, setChatMessages] = useState([]);
@@ -38,7 +38,7 @@ export default function ChatList(props){
         // setChatMessages(messages);
         // sendData();
 
-        props.sendDataToParent(chatId);
+        sendDataToParent(chatId);
     }
 
     // useEffect(()=>{
@@ -65,11 +65,16 @@ export default function ChatList(props){
         
     },[])
 
+    const otherUser = (name)=>{
+        const names = name.split("-");
+        return names[0] == userData.username ? names[1] : names[0];
+    }
+
     return(
         <>
             <div>
                 {chatList.map(chat=>(
-                    <div onClick={()=>handleChat(chat._id)} key={chat._id}>{chat.name}</div>
+                    <div onClick={()=>handleChat(chat._id)} key={chat._id}>{chat.isGroup ? chat.name : otherUser(chat.name) }</div>
                 ))}
             </div>
         </>
