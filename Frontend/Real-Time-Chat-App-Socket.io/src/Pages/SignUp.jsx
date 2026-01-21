@@ -1,8 +1,22 @@
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify'
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+import { Button } from "@/components/ui/button"
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+
 
 export default function SignUp(){
     const [formData, setFormData] = useState({
@@ -14,7 +28,8 @@ export default function SignUp(){
     const [buttonLoading, setButtonLoading] = useState(false);
     const navigate = useNavigate();
 
-    async function handleSignup(){
+    async function handleSignup(e){
+        e.preventDefault();
         setButtonLoading(true);
         if (formData.displayName === "" || formData.username === "" || formData.email === "" || formData.password === "") {
             toast.warning("Enter the details");
@@ -60,56 +75,92 @@ export default function SignUp(){
 
     return(
         <>
-            <form>
-                <input 
-                    id="displayName" 
-                    type="displayName" 
-                    value={formData.displayName} 
-                    onChange={(e)=>{
-                        setFormData({
-                            ...formData,
-                            displayName: e.target.value
-                        })
-                    }}
-                    placeholder="enter your display name"
-                />
-                <input id="username" 
-                    type="username" 
-                    value={formData.username} 
-                    onChange={(e)=>{
-                        setFormData({
-                            ...formData,
-                            username: e.target.value
-                        })
-                    }}
-                    placeholder="enter your username"
-                />
-                <input id="email" 
-                    type="email" 
-                    value={formData.email} 
-                    onChange={(e)=>{
-                        setFormData({
-                            ...formData,
-                            email: e.target.value
-                        })
-                    }}
-                    placeholder="enter your email"
-                />
-                <input id="password" 
-                    type="password" 
-                    value={formData.password} 
-                    onChange={(e)=>{
-                        setFormData({
-                            ...formData,
-                            password: e.target.value
-                        })
-                    }}
-                    placeholder="enter your password"
-                />
+        <div className="flex items-center justify-center h-screen">
+            <Card className="w-full max-w-sm">
+            <CardHeader>
+                <CardTitle>Create an account</CardTitle>
+                <CardDescription>
+                Enter your details to start chatting in real time
+                </CardDescription>
+            </CardHeader>
+            <form onSubmit={handleSignup}>
+                <CardContent>
+                    <div className="grid gap-2 mb-2">
+                        <Label htmlFor="email">Display Name</Label>
+                        <input 
+                            className="py-0.5"
+                            id="displayName" 
+                            type="displayName" 
+                            value={formData.displayName} 
+                            onChange={(e)=>{
+                                setFormData({
+                                    ...formData,
+                                    displayName: e.target.value
+                                })
+                            }}
+                            placeholder="enter your display name"
+                        />
+                    </div>
+                    <div className="grid gap-2 mb-2">
+                    <Label htmlFor="email">Username</Label>
+                    <input 
+                        className="py-0.5"
+                        id="username" 
+                        type="username" 
+                        value={formData.username} 
+                        onChange={(e)=>{
+                            setFormData({
+                                ...formData,
+                                username: e.target.value
+                            })
+                        }}
+                        placeholder="enter your username"
+                    />
+                    </div>
+                    <div className="grid gap-2 mb-2">
+                    <Label htmlFor="email">Email</Label>
+                    <input 
+                        className="py-0.5"
+                        id="email" 
+                        type="email" 
+                        value={formData.email} 
+                        onChange={(e)=>{
+                            setFormData({
+                                ...formData,
+                                email: e.target.value
+                            })
+                        }}
+                        placeholder="enter your email"
+                    />
+                    </div>
+                    <div className="grid gap-2">
+                    <Label htmlFor="email">Password</Label>
+                    <input 
+                        className="py-0.5"
+                        id="password"
+                        type="password" 
+                        value={formData.password} 
+                        onChange={(e)=>{
+                            setFormData({
+                                ...formData,
+                                password: e.target.value
+                            })
+                        }}
+                        placeholder="enter your password"
+                    />
+                    </div>
+                </CardContent>
+                <CardFooter className="flex-col gap-2">
+                    <Button variant="outline" type="submit" className="w-full mx-2" disabled={buttonLoading}>
+                        {buttonLoading ? "Creating account..." : "Sign Up"}
+                    </Button>
+                    <Button variant="outline" className="w-full" asChild>
+                        <Link to="/signin">Already have an account? Login</Link>
+                    </Button>
+                </CardFooter>
             </form>
-            <button onClick={handleSignup} disabled={buttonLoading}>
-                {buttonLoading? "Wait" : "Sign Up"}
-            </button>
+            </Card>
+        </div>
         </>
     )
 }

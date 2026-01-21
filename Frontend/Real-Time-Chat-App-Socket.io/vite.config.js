@@ -5,7 +5,15 @@ import path from 'path'
 
 // https://vite.dev/config/
 export default defineConfig({
-  // plugins: [react()],
+  plugins: [
+    react(),
+    tailwindcss(),
+  ],
+  resolve: {
+      alias: {
+          '@': path.resolve(__dirname, './src'), 
+        },
+    },
   server: {
     proxy: {
       '/socket.io': {
@@ -17,13 +25,6 @@ export default defineConfig({
       outDir: 'dist', // Ensure your build outputs to the 'dist' directory
     },
     base: '/', // This sets the base path for your app. Adjust if necessary.
-    plugins: [
-      react(),
-      tailwindcss(),],
-      resolve: {
-      alias: {
-        '@': path.resolve(__dirname, './src'), 
-      },
-    },
+    
   }
 })
