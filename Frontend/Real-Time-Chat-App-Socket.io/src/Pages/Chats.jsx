@@ -6,6 +6,17 @@ import ChatList from "../components/chatList";
 import { useEffect } from "react";
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
+import { SidebarProvider, 
+    SidebarTrigger, 
+    Sidebar, 
+    SidebarContent, 
+    SidebarFooter, 
+    SidebarGroup, 
+    SidebarHeader, 
+    SidebarGroupLabel,
+    SidebarGroupContent } from "@/components/ui/sidebar"
+
+
 export default function Chats(){
 
     const [dataFromChild, setDataFromChild] = useState("");
@@ -39,13 +50,30 @@ export default function Chats(){
 
     return(
         <>
-            <div>
-                <AddChatButton/>
-                <ChatList sendDataToParent={handleChildData} userData={userData}/>
-            </div>
-            <div>
-                <Chat chatId={dataFromChild} userData={userData}/>
-            </div>
+
+        <SidebarProvider>
+            <Sidebar>
+            <SidebarHeader />
+            <SidebarContent>
+                <SidebarGroup />
+                    <SidebarGroupLabel>Application</SidebarGroupLabel>
+                    <SidebarGroupContent>
+                        <ChatList sendDataToParent={handleChildData} userData={userData}/>
+                    </SidebarGroupContent>
+                <SidebarGroup />
+            </SidebarContent>
+            <SidebarFooter />
+            </Sidebar>
+            <main>
+                <SidebarTrigger />
+                <div>
+                    <AddChatButton/>
+                </div>
+                <div>
+                    <Chat chatId={dataFromChild} userData={userData}/>
+                </div>
+            </main>
+        </SidebarProvider>
         </>
     )
 }

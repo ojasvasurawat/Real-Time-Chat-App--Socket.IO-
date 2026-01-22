@@ -86,68 +86,68 @@ export default function SignUp(){
             <form onSubmit={handleSignup}>
                 <CardContent>
                     <div className="grid gap-2 mb-2">
-                        <Label htmlFor="email">Display Name</Label>
-                        <input 
-                            className="py-0.5"
-                            id="displayName" 
-                            type="displayName" 
-                            value={formData.displayName} 
+                            <Label>Display Name</Label>
+                            <Input 
+                                className="border-1 rounded-sm p-1.5"
+                                id="displayName" 
+                                type="displayName" 
+                                value={formData.displayName} 
+                                onChange={(e)=>{
+                                    setFormData({
+                                        ...formData,
+                                        displayName: e.target.value
+                                    })
+                                }}
+                                placeholder="enter your display name"
+                            />
+                    </div>
+                    <div className="grid gap-2 mb-2">
+                        <Label>Username</Label>
+                        <Input 
+                            className="border-1 rounded-sm p-1.5"
+                            id="username" 
+                            type="username" 
+                            value={formData.username} 
                             onChange={(e)=>{
                                 setFormData({
                                     ...formData,
-                                    displayName: e.target.value
+                                    username: e.target.value
                                 })
                             }}
-                            placeholder="enter your display name"
+                            placeholder="enter your username"
                         />
                     </div>
                     <div className="grid gap-2 mb-2">
-                    <Label htmlFor="email">Username</Label>
-                    <input 
-                        className="py-0.5"
-                        id="username" 
-                        type="username" 
-                        value={formData.username} 
-                        onChange={(e)=>{
-                            setFormData({
-                                ...formData,
-                                username: e.target.value
-                            })
-                        }}
-                        placeholder="enter your username"
-                    />
+                        <Label>Email</Label>
+                        <Input 
+                            className="border-1 rounded-sm p-1.5"
+                            id="email" 
+                            type="email" 
+                            value={formData.email} 
+                            onChange={(e)=>{
+                                setFormData({
+                                    ...formData,
+                                    email: e.target.value
+                                })
+                            }}
+                            placeholder="enter your email"
+                        />
                     </div>
                     <div className="grid gap-2 mb-2">
-                    <Label htmlFor="email">Email</Label>
-                    <input 
-                        className="py-0.5"
-                        id="email" 
-                        type="email" 
-                        value={formData.email} 
-                        onChange={(e)=>{
-                            setFormData({
-                                ...formData,
-                                email: e.target.value
-                            })
-                        }}
-                        placeholder="enter your email"
-                    />
-                    </div>
-                    <div className="grid gap-2">
-                    <Label htmlFor="email">Password</Label>
-                    <input 
-                        className="py-0.5"
-                        id="password"
-                        type="password" 
-                        value={formData.password} 
-                        onChange={(e)=>{
-                            setFormData({
-                                ...formData,
-                                password: e.target.value
-                            })
-                        }}
-                        placeholder="enter your password"
-                    />
+                        <Label>Password</Label>
+                        <Input 
+                            className="border-1 rounded-sm p-1.5"
+                            id="password"
+                            type="password" 
+                            value={formData.password} 
+                            onChange={(e)=>{
+                                setFormData({
+                                    ...formData,
+                                    password: e.target.value
+                                })
+                            }}
+                            placeholder="enter your password"
+                        />
                     </div>
                 </CardContent>
                 <CardFooter className="flex-col gap-2">

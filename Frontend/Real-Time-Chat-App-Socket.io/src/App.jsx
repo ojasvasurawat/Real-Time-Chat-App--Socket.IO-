@@ -10,12 +10,12 @@ import Chats from "./Pages/Chats";
 function App() {
   return (
     <>
-      {/* <Home/> */}
+      
       <Routes>
         <Route path="/signin" element={<SignIn/>}/>
         <Route path="/signup" element={<SignUp/>}/>
         <Route path="/chats" element={<Chats/>}/>
-        <Route path="/" element={<Home/>}/>
+        {/* <Route path="/" element={<Home/>}/> */}
       </Routes>
     </>
   )
