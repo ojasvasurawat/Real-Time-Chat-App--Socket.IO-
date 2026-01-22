@@ -50,6 +50,7 @@ async function addChat(req,res){
         }
 
         const chat = await ChatModel.create({
+            name:currentUser.username+"-"+chatUser.username,
             isGroup: false,
             participants: [userId, chatUser._id]
         });
@@ -88,7 +89,7 @@ async function getChatMessages(req,res){
 
         const messages = await MessageModel.find({
             chat: chatId
-        }).populate("sender", "displayName avatarUrl").sort({ createAt: 1});
+        }).populate("sender", "username displayName avatarUrl").sort({ createAt: 1});
 
         res.json({
             messages
@@ -133,10 +134,28 @@ async function createGroup(req,res){
     }
 }
 
+async function getProfile(req, res){
+    try{
+        const userId = req.ObjectId;
+        const user = await UserModel.findById(userId);
+        res.json({
+            user:user
+        })
+    }
+    catch(err){
+        console.log(err);
+        res.json({
+            message: "errorn in get profile",
+            error: err
+        })
+    }
+}
+
 
 module.exports = {
     getChatList,
     addChat,
     getChatMessages,
-    createGroup
+    createGroup,
+    getProfile
 };

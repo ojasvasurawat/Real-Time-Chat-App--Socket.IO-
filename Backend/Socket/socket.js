@@ -60,9 +60,11 @@ io.of("/chat").on('connection', (socket)=>{
             })
             // socket.broadcast.emit('chat message', {msg, name, time});
             const getSender = async ()=>{
-                return await UserModel.findById(userId);
+                const res = await UserModel.findById(userId);
+                return res.username;
             }
-            const sender = getSender();
+            const sender = await getSender();
+            // console.log(sender);
             socket.to(chatId).emit('chat message', {chatId, content, sender, time});
         }
         catch(err){
