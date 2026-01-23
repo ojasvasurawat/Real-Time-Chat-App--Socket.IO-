@@ -25,9 +25,9 @@ const io = new Server(server, {
 //   path:"/chat"
 });
 
-let users = []
+const onlineUsers = new Map();
 
-// io.use(sktMdw); // this woas wrong it 
+// io.use(sktMdw); // this was wrong it 
 io.of("/chat").use(sktMdw) // insted use this for namespace middleware
 
 io.of("/chat").on('connection', (socket)=>{
@@ -35,9 +35,16 @@ io.of("/chat").on('connection', (socket)=>{
     const userId = socket.ObjectId;
     // socket.broadcast.emit('hi');
     console.log(socket.id);
-    users.push(socket.id);
-    console.log("user list : ", users);
     console.log('a user connected');
+
+    if (!onlineUsers.has(userId)) {
+        onlineUsers.set(userId, new Set());
+    }
+    onlineUsers.get(userId).add(socket.id);
+
+    console.log("Online users:", [...onlineUsers.keys()]);
+
+    io.of("/chat").emit("online users", [...onlineUsers.keys()]);
 
     socket.on('join', ({chatId})=>{
         socket.join(chatId);
@@ -79,8 +86,6 @@ io.of("/chat").on('connection', (socket)=>{
     // })
 
     socket.on('disconnect', ()=>{
-        idx = users.indexOf(socket.id);
-        users.splice(idx, 1);
         console.log('user disconnect');
     })
 });
