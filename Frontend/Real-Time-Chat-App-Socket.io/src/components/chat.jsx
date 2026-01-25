@@ -78,6 +78,7 @@ export default function Chat({chatId, userData}){
 
     useEffect(()=>{
         
+        messages.current.innerHTML = "";
         const getChatMessages = async ()=>{
             const response = await axios.get(`${backendUrl}/chat-messages?chatId=${chatId}`,{
                 headers:{
@@ -145,7 +146,7 @@ export default function Chat({chatId, userData}){
         <>
             <h3>{name}</h3>
             <div>socket status: {socketStatus ? "connected" : "disconnected"}</div> 
-            <div ref={messages} style={{height: '300px', overflowY: 'scroll'}}>
+            <div ref={messages} style={{height: '80vh', overflowY: 'scroll'}}>
                 {msgData.map((data, idx)=>(
                     <Messages key={idx} sendBy={data.name} data={data.content} time={data.time}/>
                 ))}

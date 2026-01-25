@@ -14,7 +14,9 @@ import { SidebarProvider,
     SidebarGroup, 
     SidebarHeader, 
     SidebarGroupLabel,
-    SidebarGroupContent } from "@/components/ui/sidebar"
+    SidebarGroupContent,
+    SidebarMenu,
+    SidebarMenuItem } from "@/components/ui/sidebar"
 
 
 export default function Chats(){
@@ -53,10 +55,18 @@ export default function Chats(){
 
         <SidebarProvider>
             <Sidebar>
-            <SidebarHeader />
+            <SidebarHeader>
+                <SidebarMenu>
+                    <SidebarMenuItem>REAL TIME CHAT APP</SidebarMenuItem>
+                    <SidebarMenuItem>HI !</SidebarMenuItem>
+                    <SidebarMenuItem>
+                        <AddChatButton/>
+                    </SidebarMenuItem>
+                </SidebarMenu>
+            </SidebarHeader>
             <SidebarContent>
                 <SidebarGroup />
-                    <SidebarGroupLabel>Application</SidebarGroupLabel>
+                    <SidebarGroupLabel>CHATS</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <ChatList sendDataToParent={handleChildData} userData={userData}/>
                     </SidebarGroupContent>
@@ -66,9 +76,9 @@ export default function Chats(){
             </Sidebar>
             <main>
                 <SidebarTrigger />
-                <div>
+                {/* <div>
                     <AddChatButton/>
-                </div>
+                </div> */}
                 <div>
                     <Chat chatId={dataFromChild} userData={userData}/>
                 </div>

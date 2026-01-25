@@ -6,7 +6,18 @@ const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 import {SidebarMenu,
     SidebarMenuItem,
-    SidebarMenuButton } from "@/components/ui/sidebar"
+    SidebarMenuButton 
+} from "@/components/ui/sidebar"
+
+import {
+  ItemContent,
+  ItemMedia,
+  ItemTitle,
+} from "@/components/ui/item"
+
+import {
+  Avatar,
+} from "@/components/ui/avatar"
 
 
 export default function ChatList({sendDataToParent, userData}){
@@ -57,10 +68,17 @@ export default function ChatList({sendDataToParent, userData}){
                 {chatList.map((chat) => (
                 <SidebarMenuItem key={chat._id}>
                     <SidebarMenuButton asChild onClick={()=>handleChat(chat._id)}>
-                        {/* <a href={item.url}> */}
-                            {/* <item.icon /> */}
-                            <span>{chat.isGroup ? chat.name : otherUser(chat.name) }</span>
-                        {/* </a> */}
+                        {/* <span>{chat.isGroup ? chat.name : otherUser(chat.name) }</span> */}
+                        {/* <ItemMedia> */}
+                            {/* <Avatar>
+                            <AvatarImage src={chat.avatar} />
+                            <AvatarFallback>{person.username.charAt(0)}</AvatarFallback>
+                            </Avatar> */}
+                        {/* </ItemMedia> */}
+                        <ItemContent >
+                            <ItemTitle>{chat.isGroup ? chat.name : otherUser(chat.name) }</ItemTitle>
+                            {/* <ItemDescription>{person.email}</ItemDescription> */}
+                        </ItemContent>
                     </SidebarMenuButton>
                 </SidebarMenuItem>
                 ))}

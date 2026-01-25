@@ -1,9 +1,12 @@
 import axios from "axios";
 import { useState, useRef } from "react"
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
+import { Button } from "@/components/ui/button"
+import { Field } from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
 
 
-export default function AddChatButton(){
+export default function   AddChatButton(){
 
     const [chatUsername, setChatUsername] = useState("");
     const chatUsernameInput = useRef(null);
@@ -24,15 +27,17 @@ export default function AddChatButton(){
     }
     return(
         <>
-            <input
-                id="chatUsername"
-                type="chatUsername"
-                value={chatUsername}
-                onChange={(e)=>{setChatUsername(e.target.value)}}
-                placeholder="Type a username to add a chat"
-                ref={chatUsernameInput}
-            />
-            <button onClick={handleAddChat}>Add Chat</button>
+            <Field orientation="horizontal">
+                <Input
+                    id="chatUsername"
+                    type="chatUsername"
+                    value={chatUsername}
+                    onChange={(e)=>{setChatUsername(e.target.value)}}
+                    placeholder="Type a username to add a chat"
+                    ref={chatUsernameInput}
+                />
+                <Button onClick={handleAddChat}>Add Chat</Button>
+            </Field>
         </>
     )
 }

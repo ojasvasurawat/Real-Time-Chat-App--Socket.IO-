@@ -3,7 +3,12 @@ const cors = require("cors");
 const { signUp, signIn } = require("../auth/auth");
 const {auth} = require("../middleware/middleware");
 const {server, app} = require("../socket/socket");
-const {addChat, getChatList, getChatMessages, createGroup, getProfile} = require("../Functions/functions")
+const { getChatList } = require("../Functions/getChatList");
+const { addChat } = require("../Functions/addChat");
+const { getChatMessages } = require("../Functions/getChatMessages");
+const { createGroup } = require("../Functions/createGroup");
+const { getInfo } = require("../Functions/getInfo");
+const { addProfilePicture } = require("../Functions/addProfilePicture");
 
 require("dotenv").config();
 
@@ -24,7 +29,8 @@ mainApp.get("/chat-list", getChatList);
 mainApp.post("/add-chat", addChat);
 mainApp.get("/chat-messages", getChatMessages);
 mainApp.post("/create-group", createGroup)
-mainApp.get("/profile", getProfile);
+mainApp.get("/profile", getInfo);
+mainApp.post("/add-profile-picture", addProfilePicture);
 
 
 
