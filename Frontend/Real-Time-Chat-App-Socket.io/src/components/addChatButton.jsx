@@ -36,7 +36,7 @@ export default function   AddChatButton(){
                     placeholder="Type a username to add a chat"
                     ref={chatUsernameInput}
                 />
-                <Button onClick={handleAddChat}>Add Chat</Button>
+                <Button onClick={handleAddChat} variant="outline">Add Chat</Button>
             </Field>
         </>
     )

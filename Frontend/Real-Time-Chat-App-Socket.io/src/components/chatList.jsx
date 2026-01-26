@@ -10,6 +10,7 @@ import {SidebarMenu,
 } from "@/components/ui/sidebar"
 
 import {
+    Item,
   ItemContent,
   ItemMedia,
   ItemTitle,
@@ -17,7 +18,11 @@ import {
 
 import {
   Avatar,
+  AvatarImage,
+  AvatarFallback
 } from "@/components/ui/avatar"
+
+import { UsersRound } from 'lucide-react';
 
 
 export default function ChatList({sendDataToParent, userData}){
@@ -67,18 +72,18 @@ export default function ChatList({sendDataToParent, userData}){
             <SidebarMenu>
                 {chatList.map((chat) => (
                 <SidebarMenuItem key={chat._id}>
-                    <SidebarMenuButton asChild onClick={()=>handleChat(chat._id)}>
-                        {/* <span>{chat.isGroup ? chat.name : otherUser(chat.name) }</span> */}
-                        {/* <ItemMedia> */}
-                            {/* <Avatar>
-                            <AvatarImage src={chat.avatar} />
-                            <AvatarFallback>{person.username.charAt(0)}</AvatarFallback>
-                            </Avatar> */}
-                        {/* </ItemMedia> */}
-                        <ItemContent >
-                            <ItemTitle>{chat.isGroup ? chat.name : otherUser(chat.name) }</ItemTitle>
-                            {/* <ItemDescription>{person.email}</ItemDescription> */}
-                        </ItemContent>
+                    <SidebarMenuButton asChild className={"h-[10vh] m-0"} onClick={()=>handleChat(chat._id)}>
+                        <Item>
+                            <ItemMedia>
+                                <Avatar className={"h-[7vh] w-[7vh]"}>
+                                    <AvatarImage src={chat.avatarUrl} />
+                                    <AvatarFallback className={chat.isGroup ? "bg-gray-200" : "rounded-full bg-gray-200 flex items-center justify-center font-semibold text-xl"}>{chat.isGroup ? <UsersRound/> : otherUser(chat.name).charAt(0).toUpperCase()}</AvatarFallback>
+                                </Avatar>
+                            </ItemMedia>    
+                            <ItemContent >
+                                <ItemTitle className={"text-xl ml-[1vw]"}>{chat.isGroup ? chat.name : otherUser(chat.name) }</ItemTitle>
+                            </ItemContent>
+                        </Item>
                     </SidebarMenuButton>
                 </SidebarMenuItem>
                 ))}

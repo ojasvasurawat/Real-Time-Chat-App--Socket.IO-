@@ -4,7 +4,10 @@ import AddChatButton from "../components/addChatButton";
 import Chat from "../components/chat";
 import ChatList from "../components/chatList";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+import {User, LogOut} from "lucide-react";
 
 import { SidebarProvider, 
     SidebarTrigger, 
@@ -12,17 +15,19 @@ import { SidebarProvider,
     SidebarContent, 
     SidebarFooter, 
     SidebarGroup, 
-    SidebarHeader, 
-    SidebarGroupLabel,
+    SidebarHeader,
     SidebarGroupContent,
     SidebarMenu,
-    SidebarMenuItem } from "@/components/ui/sidebar"
+    SidebarMenuItem,
+    SidebarMenuButton } from "@/components/ui/sidebar"
+import { Label } from '@/components/ui/label';
 
 
 export default function Chats(){
 
     const [dataFromChild, setDataFromChild] = useState("");
     const [userData, setUserData] = useState(null);
+    const navigate = useNavigate();
 
     // Callback function to receive data from the child
     const handleChildData = (childData) => {
@@ -36,7 +41,7 @@ export default function Chats(){
 
     useEffect(()=>{
         const userData = async ()=>{
-            const response = await axios.get(`${backendUrl}/profile`,{
+            const response = await axios.get(`${backendUrl}/info`,{
                 headers:{
                     'Content-Type': 'application/json',
                     'authorization': localStorage.getItem('authorization')
@@ -50,6 +55,29 @@ export default function Chats(){
         userData()
     },[])
 
+    
+    const handleLogout = async()=>{
+        try{const response = await axios.post(`${backendUrl}/logout`,{
+                
+            },{
+                headers:{
+                    'Content-Type': 'application/json',
+                    'authorization': localStorage.getItem('authorization')
+                }
+            })
+        if (response) {
+            localStorage.setItem("authorization", "");
+            // toast.success("Logout successfully");
+            navigate("/signin");
+        }
+        else{
+            // toast.error("Logout Failed")
+        }
+        }catch(e){
+            console.log("the error is :",e);
+        }
+    }
+
     return(
         <>
 
@@ -58,30 +86,39 @@ export default function Chats(){
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>REAL TIME CHAT APP</SidebarMenuItem>
-                    <SidebarMenuItem>HI !</SidebarMenuItem>
+                    <SidebarMenuItem>HI {userData?.displayName}!</SidebarMenuItem>
                     <SidebarMenuItem>
                         <AddChatButton/>
                     </SidebarMenuItem>
                 </SidebarMenu>
             </SidebarHeader>
             <SidebarContent>
+                <Label>CHATS</Label>
                 <SidebarGroup />
-                    <SidebarGroupLabel>CHATS</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <ChatList sendDataToParent={handleChildData} userData={userData}/>
                     </SidebarGroupContent>
                 <SidebarGroup />
             </SidebarContent>
-            <SidebarFooter />
+            <SidebarFooter>
+                <SidebarMenuButton asChild>
+                <a href="/profile">
+                {userData?.avatarUrl ? <img className="w-5 h-5 object-cover rounded-full" src={avatarUrl}/> : <User/>}
+                    {/* <User/><img className="w-5" src={avatarUrl}/> */}
+                    <span>Profile</span>
+                </a>
+                </SidebarMenuButton>
+                <SidebarMenuButton asChild>
+                <div onClick={handleLogout}>
+                    <LogOut />
+                    <span>Log out</span>
+                </div>
+                </SidebarMenuButton>
+            </SidebarFooter>
             </Sidebar>
             <main>
                 <SidebarTrigger />
-                {/* <div>
-                    <AddChatButton/>
-                </div> */}
-                <div>
-                    <Chat chatId={dataFromChild} userData={userData}/>
-                </div>
+                <Chat chatId={dataFromChild} userData={userData}/>
             </main>
         </SidebarProvider>
         </>
