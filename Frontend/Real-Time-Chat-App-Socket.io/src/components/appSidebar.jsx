@@ -30,9 +30,11 @@ import {
   AvatarImage,
   AvatarFallback
 } from "@/components/ui/avatar"
+import ProfileButton from './profileButton';
+import LogoutButton from './logoutButton';
 
 
-export default function AppSidebar() {
+export default function AppSidebar({passingDataToLayout, passingProfileStatusToLayout}) {
 
     const [userData, setUserData] = useState(null);
 
@@ -52,27 +54,12 @@ export default function AppSidebar() {
         userData()
     },[])
 
-    const handleLogout = async ()=>{
-        try{
-            const response = await axios.post(`${backendUrl}/logout`,{
-                
-            },{
-                headers:{
-                    'Content-Type': 'application/json',
-                    'authorization': localStorage.getItem('authorization')
-                }
-            })
-        if (response) {
-            localStorage.setItem("authorization", "");
-            // toast.success("Logout successfully");
-            navigate("/signin");
-        }
-        else{
-            // toast.error("Logout Failed")
-        }
-        }catch(e){
-            console.log("the error is :",e);
-        }
+    const handleChatId = (chatId)=>{
+      passingDataToLayout(chatId, userData);
+    }
+
+    const handleProfileStatus = (profileStatus)=>{
+      passingProfileStatusToLayout(profileStatus);
     }
 
   return (
@@ -89,37 +76,14 @@ export default function AppSidebar() {
         <SidebarGroup>
             <SidebarGroupLabel className={"text-lg"}>CHATS</SidebarGroupLabel>
             <SidebarGroupContent className={"overflow-y-scroll"}>
-                <ChatList userData={userData}/>
+                <ChatList userData={userData} sendDataToParent={handleChatId}/>
             </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild className={"h-[5vh] m-0"}>
-              <Item>
-                <ItemMedia>
-                  <Avatar className={"h-[3vh] w-[3vh]"}>
-                    <AvatarImage src={userData?.avatarUrl} />
-                    <AvatarFallback ><User/></AvatarFallback>
-                  </Avatar>
-                </ItemMedia>    
-                <ItemContent >
-                  <ItemTitle className={"text-lg font-normal"}>Profile</ItemTitle>
-                </ItemContent>
-              </Item>
-            </SidebarMenuButton>
-            <SidebarMenuButton asChild className={"h-[5vh] m-0"}>
-              <Item>
-                <ItemMedia>
-                  <Avatar className={"h-[3vh] w-[3vh]"}>
-                    <AvatarFallback ><LogOut/></AvatarFallback>
-                  </Avatar>
-                </ItemMedia>    
-                <ItemContent >
-                  <ItemTitle className={"text-lg font-normal"}>Logout</ItemTitle>
-                </ItemContent>
-              </Item>
-            </SidebarMenuButton>
+            <ProfileButton userData={userData} sendProfileStatusToSidebar={handleProfileStatus}/>
+            <LogoutButton/>
           </SidebarMenuItem>
       </SidebarFooter> 
     </Sidebar>

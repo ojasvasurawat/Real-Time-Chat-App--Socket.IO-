@@ -38,7 +38,7 @@ export default function ChatList({sendDataToParent, userData}){
         if (currentRoom) {
             socket.emit('leave', {currentRoom});
         }
-        console.log(chatId)
+        console.log(chatId);
 
         socket.emit('join', {chatId});
         setCurrentRoom(chatId);

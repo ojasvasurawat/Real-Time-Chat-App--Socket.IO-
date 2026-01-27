@@ -144,8 +144,7 @@ export default function Chat({chatId, userData}){
     
     return (
         <>
-            <h3>{name}</h3>
-            <div>socket status: {socketStatus ? "connected" : "disconnected"}</div> 
+            <div>socket status: {socketStatus ? "connected" : "disconnected"}</div>
             <div ref={messages} style={{height: '80vh', overflowY: 'scroll'}}>
                 {msgData.map((data, idx)=>(
                     <Messages key={idx} sendBy={data.name} data={data.content} time={data.time}/>
