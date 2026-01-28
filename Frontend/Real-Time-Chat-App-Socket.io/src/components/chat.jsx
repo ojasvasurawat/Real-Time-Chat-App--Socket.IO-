@@ -6,7 +6,24 @@ import { socket } from "../socket";
 import { useLocation } from "react-router-dom";
 import Messages from "./messages";
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
+import {
+    Item,
+  ItemContent,
+  ItemMedia,
+  ItemTitle,
+  ItemDescription,
+  ItemActions,
+} from "@/components/ui/item"
 
+import {
+  Avatar,
+  AvatarImage,
+  AvatarFallback
+} from "@/components/ui/avatar"
+
+import { UsersRound } from 'lucide-react';
+import { Button } from "@/components/ui/button"
+import { Textarea } from "@/components/ui/textarea"
 
 
 export default function Chat({chatId, userData}){
@@ -16,13 +33,15 @@ export default function Chat({chatId, userData}){
 
     let [socketStatus, setSocketStatus] = useState(true);
     let [msgData, setMsgData] = useState([]);
+    let [chatData, setChatData] = useState(null);
     const input = useRef(null);
     const messages = useRef(null);
     const toggleButton = useRef(null);
     // const socket = io("http://localhost:3000/");
 
     function handleKeyDown(event){
-        if(event.key === "Enter"){
+        if(event.key === "Enter" && !event.shiftKey){
+            event.preventDefault()
             submit();
         }
     }
@@ -32,23 +51,19 @@ export default function Chat({chatId, userData}){
 
     function submit(){
         
-        const content = input.current.value;
+        let content = input.current.value;
         console.log(chatId);
-        const time = Date();
+        const time = new Date().toISOString();
         console.log(time);
-        if(content){
-            socket.emit('chat msg', {chatId, content, time});
-            setMsgData((prevData) => [...prevData, {content:content, name:userData.username, time:time}]);//----------------------------
-            console.log(socket.id);
-            console.log("msg emmited");
-            // const item = document.createElement('p');
-            // item.textContent = name+"-"+msg+`\n${time}`;
-            // Object.assign(item.style, {
-            //     textAlign: 'right',
-            // })
-            // messages.current.appendChild(item);
-            input.current.value = "";
-        }
+        if (!content || !content.trim()) return;
+        
+        content = content.replace(/^\n+/, "");
+        socket.emit('chat msg', {chatId, content, time});
+        setMsgData((prevData) => [...prevData, {content:content, name:userData.username, time:time}]);//----------------------------
+        console.log(socket.id);
+        console.log("msg emmited");
+        input.current.value = "";
+        messages.current.scrollTop = messages.current.scrollHeight;
     }
 
     function handleChange(event){
@@ -87,19 +102,30 @@ export default function Chat({chatId, userData}){
                 }
             })
             const messagesData = response.data.messages;
-            console.log(messagesData);
+            const chatData = response.data.chat;
+            // console.log(messagesData);
+            console.log("the chat data is :",chatData);
             messagesData?.map((message)=>{ 
                 setMsgData(
                     (prevData) => ([...prevData, {content:message.content, name:message.sender.username, time:message.createdAt}])
-                ) 
+                )
             })
+            setChatData(chatData);
         }
 
         getChatMessages();
+
+        if (messages.current) {
+            messages.current.scrollTop = messages.current.scrollHeight;
+        }
         
     },[chatId])
 
     useEffect(()=>{
+
+        if (messages.current) {
+            messages.current.scrollTop = messages.current.scrollHeight;
+        }
 
         socket.connect();
 
@@ -138,23 +164,66 @@ export default function Chat({chatId, userData}){
     },[])
 
 
+    const otherUsername = (chat)=>{
+        if(chat === null) return;
+        const chatName = chat.name;
+        // console.log(chat);
+        const names = chatName.split("-");
+        return names[0] == userData.username ? names[1] : names[0];
+    }
+
+    const otherDisplayname = (chat)=>{
+        if(chat === null) return;
+        const participants = chat.participants;
+        return participants[0].displayName == userData.displayName ? participants[1].displayName : participants[0].displayName;
+    }
+
+    const otherUsernameList = (chat)=>{
+        if(chat === null) return;
+        const participants = chat.participants;
+        let res = "";
+        for(const participant of participants){
+            res = res+participant.username.toString()+" , ";
+        }
+        return res.slice(0, -3);
+    }
     
     
       
     
     return (
         <>
-            <div>socket status: {socketStatus ? "connected" : "disconnected"}</div>
-            <div ref={messages} style={{height: '80vh', overflowY: 'scroll'}}>
+
+            <Item>
+                <ItemMedia>
+                    <Avatar className={"h-[7vh] w-[7vh]"}>
+                        <AvatarImage src={chatData?.avatarUrl} />
+                        <AvatarFallback className={chatData?.isGroup ? "bg-gray-200" : "rounded-full bg-gray-200 flex items-center justify-center font-semibold text-xl"}>{chatData?.isGroup ? <UsersRound/> : otherDisplayname(chatData)?.charAt(0).toUpperCase()}</AvatarFallback>
+                    </Avatar>
+                </ItemMedia>    
+                <ItemContent>
+                    <ItemTitle className={"text-xl ml-[1vw]"}>{chatData?.isGroup ? chatData.name : otherDisplayname(chatData) }</ItemTitle>
+                    <ItemDescription className={" ml-[1vw] truncate"}>{chatData?.isGroup ? otherUsernameList(chatData) : otherUsername(chatData) }</ItemDescription>
+                </ItemContent>
+                <ItemContent>
+                    <ItemDescription>socket status: {socketStatus ? "connected" : "disconnected"}</ItemDescription>
+                </ItemContent>
+                <ItemActions>
+                    <Button variant="outline" onClick={toggleConnection}>
+                    {socketStatus ? "disconnect from socket" : "connect to socket"}
+                    </Button>
+                </ItemActions>
+            </Item>
+            <div ref={messages} className={"h-[450px] overflow-y-scroll"} >
                 {msgData.map((data, idx)=>(
-                    <Messages key={idx} sendBy={data.name} data={data.content} time={data.time}/>
+                    <div key={idx} className={`flex ${userData.username === data.name ? "justify-end" : "justify-start"}`}>
+                        <Messages key={idx} sendBy={data.name} data={data.content} time={data.time}/>
+                    </div>
                 ))}
             </div>
-            <div>
-                <input type="text" placeholder="enter your message" ref={input} onKeyDown={handleKeyDown} onChange={handleChange}/>
-                <button onClick={submit}>Send</button>
-                <button onClick={toggleConnection}>{socketStatus ? "disconnect from socket" : "connect to socket"}</button>
-                {/* <button onClick={disconnect}>disconnect</button> */}
+            <div className={"flex"}>
+                <Textarea type="text" placeholder="Type your message here." className={""} ref={input} onKeyDown={handleKeyDown} />
+                <Button onClick={submit} variant="outline" className={"my-auto mx-2"}>Send</Button>
             </div>
         </>
     )

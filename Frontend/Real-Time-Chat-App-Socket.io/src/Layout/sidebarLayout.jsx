@@ -13,8 +13,9 @@ export default function SidebarLayout({passingDataToHome, passingProfileStatusTo
   return (
     <SidebarProvider>
       <AppSidebar passingDataToLayout={handleDataFromSidebar} passingProfileStatusToLayout={hadleProfileStatusFromSidebar}/>
-      <main>
-        <SidebarTrigger />
+      <SidebarTrigger />
+      <main className={"w-[50vw] mr-[1vw]"}>
+        
         {children}
       </main>
     </SidebarProvider>

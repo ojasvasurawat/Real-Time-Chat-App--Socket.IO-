@@ -14,6 +14,7 @@ import {
   ItemContent,
   ItemMedia,
   ItemTitle,
+  ItemDescription,
 } from "@/components/ui/item"
 
 import {
@@ -61,9 +62,25 @@ export default function ChatList({sendDataToParent, userData}){
         
     },[])
 
-    const otherUser = (name)=>{
-        const names = name.split("-");
+    const otherUsername = (chat)=>{
+        const chatName = chat.name;
+        // console.log(chat);
+        const names = chatName.split("-");
         return names[0] == userData.username ? names[1] : names[0];
+    }
+
+    const otherDisplayname = (chat)=>{
+        const participants = chat.participants;
+        return participants[0].displayName == userData.displayName ? participants[1].displayName : participants[0].displayName;
+    }
+
+    const otherUsernameList = (chat)=>{
+        const participants = chat.participants;
+        let res = "";
+        for(const participant of participants){
+            res = res+participant.username.toString()+" , ";
+        }
+        return res.slice(0, -3);
     }
 
     return(
@@ -77,11 +94,12 @@ export default function ChatList({sendDataToParent, userData}){
                             <ItemMedia>
                                 <Avatar className={"h-[7vh] w-[7vh]"}>
                                     <AvatarImage src={chat.avatarUrl} />
-                                    <AvatarFallback className={chat.isGroup ? "bg-gray-200" : "rounded-full bg-gray-200 flex items-center justify-center font-semibold text-xl"}>{chat.isGroup ? <UsersRound/> : otherUser(chat.name).charAt(0).toUpperCase()}</AvatarFallback>
+                                    <AvatarFallback className={chat.isGroup ? "bg-gray-200" : "rounded-full bg-gray-200 flex items-center justify-center font-semibold text-xl"}>{chat.isGroup ? <UsersRound/> : otherDisplayname(chat).charAt(0).toUpperCase()}</AvatarFallback>
                                 </Avatar>
                             </ItemMedia>    
-                            <ItemContent >
-                                <ItemTitle className={"text-xl ml-[1vw]"}>{chat.isGroup ? chat.name : otherUser(chat.name) }</ItemTitle>
+                            <ItemContent>
+                                <ItemTitle className={"text-xl ml-[1vw]"}>{chat.isGroup ? chat.name : otherDisplayname(chat) }</ItemTitle>
+                                <ItemDescription className={" ml-[1vw] truncate"}>{chat.isGroup ? otherUsernameList(chat) : otherUsername(chat) }</ItemDescription>
                             </ItemContent>
                         </Item>
                     </SidebarMenuButton>
