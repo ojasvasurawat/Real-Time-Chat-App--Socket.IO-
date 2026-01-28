@@ -5,7 +5,7 @@ async function getChatList(req,res){
 
     try{
         const userId = req.ObjectId;
-        const chats = await ChatModel.find({participants: userId}).populate("participants", "username, avatarUrl, displayName").sort({updatedAt: -1});
+        const chats = await ChatModel.find({participants: userId}).populate("participants", "username avatarUrl displayName").sort({updatedAt: -1});
         res.json({
             chats
         });

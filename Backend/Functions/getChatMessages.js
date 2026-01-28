@@ -14,7 +14,7 @@ async function getChatMessages(req,res){
         const chat = await ChatModel.findOne({
             _id: chatId,
             participants: userId
-        });
+        }).populate("participants", "username avatarUrl displayName");
 
         if(!chat){
             return res.json({ message: "you are not in this chat"})
@@ -25,6 +25,7 @@ async function getChatMessages(req,res){
         }).populate("sender", "username displayName avatarUrl").sort({ createAt: 1});
 
         res.json({
+            chat,
             messages
         })
     }
