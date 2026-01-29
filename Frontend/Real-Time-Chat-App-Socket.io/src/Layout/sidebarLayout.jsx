@@ -1,7 +1,7 @@
 import AppSidebar from "@/components/appSidebar"
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 
-export default function SidebarLayout({passingDataToHome, passingProfileStatusToHome, children }) {
+export default function SidebarLayout({passingDataToHome, passingProfileStatusToHome, onlineUsersList, children }) {
 
   const handleDataFromSidebar = (chatId, userData)=>{
       passingDataToHome(chatId, userData);
@@ -12,7 +12,7 @@ export default function SidebarLayout({passingDataToHome, passingProfileStatusTo
   }
   return (
     <SidebarProvider>
-      <AppSidebar passingDataToLayout={handleDataFromSidebar} passingProfileStatusToLayout={hadleProfileStatusFromSidebar}/>
+      <AppSidebar passingDataToLayout={handleDataFromSidebar} passingProfileStatusToLayout={hadleProfileStatusFromSidebar} onlineUsersList={onlineUsersList}/>
       <SidebarTrigger />
       <main className={"w-[50vw] mr-[1vw]"}>
         

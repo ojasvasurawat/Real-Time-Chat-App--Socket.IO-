@@ -26,7 +26,7 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 
 
-export default function Chat({chatId, userData}){
+export default function Chat({chatId, userData, onlineUsersList}){
 
     // const location = useLocation();
     // const {name} = location.state || {};
@@ -119,7 +119,7 @@ export default function Chat({chatId, userData}){
             messages.current.scrollTop = messages.current.scrollHeight;
         }
         
-    },[chatId])
+    },[chatId, socketStatus])
 
     useEffect(()=>{
 
@@ -179,13 +179,46 @@ export default function Chat({chatId, userData}){
     }
 
     const otherUsernameList = (chat)=>{
-        if(chat === null) return;
+        return(
+            <>
+            <span className={"text-blue-400"}>
+                {otherOnlineUsernameList(chat)}
+            </span>
+            <span >
+                {otherOfflineUsernameList(chat)}
+            </span>
+            </>
+        )
+    }
+
+    const otherOnlineUsernameList = (chat)=>{
         const participants = chat.participants;
-        let res = "";
+        let onlineRes = [];
         for(const participant of participants){
-            res = res+participant.username.toString()+" , ";
+            if( onlineUsersList.includes(participant.username) && participant.username !== userData.username){
+                onlineRes.push(participant.username.toString()+" ");
+            }
         }
-        return res.slice(0, -3);
+        console.log(onlineRes);
+        return onlineRes;
+    }
+
+    const otherOfflineUsernameList = (chat)=>{
+        const participants = chat.participants;
+        let offlineRes = [];
+        for(const participant of participants){
+            if( !onlineUsersList.includes(participant.username) ){
+                offlineRes.push(participant.username.toString()+" ");
+            }
+        }
+        offlineRes.push(userData.username);
+        console.log(offlineRes);
+        return offlineRes;
+    }
+
+    const isOnline = (chat)=>{
+        const name = otherUsername(chat);
+        return onlineUsersList.includes(name);
     }
     
     
@@ -203,7 +236,7 @@ export default function Chat({chatId, userData}){
                 </ItemMedia>    
                 <ItemContent>
                     <ItemTitle className={"text-xl ml-[1vw]"}>{chatData?.isGroup ? chatData.name : otherDisplayname(chatData) }</ItemTitle>
-                    <ItemDescription className={" ml-[1vw] truncate"}>{chatData?.isGroup ? otherUsernameList(chatData) : otherUsername(chatData) }</ItemDescription>
+                    <ItemDescription className={`ml-[1vw] truncate ${isOnline(chatData) ? "text-blue-400" : ""}`}>{chatData?.isGroup ? otherUsernameList(chatData) : isOnline(chatData) ? `${otherUsername(chatData)} is online` : `${otherUsername(chatData)} is offline` }</ItemDescription>
                 </ItemContent>
                 <ItemContent>
                     <ItemDescription>socket status: {socketStatus ? "connected" : "disconnected"}</ItemDescription>

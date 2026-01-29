@@ -26,7 +26,7 @@ import {
 import { UsersRound } from 'lucide-react';
 
 
-export default function ChatList({sendDataToParent, userData}){
+export default function ChatList({sendDataToParent, userData, onlineUsersList}){
 
     const [chatList, setChatList] = useState([]);
     const [currentRoom, setCurrentRoom] = useState(null);
@@ -75,12 +75,46 @@ export default function ChatList({sendDataToParent, userData}){
     }
 
     const otherUsernameList = (chat)=>{
+        return(
+            <>
+            <span className={"text-blue-400"}>
+                {otherOnlineUsernameList(chat)}
+            </span>
+            <span >
+                {otherOfflineUsernameList(chat)}
+            </span>
+            </>
+        )
+    }
+
+    const otherOnlineUsernameList = (chat)=>{
         const participants = chat.participants;
-        let res = "";
+        let onlineRes = [];
         for(const participant of participants){
-            res = res+participant.username.toString()+" , ";
+            if( onlineUsersList.includes(participant.username) && participant.username !== userData.username){
+                onlineRes.push(participant.username.toString()+" ");
+            }
         }
-        return res.slice(0, -3);
+        // console.log(onlineRes);
+        return onlineRes;
+    }
+
+    const otherOfflineUsernameList = (chat)=>{
+        const participants = chat.participants;
+        let offlineRes = [];
+        for(const participant of participants){
+            if( !onlineUsersList.includes(participant.username) ){
+                offlineRes.push(participant.username.toString()+" ");
+            }
+        }
+        offlineRes.push(userData.username);
+        // console.log(offlineRes);
+        return offlineRes;
+    }
+
+    const isOnline = (chat)=>{
+        const name = otherUsername(chat);
+        return onlineUsersList.includes(name);
     }
 
     return(
@@ -93,13 +127,13 @@ export default function ChatList({sendDataToParent, userData}){
                         <Item>
                             <ItemMedia>
                                 <Avatar className={"h-[7vh] w-[7vh]"}>
-                                    <AvatarImage src={chat.avatarUrl} />
+                                    <AvatarImage src={chat?.avatarUrl} />
                                     <AvatarFallback className={chat.isGroup ? "bg-gray-200" : "rounded-full bg-gray-200 flex items-center justify-center font-semibold text-xl"}>{chat.isGroup ? <UsersRound/> : otherDisplayname(chat).charAt(0).toUpperCase()}</AvatarFallback>
                                 </Avatar>
                             </ItemMedia>    
                             <ItemContent>
                                 <ItemTitle className={"text-xl ml-[1vw]"}>{chat.isGroup ? chat.name : otherDisplayname(chat) }</ItemTitle>
-                                <ItemDescription className={" ml-[1vw] truncate"}>{chat.isGroup ? otherUsernameList(chat) : otherUsername(chat) }</ItemDescription>
+                                <ItemDescription className={`ml-[1vw] truncate ${isOnline(chat) ? "text-blue-400" : ""}`}>{chat.isGroup ? otherUsernameList(chat) : isOnline(chat) ? `${otherUsername(chat)} is online` : `${otherUsername(chat)} is offline` }</ItemDescription>
                             </ItemContent>
                         </Item>
                     </SidebarMenuButton>

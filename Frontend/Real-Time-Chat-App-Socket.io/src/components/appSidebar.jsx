@@ -34,7 +34,7 @@ import ProfileButton from './profileButton';
 import LogoutButton from './logoutButton';
 
 
-export default function AppSidebar({passingDataToLayout, passingProfileStatusToLayout}) {
+export default function AppSidebar({passingDataToLayout, passingProfileStatusToLayout, onlineUsersList}) {
 
     const [userData, setUserData] = useState(null);
 
@@ -76,7 +76,7 @@ export default function AppSidebar({passingDataToLayout, passingProfileStatusToL
         <SidebarGroup>
             <SidebarGroupLabel className={"text-lg"}>CHATS</SidebarGroupLabel>
             <SidebarGroupContent className={"overflow-y-scroll"}>
-                <ChatList userData={userData} sendDataToParent={handleChatId}/>
+                <ChatList userData={userData} sendDataToParent={handleChatId} onlineUsersList={onlineUsersList}/>
             </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>

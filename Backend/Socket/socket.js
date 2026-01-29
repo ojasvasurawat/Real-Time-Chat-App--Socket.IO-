@@ -30,17 +30,19 @@ const onlineUsers = new Map();
 // io.use(sktMdw); // this was wrong it 
 io.of("/chat").use(sktMdw) // insted use this for namespace middleware
 
-io.of("/chat").on('connection', (socket)=>{
+io.of("/chat").on('connection', async (socket)=>{
 
     const userId = socket.ObjectId;
     // socket.broadcast.emit('hi');
     console.log(socket.id);
     console.log('a user connected');
 
-    if (!onlineUsers.has(userId)) {
-        onlineUsers.set(userId, new Set());
+    const user = await UserModel.findById(userId);
+
+    if (!onlineUsers.has(user.username)) {
+        onlineUsers.set(user.username, new Set());
     }
-    onlineUsers.get(userId).add(socket.id);
+    onlineUsers.get(user.username).add(socket.id);
 
     console.log("Online users:", [...onlineUsers.keys()]);
 
@@ -87,7 +89,23 @@ io.of("/chat").on('connection', (socket)=>{
 
     socket.on('disconnect', ()=>{
         console.log('user disconnect');
-    })
+
+        if(!user || !user.username) return;
+
+        const sockets = onlineUsers.get(user.username);
+
+        if (sockets) {
+            sockets.delete(socket.id);
+
+            if (sockets.size === 0) {
+                onlineUsers.delete(user.username);
+            }
+        }
+
+        console.log("Online users:", [...onlineUsers.keys()]);
+
+        io.of("/chat").emit("online users", [...onlineUsers.keys()]);
+        })
 });
 
 
