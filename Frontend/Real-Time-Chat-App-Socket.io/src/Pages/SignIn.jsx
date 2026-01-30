@@ -44,7 +44,7 @@ export default function SignIn(){
         if(response.data.token){
             localStorage.setItem("authorization", response.data.token);
             toast.success(`Welcome, ${response.data.user.name}`);
-            navigate("/chats");
+            navigate("/");
         }
         else{
             setButtonLoading(false);

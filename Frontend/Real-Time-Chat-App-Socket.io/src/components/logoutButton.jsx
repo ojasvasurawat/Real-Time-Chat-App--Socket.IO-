@@ -48,7 +48,7 @@ export default function LogoutButton(){
             <SidebarMenuButton asChild className={"h-[5vh] m-0"} onClick={handleLogout}>
               <Item>
                 <ItemMedia>
-                  <Avatar className={"h-[3vh] w-[3vh]"}>
+                  <Avatar className={"h-[4vh] w-[4vh]"}>
                     <AvatarFallback ><LogOut/></AvatarFallback>
                   </Avatar>
                 </ItemMedia>    

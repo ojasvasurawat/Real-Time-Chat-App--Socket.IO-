@@ -25,7 +25,7 @@ export default function ProfileButton({sendProfileStatusToSidebar, userData}){
             <SidebarMenuButton asChild className={"h-[5vh] m-0"} onClick={handleProfileClick}>
               <Item>
                 <ItemMedia>
-                  <Avatar className={"h-[3vh] w-[3vh]"}>
+                  <Avatar className={"h-[4vh] w-[4vh]"}>
                     <AvatarImage src={userData?.avatarUrl} />
                     <AvatarFallback ><User/></AvatarFallback>
                   </Avatar>

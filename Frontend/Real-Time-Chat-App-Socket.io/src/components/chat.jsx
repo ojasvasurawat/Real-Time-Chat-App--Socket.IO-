@@ -24,6 +24,8 @@ import {
 import { UsersRound } from 'lucide-react';
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
+import { AlertDialog, AlertDialogContent, AlertDialogTrigger, AlertDialogFooter, AlertDialogCancel, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription } from '@/components/ui/alert-dialog';
+
 
 
 export default function Chat({chatId, userData, onlineUsersList}){
@@ -56,10 +58,12 @@ export default function Chat({chatId, userData, onlineUsersList}){
         const time = new Date().toISOString();
         console.log(time);
         if (!content || !content.trim()) return;
+
+        const avatarUrl = userData?.avatarUrl ? userData?.avatarUrl : userData?.username.toUpperCase().charAt(0);
         
         content = content.replace(/^\n+/, "");
-        socket.emit('chat msg', {chatId, content, time});
-        setMsgData((prevData) => [...prevData, {content:content, name:userData.username, time:time}]);//----------------------------
+        socket.emit('chat msg', {chatId, content, time, avatarUrl});
+        setMsgData((prevData) => [...prevData, {content:content, name:userData.username, time:time, avatarUrl:avatarUrl}]);//----------------------------
         console.log(socket.id);
         console.log("msg emmited");
         input.current.value = "";
@@ -107,7 +111,7 @@ export default function Chat({chatId, userData, onlineUsersList}){
             console.log("the chat data is :",chatData);
             messagesData?.map((message)=>{ 
                 setMsgData(
-                    (prevData) => ([...prevData, {content:message.content, name:message.sender.username, time:message.createdAt}])
+                    (prevData) => ([...prevData, {content:message.content, name:message.sender.username, time:message.createdAt, avatarUrl:message.avatarUrl}])
                 )
             })
             setChatData(chatData);
@@ -131,11 +135,11 @@ export default function Chat({chatId, userData, onlineUsersList}){
 
         console.log(socket.id);
 
-        const handleChatMessage = ({chatId, content, sender, time})=>{
+        const handleChatMessage = ({chatId, content, sender, time, avatarUrl})=>{
             console.log(socket.id);
             console.log("the broadcasted message is : ",content);
             msgData.map((data)=>{console.log(data)});
-            setMsgData((prevData) => ([...prevData, {content:content, name:sender, time:time}]));
+            setMsgData((prevData) => ([...prevData, {content:content, name:sender, time:time, avatarUrl:avatarUrl}]));
             // const item = document.createElement('p');
             // item.textContent = name +"-"+msg+`\n${time}`;
             // messages.current.appendChild(item);
@@ -170,6 +174,13 @@ export default function Chat({chatId, userData, onlineUsersList}){
         // console.log(chat);
         const names = chatName.split("-");
         return names[0] == userData.username ? names[1] : names[0];
+    }
+
+    const otherUserAvatarUrl = (chat)=>{
+        if(chat === null) return;
+        if(chat.isGroup) return;
+        const otherusername = otherUsername(chat);
+        return chat.participants[0].username === otherusername ? chat.participants[0].avatarUrl : chat.participants[1].avatarUrl;
     }
 
     const otherDisplayname = (chat)=>{
@@ -229,10 +240,31 @@ export default function Chat({chatId, userData, onlineUsersList}){
 
             <Item>
                 <ItemMedia>
-                    <Avatar className={"h-[7vh] w-[7vh]"}>
-                        <AvatarImage src={chatData?.avatarUrl} />
+                    <AlertDialog>
+                        <AlertDialogTrigger>
+                            <Avatar className={"h-[7vh] w-[7vh]"}>
+                                <AvatarImage src={otherUserAvatarUrl(chatData)} />
+                                <AvatarFallback className={chatData?.isGroup ? "bg-gray-200" : "rounded-full bg-gray-200 flex items-center justify-center font-semibold text-xl"}>{chatData?.isGroup ? <UsersRound/> : otherDisplayname(chatData)?.charAt(0).toUpperCase()}</AvatarFallback>
+                            </Avatar>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <Avatar className={"w-full h-auto rounded-none"}>
+                                    <AvatarImage src={otherUserAvatarUrl(chatData)} />
+                                    <AvatarFallback className={chatData?.isGroup ? "bg-gray-200" : "rounded-full bg-gray-200 flex items-center justify-center font-semibold text-xl"}>{chatData?.isGroup ? <UsersRound/> : otherDisplayname(chatData)?.charAt(0).toUpperCase()}</AvatarFallback>
+                                </Avatar>
+                                <AlertDialogTitle></AlertDialogTitle>
+                                <AlertDialogDescription></AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel className={"mx-auto"}>Back</AlertDialogCancel>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
+                    {/* <Avatar className={"h-[7vh] w-[7vh]"}>
+                        <AvatarImage src={otherUserAvatarUrl(chatData)} />
                         <AvatarFallback className={chatData?.isGroup ? "bg-gray-200" : "rounded-full bg-gray-200 flex items-center justify-center font-semibold text-xl"}>{chatData?.isGroup ? <UsersRound/> : otherDisplayname(chatData)?.charAt(0).toUpperCase()}</AvatarFallback>
-                    </Avatar>
+                    </Avatar> */}
                 </ItemMedia>    
                 <ItemContent>
                     <ItemTitle className={"text-xl ml-[1vw]"}>{chatData?.isGroup ? chatData.name : otherDisplayname(chatData) }</ItemTitle>
@@ -250,7 +282,7 @@ export default function Chat({chatId, userData, onlineUsersList}){
             <div ref={messages} className={"h-[450px] overflow-y-scroll"} >
                 {msgData.map((data, idx)=>(
                     <div key={idx} className={`flex ${userData.username === data.name ? "justify-end" : "justify-start"}`}>
-                        <Messages key={idx} sendBy={data.name} data={data.content} time={data.time}/>
+                        <Messages key={idx} sendBy={data.name} data={data.content} time={data.time} avatarUrl={data.avatarUrl}/>
                     </div>
                 ))}
             </div>

@@ -5,9 +5,10 @@ const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 export default function Profile() {
 
-    const [currentName, setCurrentName] = useState("");
+    const [currentDisplayName, setCurrentDisplayName] = useState("");
+    const [currentUsername, setCurrentUsername] = useState("");
     const [currentEmail, setCurrentEmail] = useState("");
-    const [changedName, setChangedName] = useState("");
+    const [changedDisplayName, setChangedDisplayName] = useState("");
     const [changedPassword, setChangedPassword] = useState("");
     const navigate = useNavigate();
     const fileInputRef = useRef(null);
@@ -26,7 +27,8 @@ export default function Profile() {
             }
         }).then((response)=>{
             console.log(response);
-            setCurrentName(response.data.user.name);
+            setCurrentDisplayName(response.data.user.displayName);
+            setCurrentUsername(response.data.user.username);
             setCurrentEmail(response.data.user.email);
             setOldAvatarUrl(response.data.user.avatarUrl);
         }).catch((e)=>{
@@ -100,10 +102,51 @@ export default function Profile() {
         
     };
 
-    const handleUpdate = async () => {
+    const handleDisplayNameUpdate = async () => {
         setButtonLoadingUpdate(true)
 
-        if (changedPassword === "" || changedName === "" ) {
+        if (changedDisplayName === "" ) {
+            // toast.warning("Enter the details");
+            setButtonLoadingUpdate(false)
+            return;
+        }
+        if (changedDisplayName.length < 3 ) {
+            // toast.warning("Password must be at least 8 characters long.");
+            setButtonLoadingUpdate(false)
+            return;
+        }
+
+        try {
+            const response = await axios.post(`${backendUrl}/update-displayname`, {
+                displayName: changedDisplayName,
+            },{
+                headers:{
+                    'Content-Type': 'application/json',
+                    'authorization': localStorage.getItem('authorization')
+                }
+            });
+
+            if (response.data) {
+                setButtonLoadingUpdate(false)
+                console.log("display name updated successfully")
+                // toast.success("Account updated successfully");
+            }
+        } catch (error) {
+            console.error("Update failed:", error);
+            if (error.response?.data?.message) {
+                // toast.error(`Signup failed: ${error.response.data.message}`);
+                setButtonLoadingUpdate(false)
+            } else {
+                // toast.error("Update failed: Unknown error occurred");
+                setButtonLoadingUpdate(false)
+            }
+        }
+    };
+
+    const handlePasswordUpdate = async () => {
+        setButtonLoadingUpdate(true)
+
+        if (changedPassword === "") {
             // toast.warning("Enter the details");
             setButtonLoadingUpdate(false)
             return;
@@ -115,8 +158,8 @@ export default function Profile() {
         }
 
         try {
-            const response = await axios.post(`${backendUrl}/profile`, {
-                name: changedName,
+            const response = await axios.post(`${backendUrl}/update-password`, {
+                // name: changedName,
                 password: changedPassword
             },{
                 headers:{
@@ -127,6 +170,7 @@ export default function Profile() {
 
             if (response.data) {
                 setButtonLoadingUpdate(false)
+                console.log("password updated successfully")
                 // toast.success("Account updated successfully");
             }
         } catch (error) {
@@ -174,7 +218,7 @@ export default function Profile() {
                 
                 <h1 className="text-center font-bold text-4xl font-sans text-indigo-500 pt-7">Profile</h1>
                 <div className="  mt-10 grid md:grid-cols-2 gap-5">
-                    {/* <div className="space-y-6 mx-5 md:mr-5 md:ml-10">
+                    <div className="space-y-6 mx-5 md:mr-5 md:ml-10">
                         <h2 className="text-center text-3xl font-bold text-gray-900">Account Details</h2>
 
                         <div className="space-y-4">
@@ -182,7 +226,14 @@ export default function Profile() {
                                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
                                     Username
                                 </label>
-                                <div className="w-full px-4 py-3 border border-white rounded-lg focus:ring-blue-500 focus:border-blue-500">{currentName}</div>
+                                <div className="w-full px-4 py-3 border border-white rounded-lg focus:ring-blue-500 focus:border-blue-500">{currentUsername}</div>
+                            </div>
+
+                            <div>
+                                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                                    Display Name
+                                </label>
+                                <div className="w-full px-4 py-3 border border-white rounded-lg focus:ring-blue-500 focus:border-blue-500">{currentDisplayName}</div>
                             </div>
 
                             <div>
@@ -208,17 +259,24 @@ export default function Profile() {
                         <div className="space-y-4">
                             <div>
                                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                                    New Username
+                                    New Display Name
                                 </label>
                                 <input
                                     id="name"
                                     type="name"
-                                    value={changedName}
-                                    onChange={(e) => setChangedName(e.target.value)}
+                                    value={changedDisplayName}
+                                    onChange={(e) => setChangedDisplayName(e.target.value)}
                                     className="w-full px-4 py-3 border border-white rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                                    placeholder="Enter your new username"
+                                    placeholder="Enter your new display name"
                                 />
                             </div>
+
+                            <button
+                                onClick={handleDisplayNameUpdate}
+                                className={`w-full py-3 px-4 text-white font-medium rounded-lg transition duration-200 ${buttonLoadingUpdate ? ("bg-blue-100 hover:bg-blue-100") : ("bg-blue-600 hover:bg-blue-900")}`}
+                            >
+                                {buttonLoadingUpdate ? ("Wait") : ("Update")}
+                            </button>
 
                             <div>
                                 <div className="flex justify-between mb-1">
@@ -236,17 +294,24 @@ export default function Profile() {
                                 />
                             </div>
 
+                            <button
+                                onClick={handlePasswordUpdate}
+                                className={`w-full py-3 px-4 text-white font-medium rounded-lg transition duration-200 ${buttonLoadingUpdate ? ("bg-blue-100 hover:bg-blue-100") : ("bg-blue-600 hover:bg-blue-900")}`}
+                            >
+                                {buttonLoadingUpdate ? ("Wait") : ("Update")}
+                            </button>
+
                         </div>
 
-                        <button
+                        {/* <button
                             onClick={handleUpdate}
                             className={`w-full py-3 px-4 text-white font-medium rounded-lg transition duration-200 ${buttonLoadingUpdate ? ("bg-blue-100 hover:bg-blue-100") : ("bg-blue-600 hover:bg-blue-900")}`}
                         >
                             {buttonLoadingUpdate ? ("Wait") : ("Update")}
-                        </button>
+                        </button> */}
                         
 
-                    </div> */}
+                    </div>
 
                 
                     <div className="grid justify-items-center md:col-span-2">

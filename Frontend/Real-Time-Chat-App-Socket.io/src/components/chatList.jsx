@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/avatar"
 
 import { UsersRound } from 'lucide-react';
+import { AlertDialog, AlertDialogContent, AlertDialogTrigger, AlertDialogFooter, AlertDialogCancel, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription } from '@/components/ui/alert-dialog';
 
 
 export default function ChatList({sendDataToParent, userData, onlineUsersList}){
@@ -67,6 +68,12 @@ export default function ChatList({sendDataToParent, userData, onlineUsersList}){
         // console.log(chat);
         const names = chatName.split("-");
         return names[0] == userData.username ? names[1] : names[0];
+    }
+
+    const otherUserAvatarUrl = (chat)=>{
+        if(chat.isGroup) return;
+        const otherusername = otherUsername(chat);
+        return chat.participants[0].username === otherusername ? chat.participants[0].avatarUrl : chat.participants[1].avatarUrl;
     }
 
     const otherDisplayname = (chat)=>{
@@ -126,10 +133,27 @@ export default function ChatList({sendDataToParent, userData, onlineUsersList}){
                     <SidebarMenuButton asChild className={"h-[10vh] m-0"} onClick={()=>handleChat(chat._id)}>
                         <Item>
                             <ItemMedia>
-                                <Avatar className={"h-[7vh] w-[7vh]"}>
-                                    <AvatarImage src={chat?.avatarUrl} />
-                                    <AvatarFallback className={chat.isGroup ? "bg-gray-200" : "rounded-full bg-gray-200 flex items-center justify-center font-semibold text-xl"}>{chat.isGroup ? <UsersRound/> : otherDisplayname(chat).charAt(0).toUpperCase()}</AvatarFallback>
-                                </Avatar>
+                                <AlertDialog>
+                                    <AlertDialogTrigger>
+                                        <Avatar className={"h-[7vh] w-[7vh]"}>
+                                            <AvatarImage src={otherUserAvatarUrl(chat)} />
+                                            <AvatarFallback className={chat.isGroup ? "bg-gray-200" : "rounded-full bg-gray-200 flex items-center justify-center font-semibold text-xl"}>{chat.isGroup ? <UsersRound/> : otherDisplayname(chat).charAt(0).toUpperCase()}</AvatarFallback>
+                                        </Avatar>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                        <AlertDialogHeader>
+                                            <Avatar className={"w-full h-auto rounded-none"}>
+                                                <AvatarImage src={otherUserAvatarUrl(chat)} />
+                                                <AvatarFallback className={chat.isGroup ? "bg-gray-200" : " bg-gray-200 flex items-center justify-center font-semibold text-xl"}>{chat.isGroup ? <UsersRound/> : otherDisplayname(chat).charAt(0).toUpperCase()}</AvatarFallback>
+                                            </Avatar>
+                                            <AlertDialogTitle></AlertDialogTitle>
+                                            <AlertDialogDescription></AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                            <AlertDialogCancel className={"mx-auto"}>Back</AlertDialogCancel>
+                                        </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                </AlertDialog>
                             </ItemMedia>    
                             <ItemContent>
                                 <ItemTitle className={"text-xl ml-[1vw]"}>{chat.isGroup ? chat.name : otherDisplayname(chat) }</ItemTitle>
