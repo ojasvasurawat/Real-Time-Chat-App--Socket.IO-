@@ -59,13 +59,14 @@ io.of("/chat").on('connection', async (socket)=>{
     });
 
 
-    socket.on('chat msg', async ({chatId, content, time}) => {
+    socket.on('chat msg', async ({chatId, content, time, avatarUrl}) => {
         try{
             console.log('msg recived: ' + content+" in room: "+chatId);
             const message = await MessageModel.create({
                 chat: chatId,
                 sender: userId,
-                content: content
+                content: content,
+                avatarUrl: avatarUrl
             })
             // socket.broadcast.emit('chat message', {msg, name, time});
             const getSender = async ()=>{
@@ -74,7 +75,7 @@ io.of("/chat").on('connection', async (socket)=>{
             }
             const sender = await getSender();
             // console.log(sender);
-            socket.to(chatId).emit('chat message', {chatId, content, sender, time});
+            socket.to(chatId).emit('chat message', {chatId, content, sender, time, avatarUrl});
         }
         catch(err){
             console.log("error in chat msg listner : ", err);

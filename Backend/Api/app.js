@@ -9,6 +9,8 @@ const { createGroup } = require("../Functions/createGroup");
 const { getInfo } = require("../Functions/getInfo");
 const { addProfilePicture } = require("../Functions/addProfilePicture");
 const { signUp, signIn, logout } = require("../Auth/auth");
+const { updateDisplayname } = require("../Functions/updateDisplayname");
+const { updatePassword } = require("../Functions/updatePassword");
 
 require("dotenv").config();
 
@@ -31,6 +33,8 @@ mainApp.get("/chat-messages", getChatMessages);
 mainApp.post("/create-group", createGroup)
 mainApp.get("/info", getInfo);
 mainApp.post("/add-profile-picture", addProfilePicture);
+mainApp.post("/update-displayname", updateDisplayname);
+mainApp.post("/update-password", updatePassword);
 mainApp.post("/logout", logout);
 
 

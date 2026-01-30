@@ -21,6 +21,7 @@ const Message = new Schema({
     chat: {type: mongoose.Schema.Types.ObjectId, ref: 'chats'},
     sender: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
     content: String,
+    avatarUrl: String,
 },{ timestamps: true });
 
 const userModel = mongoose.model('users', User);
