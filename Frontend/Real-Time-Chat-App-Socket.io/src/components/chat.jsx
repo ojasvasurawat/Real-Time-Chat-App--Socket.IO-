@@ -40,6 +40,10 @@ export default function Chat({chatId, userData, onlineUsersList}){
     const messages = useRef(null);
     const toggleButton = useRef(null);
     // const socket = io("http://localhost:3000/");
+    const [isTyping, setIsTyping] = useState(false);
+    const [typingUser, setTypingUser] = useState(null);
+    const [messageText, setMessageText] = useState("");
+
 
     function handleKeyDown(event){
         if(event.key === "Enter" && !event.shiftKey){
@@ -72,9 +76,11 @@ export default function Chat({chatId, userData, onlineUsersList}){
 
     function handleChange(event){
         console.log("handleChange running...");
-        const status="typing"
-        if(room){
-            socket.emit('typing status', {name, status, room});
+        setMessageText(event.target.value);
+
+        if (!isTyping && chatId) {
+            setIsTyping(true);
+            socket.emit("typing status", {username: userData.username, status: "typing", chatId});
         }
     }
 
@@ -91,9 +97,31 @@ export default function Chat({chatId, userData, onlineUsersList}){
         }
     }
 
-    // function disconnect(){
-    //     socket.disconnect();
-    // }
+    function useDebounce(value, delay = 500) {
+        const [debouncedValue, setDebouncedValue] = useState(value);
+
+        useEffect(() => {
+            const timer = setTimeout(() => {
+            setDebouncedValue(value);
+            }, delay);
+
+            return () => clearTimeout(timer);
+        }, [value, delay]);
+
+        return debouncedValue;
+    }
+
+    const debouncedText = useDebounce(messageText, 600);
+
+
+    useEffect(() => {
+        if (isTyping && chatId) {
+            socket.emit("typing status", {chatId, username: userData.username, status: "stop"});
+            setIsTyping(false);
+        }
+    }, [debouncedText]);
+
+
 
     useEffect(()=>{
         
@@ -147,15 +175,13 @@ export default function Chat({chatId, userData, onlineUsersList}){
 
         socket.on('chat message', handleChatMessage);
 
-        const handleTypingStatus = ({name, status, room})=>{
-            console.log(name+" is typing...");
-            const typingBox = document.createElement('p');
-            // typingBox.className("typingStatus");
-            typingBox.textContent = name+" typing...";
-            messages.current.appendChild(typingBox);
-            setTimeout(() => {
-                typingBox.remove();
-            }, 80);
+        const handleTypingStatus = ({username, status})=>{
+            console.log(username+" is typing...");
+            if (status === "typing") {
+                setTypingUser(username);
+            } else {
+                setTypingUser(null);
+            }
         }
 
         socket.on('typ status', handleTypingStatus);
@@ -261,10 +287,6 @@ export default function Chat({chatId, userData, onlineUsersList}){
                             </AlertDialogFooter>
                         </AlertDialogContent>
                     </AlertDialog>
-                    {/* <Avatar className={"h-[7vh] w-[7vh]"}>
-                        <AvatarImage src={otherUserAvatarUrl(chatData)} />
-                        <AvatarFallback className={chatData?.isGroup ? "bg-gray-200" : "rounded-full bg-gray-200 flex items-center justify-center font-semibold text-xl"}>{chatData?.isGroup ? <UsersRound/> : otherDisplayname(chatData)?.charAt(0).toUpperCase()}</AvatarFallback>
-                    </Avatar> */}
                 </ItemMedia>    
                 <ItemContent>
                     <ItemTitle className={"text-xl ml-[1vw]"}>{chatData?.isGroup ? chatData.name : otherDisplayname(chatData) }</ItemTitle>
@@ -285,9 +307,14 @@ export default function Chat({chatId, userData, onlineUsersList}){
                         <Messages key={idx} sendBy={data.name} data={data.content} time={data.time} avatarUrl={data.avatarUrl}/>
                     </div>
                 ))}
+                {typingUser && typingUser !== userData.username && (
+                <p className="text-sm text-blue-400 px-2">
+                    {typingUser} is typing...
+                </p>
+                )}
             </div>
             <div className={"flex"}>
-                <Textarea type="text" placeholder="Type your message here." className={""} ref={input} onKeyDown={handleKeyDown} />
+                <Textarea type="text" placeholder="Type your message here." className={""} ref={input} onKeyDown={handleKeyDown} onChange={handleChange}/>
                 <Button onClick={submit} variant="outline" className={"my-auto mx-2"}>Send</Button>
             </div>
         </>
