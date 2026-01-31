@@ -82,11 +82,11 @@ io.of("/chat").on('connection', async (socket)=>{
         }
     });
 
-    // socket.on('typing status', ({name, status, room})=>{
-    //     console.log(name+" is typing...");
-    //     // socket.broadcast.emit('typ status', {name, status});
-    //     socket.to(room).emit('typ status', {name, status});
-    // })
+    socket.on('typing status', ({username, status, chatId})=>{
+        console.log(username+" is typing...");
+        // socket.broadcast.emit('typ status', {name, status});
+        socket.to(chatId).emit('typ status', {username, status});
+    })
 
     socket.on('disconnect', ()=>{
         console.log('user disconnect');
