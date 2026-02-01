@@ -1,5 +1,5 @@
 import AppSidebar from "@/components/appSidebar"
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { SidebarProvider } from "@/components/ui/sidebar"
 
 export default function SidebarLayout({passingDataToHome, passingProfileStatusToHome, onlineUsersList, children }) {
 
@@ -11,11 +11,9 @@ export default function SidebarLayout({passingDataToHome, passingProfileStatusTo
       passingProfileStatusToHome(profileStatus);
   }
   return (
-    <SidebarProvider>
+    <SidebarProvider defaultOpen>
       <AppSidebar passingDataToLayout={handleDataFromSidebar} passingProfileStatusToLayout={hadleProfileStatusFromSidebar} onlineUsersList={onlineUsersList}/>
-      <SidebarTrigger />
       <main className={"w-[50vw] mr-[1vw]"}>
-        
         {children}
       </main>
     </SidebarProvider>

@@ -4,10 +4,10 @@ import { useEffect } from 'react';
 import { socket } from '../socket';
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-import {SidebarMenu,
-    SidebarMenuItem,
-    SidebarMenuButton 
-} from "@/components/ui/sidebar"
+import { Card, CardContent } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/button";
+
 
 import {
     Item,
@@ -127,14 +127,16 @@ export default function ChatList({sendDataToParent, userData, onlineUsersList}){
     return(
         <>
 
-            <SidebarMenu>
+            <Card className="flex-1 overflow-hidden">
+                <CardContent className="p-0 h-full">
+                    <ScrollArea className="h-full">
+                        <div className="flex flex-col">
                 {chatList.map((chat) => (
-                <SidebarMenuItem key={chat._id}>
-                    <SidebarMenuButton asChild className={"h-[10vh] m-0"} onClick={()=>handleChat(chat._id)}>
+                    <Button key={chat._id} variant='ghost' className={"flex items-start w-full h-[10vh] p-2 mb-1 justify-start"} onClick={()=>handleChat(chat._id)}>
                         <Item>
                             <ItemMedia>
                                 <AlertDialog>
-                                    <AlertDialogTrigger>
+                                    <AlertDialogTrigger asChild>
                                         <Avatar className={"h-[7vh] w-[7vh]"}>
                                             <AvatarImage src={otherUserAvatarUrl(chat)} />
                                             <AvatarFallback className={chat.isGroup ? "bg-gray-200" : "rounded-full bg-gray-200 flex items-center justify-center font-semibold text-xl"}>{chat.isGroup ? <UsersRound/> : otherDisplayname(chat).charAt(0).toUpperCase()}</AvatarFallback>
@@ -160,10 +162,12 @@ export default function ChatList({sendDataToParent, userData, onlineUsersList}){
                                 <ItemDescription className={`ml-[1vw] truncate ${isOnline(chat) ? "text-blue-400" : ""}`}>{chat.isGroup ? otherUsernameList(chat) : isOnline(chat) ? `${otherUsername(chat)} is online` : `${otherUsername(chat)} is offline` }</ItemDescription>
                             </ItemContent>
                         </Item>
-                    </SidebarMenuButton>
-                </SidebarMenuItem>
+                    </Button>
                 ))}
-            </SidebarMenu>
+                </div>
+                </ScrollArea>
+                </CardContent>
+            </Card>
         </>
     )
 }

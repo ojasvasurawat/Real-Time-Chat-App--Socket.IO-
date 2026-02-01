@@ -1,14 +1,4 @@
 import axios from 'axios';
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarHeader,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenuItem,
-} from "@/components/ui/sidebar"
 import { useEffect, useState } from "react"
 import AddChatButton from './addChatButton';
 import { Field } from './ui/field';
@@ -17,9 +7,10 @@ import ChatList from './chatList';
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 import ProfileButton from './profileButton';
 import LogoutButton from './logoutButton';
+import { Card, CardHeader, CardTitle, CardContent, CardFooter, CardDescription } from "@/components/ui/card";
 
 
-export default function AppSidebar({passingDataToLayout, passingProfileStatusToLayout, onlineUsersList}) {
+export default function MobileSidebar({passingDataToHome, passingProfileStatusToHome, onlineUsersList}) {
 
     const [userData, setUserData] = useState(null);
 
@@ -40,37 +31,35 @@ export default function AppSidebar({passingDataToLayout, passingProfileStatusToL
     },[])
 
     const handleChatId = (chatId)=>{
-      passingDataToLayout(chatId, userData);
+      passingDataToHome(chatId, userData);
     }
 
     const handleProfileStatus = (profileStatus)=>{
-      passingProfileStatusToLayout(profileStatus);
+      passingProfileStatusToHome(profileStatus);
     }
 
+    if (!userData) return null;
+
   return (
-    <Sidebar collapsible={false}>
-      <SidebarHeader>
-        <h1 className={"text-xl "}>REAL TIME CHAT APP</h1>
+    <Card className={"w-screen max-w-none h-screen"}>
+      <CardHeader>
+        <CardTitle className={"text-xl "}>REAL TIME CHAT APP</CardTitle>
         <Field orientation="horizontal" className={"flex justify-between"}>
           <h2 className={"text-lg"}>HI {userData?.displayName}!</h2>
           <CreateGroupButton/>
         </Field>
         <AddChatButton />
-      </SidebarHeader>
-      <SidebarContent>
-        <SidebarGroup>
-            <SidebarGroupLabel className={"text-lg"}>CHATS</SidebarGroupLabel>
-            <SidebarGroupContent className={"overflow-y-scroll"}>
+      </CardHeader>
+      <CardContent >
+            <CardDescription className={"text-lg"}>CHATS</CardDescription>
+            <div className={"overflow-y-scroll"}>
                 <ChatList userData={userData} sendDataToParent={handleChatId} onlineUsersList={onlineUsersList}/>
-            </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
-      <SidebarFooter>
-          <SidebarMenuItem>
+            </div>
+      </CardContent >
+      <CardFooter >
             <ProfileButton userData={userData} sendProfileStatusToSidebar={handleProfileStatus}/>
             <LogoutButton/>
-          </SidebarMenuItem>
-      </SidebarFooter> 
-    </Sidebar>
-  )
+      </CardFooter > 
+    </Card >
+  );
 }

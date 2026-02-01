@@ -21,14 +21,17 @@ import {
   AvatarFallback
 } from "@/components/ui/avatar"
 
-import { UsersRound } from 'lucide-react';
+import { UsersRound, ArrowLeft } from 'lucide-react';
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { AlertDialog, AlertDialogContent, AlertDialogTrigger, AlertDialogFooter, AlertDialogCancel, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription } from '@/components/ui/alert-dialog';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 
 
-export default function Chat({chatId, userData, onlineUsersList}){
+export default function Chat({chatId, userData, onlineUsersList, onBack}){
+
+    const isMobile = useIsMobile();
 
     // const location = useLocation();
     // const {name} = location.state || {};
@@ -263,6 +266,8 @@ export default function Chat({chatId, userData, onlineUsersList}){
     
     return (
         <>
+
+            {isMobile && (<Button variant="ghost" onClick={onBack} className="mb-2"><ArrowLeft/></Button>)}
 
             <Item>
                 <ItemMedia>

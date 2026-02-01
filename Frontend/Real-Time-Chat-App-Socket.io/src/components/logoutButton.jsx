@@ -1,8 +1,7 @@
 import axios from "axios";
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
-import {
-  SidebarMenuButton
-} from "@/components/ui/sidebar"
+import { Button } from "@/components/ui/button";
+
 import { LogOut } from 'lucide-react';
 import {
     Item,
@@ -45,7 +44,7 @@ export default function LogoutButton(){
 
     return(
         <>
-            <SidebarMenuButton asChild className={"h-[5vh] m-0"} onClick={handleLogout}>
+            <Button varient="ghost" asChild className={"h-[5vh] m-0"} onClick={handleLogout}>
               <Item>
                 <ItemMedia>
                   <Avatar className={"h-[4vh] w-[4vh]"}>
@@ -56,7 +55,7 @@ export default function LogoutButton(){
                   <ItemTitle className={"text-lg font-normal"}>Logout</ItemTitle>
                 </ItemContent>
               </Item>
-            </SidebarMenuButton>
+            </Button>
         </>
     )
 }
