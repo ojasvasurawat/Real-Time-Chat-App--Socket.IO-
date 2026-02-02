@@ -1,4 +1,6 @@
-import { Button } from "@/components/ui/button";
+import {
+  SidebarMenuButton
+} from "@/components/ui/sidebar"
 import { User } from 'lucide-react';
 import {
     Item,
@@ -20,7 +22,11 @@ export default function ProfileButton({sendProfileStatusToSidebar, userData}){
 
     return(
         <>
+<<<<<<< HEAD
             <Button variant="ghost" asChild className={"h-[7vh] m-0 text-white hover:bg-white/10 "} onClick={handleProfileClick}>
+=======
+            <SidebarMenuButton asChild className={"h-[5vh] m-0"} onClick={handleProfileClick}>
+>>>>>>> parent of f64b16e (mobile sidebar added)
               <Item>
                 <ItemMedia>
                   <Avatar className={"h-[4vh] w-[4vh]"}>
@@ -32,7 +38,7 @@ export default function ProfileButton({sendProfileStatusToSidebar, userData}){
                   <ItemTitle className={"text-lg font-normal"}>Profile</ItemTitle>
                 </ItemContent>
               </Item>
-            </Button>
+            </SidebarMenuButton>
         </>
     )
 }

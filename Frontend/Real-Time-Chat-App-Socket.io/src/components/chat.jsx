@@ -21,17 +21,14 @@ import {
   AvatarFallback
 } from "@/components/ui/avatar"
 
-import { UsersRound, ArrowLeft } from 'lucide-react';
+import { UsersRound } from 'lucide-react';
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { AlertDialog, AlertDialogContent, AlertDialogTrigger, AlertDialogFooter, AlertDialogCancel, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription } from '@/components/ui/alert-dialog';
-import { useIsMobile } from '@/hooks/use-mobile';
 
 
 
-export default function Chat({chatId, userData, onlineUsersList, onBack}){
-
-    const isMobile = useIsMobile();
+export default function Chat({chatId, userData, onlineUsersList}){
 
     // const location = useLocation();
     // const {name} = location.state || {};
@@ -272,6 +269,7 @@ export default function Chat({chatId, userData, onlineUsersList, onBack}){
     return (
         <>
 
+<<<<<<< HEAD
         <div className={" h-screen grid grid-rows-[auto_1fr_auto] gap-2"}>
 
 
@@ -279,6 +277,9 @@ export default function Chat({chatId, userData, onlineUsersList, onBack}){
                 <div className='flex items-center w-full gap-3'>
                 {isMobile && (<Button variant="ghost" onClick={onBack} className="mb-2"><ArrowLeft/></Button>)}
 
+=======
+            <Item>
+>>>>>>> parent of f64b16e (mobile sidebar added)
                 <ItemMedia>
                     <AlertDialog>
                         <AlertDialogTrigger>

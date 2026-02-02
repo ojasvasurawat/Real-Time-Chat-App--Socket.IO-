@@ -4,8 +4,6 @@ import SidebarLayout from "@/Layout/sidebarLayout";
 import { useEffect, useState } from "react";
 import { socket } from "../socket";
 import Profile from './Profile';
-import { useIsMobile } from '@/hooks/use-mobile';
-import MobileSidebar from '@/components/mobileSidebar';
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 
@@ -18,9 +16,6 @@ export default function Home(){
     const [onlineUsersList, setOnlineUsersList] = useState([]);
     const [chatList, setChatList] = useState([]);
 
-    const isMobile = useIsMobile();
-    const [mobileScreen, setMobileScreen] = useState("sidebar");
-
     const handleDataFromLayout = (chatId, userData)=>{
         // console.log("the chat id form deep of the deep is : ",chatId);
         // console.log("the userData form deep is : ",userData);
@@ -28,20 +23,12 @@ export default function Home(){
         setUserData(userData);
         setChatState(true);
         setProfileState(false);
-
-        if(isMobile){
-            setMobileScreen("chat");
-        }
     }
 
     const handleProfileStatusFromLayout = (profileStatus)=>{
         console.log("the profile status from the deep of the deep is :", profileStatus);
         setProfileState(profileStatus);
         setChatState(false);
-
-        if(isMobile){
-            setMobileScreen("profile")
-        }
     }
 
     useEffect(()=>{
@@ -73,20 +60,9 @@ export default function Home(){
         };
     },[])
 
-
-    if(!isMobile){
-        return(
-            <>
-                <SidebarLayout passingDataToHome={handleDataFromLayout} passingProfileStatusToHome={handleProfileStatusFromLayout} onlineUsersList={onlineUsersList}>
-                    {chatState && <Chat chatId={chatId} userData={userData} onlineUsersList={onlineUsersList}/>}
-                    {profileState && <Profile/>}
-                </SidebarLayout>
-            </>
-        )
-    }
-
     return(
         <>
+<<<<<<< HEAD
             <div className="h-screen w-max-screen bg-background text-white">
                 {mobileScreen === "sidebar" && (<MobileSidebar passingDataToHome={handleDataFromLayout} passingProfileStatusToHome={handleProfileStatusFromLayout} onlineUsersList={onlineUsersList} chatList={chatList}/>)}
                 {mobileScreen !== "sidebar" && (
@@ -96,6 +72,12 @@ export default function Home(){
                     </main>
                 )}
             </div>
+=======
+            <SidebarLayout passingDataToHome={handleDataFromLayout} passingProfileStatusToHome={handleProfileStatusFromLayout} onlineUsersList={onlineUsersList}>
+                {chatState && <Chat chatId={chatId} userData={userData} onlineUsersList={onlineUsersList}/>}
+                {profileState && <Profile/>}
+            </SidebarLayout>
+>>>>>>> parent of f64b16e (mobile sidebar added)
         </>
     )
 }

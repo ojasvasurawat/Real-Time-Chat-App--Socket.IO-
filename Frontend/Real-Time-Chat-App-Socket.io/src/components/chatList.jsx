@@ -4,10 +4,10 @@ import { useEffect } from 'react';
 import { socket } from '../socket';
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-import { Card, CardContent } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Button } from "@/components/ui/button";
-
+import {SidebarMenu,
+    SidebarMenuItem,
+    SidebarMenuButton 
+} from "@/components/ui/sidebar"
 
 import {
     Item,
@@ -127,16 +127,23 @@ export default function ChatList({sendDataToParent, userData, onlineUsersList}){
     return(
         <>
 
+<<<<<<< HEAD
             <Card className="flex-1 overflow-hidden gap-0 rounded-none border-0 py-0 shadow-none">
                 <CardContent className="p-0 h-full">
                     <ScrollArea className="h-full">
                         <div className="flex flex-col">
                 {chatList.map((chat) => (
                     <Button key={chat._id} variant='ghost' className={"flex items-start w-full h-[10vh] p-0 m-0 justify-start hover:bg-background/20"} onClick={()=>handleChat(chat._id)}>
+=======
+            <SidebarMenu>
+                {chatList.map((chat) => (
+                <SidebarMenuItem key={chat._id}>
+                    <SidebarMenuButton asChild className={"h-[10vh] m-0"} onClick={()=>handleChat(chat._id)}>
+>>>>>>> parent of f64b16e (mobile sidebar added)
                         <Item>
                             <ItemMedia>
                                 <AlertDialog>
-                                    <AlertDialogTrigger asChild>
+                                    <AlertDialogTrigger>
                                         <Avatar className={"h-[7vh] w-[7vh]"}>
                                             <AvatarImage src={otherUserAvatarUrl(chat)} />
                                             <AvatarFallback className={chat.isGroup ? "bg-gray-400 text-white flex items-center justify-center font-semibold text-xl" : "bg-gray-600 text-white flex items-center justify-center font-semibold text-xl"}>{chat.isGroup ? <UsersRound/> : otherDisplayname(chat).charAt(0).toUpperCase()}</AvatarFallback>
@@ -162,12 +169,10 @@ export default function ChatList({sendDataToParent, userData, onlineUsersList}){
                                 <ItemDescription className={`ml-4 truncate ${isOnline(chat) ? "text-accent" : "text-gray-400"}`}>{chat.isGroup ? otherUsernameList(chat) : isOnline(chat) ? `${otherUsername(chat)} is online` : `${otherUsername(chat)} is offline` }</ItemDescription>
                             </ItemContent>
                         </Item>
-                    </Button>
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
                 ))}
-                </div>
-                </ScrollArea>
-                </CardContent>
-            </Card>
+            </SidebarMenu>
         </>
     )
 }

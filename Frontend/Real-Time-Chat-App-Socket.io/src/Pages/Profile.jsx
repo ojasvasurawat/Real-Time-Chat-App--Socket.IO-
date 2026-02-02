@@ -2,12 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
-import { ArrowLeft } from 'lucide-react';
-import { useIsMobile } from "@/hooks/use-mobile";
-import { Button } from "@/components/ui/button";
 
-
-export default function Profile({onBack}) {
+export default function Profile() {
 
     const [currentDisplayName, setCurrentDisplayName] = useState("");
     const [currentUsername, setCurrentUsername] = useState("");
@@ -21,8 +17,6 @@ export default function Profile({onBack}) {
     const [buttonLoadingLogout, setButtonLoadingLogout] = useState(false);
     const [buttonLoadingUpdate, setButtonLoadingUpdate] = useState(false);
     const [buttonLoadingAvatar, setButtonLoadingAvatar] = useState(false);
-
-    const isMobile = useIsMobile();
 
 
     useEffect(()=>{
@@ -221,8 +215,6 @@ export default function Profile({onBack}) {
     return (
         <>
             <div>
-
-                {isMobile && (<Button variant="ghost" onClick={onBack} className="mb-2"><ArrowLeft/></Button>)}
                 
                 <h1 className="text-center font-bold text-4xl font-sans text-indigo-500 pt-7">Profile</h1>
                 <div className="  mt-10 grid md:grid-cols-2 gap-5">

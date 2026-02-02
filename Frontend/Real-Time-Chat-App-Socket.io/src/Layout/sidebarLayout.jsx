@@ -1,5 +1,5 @@
 import AppSidebar from "@/components/appSidebar"
-import { SidebarProvider } from "@/components/ui/sidebar"
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 
 export default function SidebarLayout({passingDataToHome, passingProfileStatusToHome, onlineUsersList, children }) {
 
@@ -12,12 +12,10 @@ export default function SidebarLayout({passingDataToHome, passingProfileStatusTo
   }
   return (
     <SidebarProvider defaultOpen>
-      <div className="flex h-screen bg-background text-white w-screen">
-        <AppSidebar passingDataToLayout={handleDataFromSidebar} passingProfileStatusToLayout={hadleProfileStatusFromSidebar} onlineUsersList={onlineUsersList}/>
-        <main className={"flex-1 min-w-0  h-screen overflow-y-auto w-fit"}>
-          {children}
-        </main>
-      </div>
+      <AppSidebar passingDataToLayout={handleDataFromSidebar} passingProfileStatusToLayout={hadleProfileStatusFromSidebar} onlineUsersList={onlineUsersList}/>
+      <main className={"w-[50vw] mr-[1vw]"}>
+        {children}
+      </main>
     </SidebarProvider>
   )
 }

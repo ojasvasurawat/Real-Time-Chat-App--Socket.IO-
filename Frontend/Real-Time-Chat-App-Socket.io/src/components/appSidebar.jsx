@@ -8,13 +8,28 @@ import {
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarMenuItem,
+  SidebarMenuButton
 } from "@/components/ui/sidebar"
 import { useEffect, useState } from "react"
 import AddChatButton from './addChatButton';
 import { Field } from './ui/field';
+import { Button } from './ui/button';
 import CreateGroupButton from './createGroupButton';
+import { Label } from './ui/label';
 import ChatList from './chatList';
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
+import { User, LogOut } from 'lucide-react';
+import {
+    Item,
+  ItemContent,
+  ItemMedia,
+  ItemTitle,
+} from "@/components/ui/item"
+import {
+  Avatar,
+  AvatarImage,
+  AvatarFallback
+} from "@/components/ui/avatar"
 import ProfileButton from './profileButton';
 import LogoutButton from './logoutButton';
 
@@ -48,11 +63,19 @@ export default function AppSidebar({passingDataToLayout, passingProfileStatusToL
     }
 
   return (
+<<<<<<< HEAD
     <Sidebar collapsible={false} className="bg-surface text-white  flex flex-col" >
       <SidebarHeader className="px-4 py-3 flex flex-col gap-3">
         <h1 className={"text-xl font-bold"}>REAL TIME CHAT APP</h1>
         <Field orientation="horizontal" className={"flex justify-between items-center"}>
           <h2 className={"text-lg font-medium"}>HI {userData?.displayName}!</h2>
+=======
+    <Sidebar>
+      <SidebarHeader>
+        <h1 className={"text-xl "}>REAL TIME CHAT APP</h1>
+        <Field orientation="horizontal" className={"flex justify-between"}>
+          <h2 className={"text-lg"}>HI {userData?.displayName}!</h2>
+>>>>>>> parent of f64b16e (mobile sidebar added)
           <CreateGroupButton/>
         </Field>
         <AddChatButton />
