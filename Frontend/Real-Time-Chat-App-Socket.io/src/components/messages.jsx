@@ -13,24 +13,51 @@ import {
   AvatarFallback
 } from "@/components/ui/avatar"
 
-export default function Messages({sendBy, data, time, avatarUrl}){
+export default function Messages({sendBy, data, time, avatarUrl, isSender}){
+
+
+    function formatMessageTime(isoTime) {
+        const date = new Date(isoTime)
+        const now = new Date()
+
+        const isToday =
+            date.toDateString() === now.toDateString()
+
+        const isYesterday =
+            new Date(now.setDate(now.getDate() - 1)).toDateString() ===
+            date.toDateString()
+
+        const time = date.toLocaleTimeString([], {
+            hour: "numeric",
+            minute: "2-digit",
+        })
+
+        if (isToday) return time
+        if (isYesterday) return `Yesterday · ${time}`
+
+        return date.toLocaleDateString([], {
+            month: "short",
+            day: "numeric",
+        }) + ` · ${time}`
+    }
+
 
     return(
     <>
 
-        <Card className={"p-2 py-0 gap-0 my-[0.7vh] w-auto max-w-[30vw]"}>
-        <CardHeader className={"px-0 flex mt-1"}>
-            <Avatar className={"h-[20px] w-[20px] flex-none"}>
+        <Card className={`min-w-[140px] max-w-[75%] sm:max-w-[60%] md:max-w-[45%] px-3 py-2 rounded-2xl shadow-sm gap-1 ${isSender ? "bg-primary/80 text-white self-end" : "bg-surface text-white self-start"} rounded-lg`}>
+        <CardHeader className={"px-0 flex items-center gap-2"}>
+            <Avatar className={"h-5 w-5 flex-none"}>
                 <AvatarImage src={avatarUrl} />
-                <AvatarFallback className={"rounded-full bg-gray-200 flex items-center justify-center font-semibold text-xs"}>{avatarUrl}</AvatarFallback>
+                <AvatarFallback className={"bg-gray-600 text-white flex items-center justify-center font-semibold text-xs"}>{avatarUrl}</AvatarFallback>
             </Avatar>
-            <CardTitle>{sendBy}</CardTitle>
+            <CardTitle className="text-sm font-semibold">{sendBy}</CardTitle>
         </CardHeader>
         <CardContent className={"px-0 ml-2"}>
             <p className={"whitespace-pre-wrap break-words"}>{data}</p>
         </CardContent>
-        <CardFooter className={"px-0 flex justify-end"}>
-            <CardDescription>{time}</CardDescription>
+        <CardFooter className={"px-0 flex justify-end text-xs text-gray-300"}>
+            <CardDescription>{formatMessageTime(time)}</CardDescription>
         </CardFooter>
         </Card>
     </>

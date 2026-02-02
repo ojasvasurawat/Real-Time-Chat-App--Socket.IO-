@@ -87,9 +87,15 @@ export default function Home(){
 
     return(
         <>
-            {mobileScreen === "sidebar" && (<MobileSidebar passingDataToHome={handleDataFromLayout} passingProfileStatusToHome={handleProfileStatusFromLayout} onlineUsersList={onlineUsersList} chatList={chatList}/>)}
-            {mobileScreen === "chat" && (<Chat chatId={chatId} userData={userData} onlineUsersList={onlineUsersList} onBack={()=> setMobileScreen("sidebar")} />)}
-            {mobileScreen === "profile" && (<Profile onBack={()=> setMobileScreen("sidebar")} />)}
+            <div className="h-screen w-max-screen bg-background text-white">
+                {mobileScreen === "sidebar" && (<MobileSidebar passingDataToHome={handleDataFromLayout} passingProfileStatusToHome={handleProfileStatusFromLayout} onlineUsersList={onlineUsersList} chatList={chatList}/>)}
+                {mobileScreen !== "sidebar" && (
+                    <main className={"flex-1 overflow-auto"}>
+                        {mobileScreen === "chat" && (<Chat chatId={chatId} userData={userData} onlineUsersList={onlineUsersList} onBack={()=> setMobileScreen("sidebar")} />)}
+                        {mobileScreen === "profile" && (<Profile onBack={()=> setMobileScreen("sidebar")} />)}
+                    </main>
+                )}
+            </div>
         </>
     )
 }

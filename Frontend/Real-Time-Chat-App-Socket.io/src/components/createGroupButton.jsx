@@ -61,9 +61,9 @@ export default function CreateGroupButton(){
         <>
             <AlertDialog>
             <AlertDialogTrigger asChild>
-                <Button className={"p-1"} variant="outline">Create Group</Button>
+                <Button variant="outline" className={"border-primary text-primary hover:bg-primary/10"}>Create Group</Button>
             </AlertDialogTrigger>
-            <AlertDialogContent>
+            <AlertDialogContent className={"bg-surface text-white border border-white/10"}>
                 <AlertDialogHeader>
                 <AlertDialogTitle>Enter usernames of users to add in group</AlertDialogTitle>
                 <AlertDialogDescription>
@@ -84,10 +84,10 @@ export default function CreateGroupButton(){
                             placeholder="Type a username to add in group"
                             ref={chatUsernameInput}
                         />
-                        <Button variant="outline" onClick={handleAddUsername} >Add</Button>
+                        <Button variant="outline" className="border-primary text-primary hover:bg-primary/10" onClick={handleAddUsername} >Add</Button>
                     </Field>
-                    <Label className={"my-2"}>Members with you</Label>
-                    <Field ref={usernameListDiv} className={"overflow-y-scroll h-[20vh]"}>
+                    <Label className={"my-2"}>Members including you</Label>
+                    <Field ref={usernameListDiv} className={"overflow-y-auto h-[20vh] bg-background rounded-md p-2"}>
                         {chatUsernameList.map((data, idx)=>(
                             <Label key={idx}>{data}</Label>
                         ))}
@@ -95,8 +95,8 @@ export default function CreateGroupButton(){
                 </div>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                    <AlertDialogAction variant="outline" onClick={handleCreateGroup}>Create Group</AlertDialogAction>    
-                    <AlertDialogCancel onClick={handelCancel}>Cancel</AlertDialogCancel>
+                    <AlertDialogAction className="bg-primary hover:bg-primary/90 text-white" onClick={handleCreateGroup}>Create Group</AlertDialogAction>    
+                    <AlertDialogCancel onClick={handelCancel} className="border border-white/20 text-gray-300 hover:bg-white/10">Cancel</AlertDialogCancel>
                 </AlertDialogFooter>
             </AlertDialogContent>
             </AlertDialog>

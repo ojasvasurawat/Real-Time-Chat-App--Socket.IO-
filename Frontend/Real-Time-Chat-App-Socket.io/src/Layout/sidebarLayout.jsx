@@ -12,10 +12,12 @@ export default function SidebarLayout({passingDataToHome, passingProfileStatusTo
   }
   return (
     <SidebarProvider defaultOpen>
-      <AppSidebar passingDataToLayout={handleDataFromSidebar} passingProfileStatusToLayout={hadleProfileStatusFromSidebar} onlineUsersList={onlineUsersList}/>
-      <main className={"w-[50vw] mr-[1vw]"}>
-        {children}
-      </main>
+      <div className="flex h-screen bg-background text-white w-screen">
+        <AppSidebar passingDataToLayout={handleDataFromSidebar} passingProfileStatusToLayout={hadleProfileStatusFromSidebar} onlineUsersList={onlineUsersList}/>
+        <main className={"flex-1 min-w-0  h-screen overflow-y-auto w-fit"}>
+          {children}
+        </main>
+      </div>
     </SidebarProvider>
   )
 }

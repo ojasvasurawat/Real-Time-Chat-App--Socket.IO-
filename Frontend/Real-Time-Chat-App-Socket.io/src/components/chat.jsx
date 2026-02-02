@@ -47,6 +47,8 @@ export default function Chat({chatId, userData, onlineUsersList, onBack}){
     const [typingUser, setTypingUser] = useState(null);
     const [messageText, setMessageText] = useState("");
 
+    const bottomInChat = useRef(null);
+
 
     function handleKeyDown(event){
         if(event.key === "Enter" && !event.shiftKey){
@@ -74,7 +76,6 @@ export default function Chat({chatId, userData, onlineUsersList, onBack}){
         console.log(socket.id);
         console.log("msg emmited");
         input.current.value = "";
-        messages.current.scrollTop = messages.current.scrollHeight;
     }
 
     function handleChange(event){
@@ -100,6 +101,10 @@ export default function Chat({chatId, userData, onlineUsersList, onBack}){
         }
     }
 
+    function scrollToBottom(){
+        bottomInChat.current?.scrollIntoView({behavior: "smooth", block: "end"});
+    }
+
     function useDebounce(value, delay = 500) {
         const [debouncedValue, setDebouncedValue] = useState(value);
 
@@ -118,6 +123,10 @@ export default function Chat({chatId, userData, onlineUsersList, onBack}){
 
 
     useEffect(() => {
+        scrollToBottom();
+    }, [msgData, typingUser]);
+
+    useEffect(() => {
         if (isTyping && chatId) {
             socket.emit("typing status", {chatId, username: userData.username, status: "stop"});
             setIsTyping(false);
@@ -127,8 +136,10 @@ export default function Chat({chatId, userData, onlineUsersList, onBack}){
 
 
     useEffect(()=>{
+
         
-        messages.current.innerHTML = "";
+        // messages.current.innerHTML = "";
+        setMsgData([])
         const getChatMessages = async ()=>{
             const response = await axios.get(`${backendUrl}/chat-messages?chatId=${chatId}`,{
                 headers:{
@@ -150,17 +161,11 @@ export default function Chat({chatId, userData, onlineUsersList, onBack}){
 
         getChatMessages();
 
-        if (messages.current) {
-            messages.current.scrollTop = messages.current.scrollHeight;
-        }
         
     },[chatId, socketStatus])
 
     useEffect(()=>{
 
-        if (messages.current) {
-            messages.current.scrollTop = messages.current.scrollHeight;
-        }
 
         socket.connect();
 
@@ -221,10 +226,10 @@ export default function Chat({chatId, userData, onlineUsersList, onBack}){
     const otherUsernameList = (chat)=>{
         return(
             <>
-            <span className={"text-blue-400"}>
+            <span className={"text-accent"}>
                 {otherOnlineUsernameList(chat)}
             </span>
-            <span >
+            <span className={"text-gray-400"}>
                 {otherOfflineUsernameList(chat)}
             </span>
             </>
@@ -267,22 +272,26 @@ export default function Chat({chatId, userData, onlineUsersList, onBack}){
     return (
         <>
 
-            {isMobile && (<Button variant="ghost" onClick={onBack} className="mb-2"><ArrowLeft/></Button>)}
+        <div className={" h-screen grid grid-rows-[auto_1fr_auto] gap-2"}>
 
-            <Item>
+
+            <Item className={"px-2 w-full"}>
+                <div className='flex items-center w-full gap-3'>
+                {isMobile && (<Button variant="ghost" onClick={onBack} className="mb-2"><ArrowLeft/></Button>)}
+
                 <ItemMedia>
                     <AlertDialog>
                         <AlertDialogTrigger>
                             <Avatar className={"h-[7vh] w-[7vh]"}>
                                 <AvatarImage src={otherUserAvatarUrl(chatData)} />
-                                <AvatarFallback className={chatData?.isGroup ? "bg-gray-200" : "rounded-full bg-gray-200 flex items-center justify-center font-semibold text-xl"}>{chatData?.isGroup ? <UsersRound/> : otherDisplayname(chatData)?.charAt(0).toUpperCase()}</AvatarFallback>
+                                <AvatarFallback className={chatData?.isGroup ? "bg-gray-400 text-white flex items-center justify-center font-semibold text-xl" : "bg-gray-600 text-white flex items-center justify-center font-semibold text-xl"}>{chatData?.isGroup ? <UsersRound/> : otherDisplayname(chatData)?.charAt(0).toUpperCase()}</AvatarFallback>
                             </Avatar>
                         </AlertDialogTrigger>
-                        <AlertDialogContent>
-                            <AlertDialogHeader>
-                                <Avatar className={"w-full h-auto rounded-none"}>
+                        <AlertDialogContent className="bg-surface text-white">
+                            <AlertDialogHeader className="flex items-center">
+                                <Avatar className="w-50 h-50 md:w-100 md:h-100 rounded-full mx-auto">
                                     <AvatarImage src={otherUserAvatarUrl(chatData)} />
-                                    <AvatarFallback className={chatData?.isGroup ? "bg-gray-200" : "rounded-full bg-gray-200 flex items-center justify-center font-semibold text-xl"}>{chatData?.isGroup ? <UsersRound/> : otherDisplayname(chatData)?.charAt(0).toUpperCase()}</AvatarFallback>
+                                    <AvatarFallback className={chatData?.isGroup ? "bg-gray-400 text-white flex items-center justify-center font-semibold text-8xl md:text-[200px]" : "bg-gray-600 text-white flex items-center justify-center font-semibold text-8xl md:text-[200px]"}>{chatData?.isGroup ? <UsersRound className="w-[94px] h-[94px] md:w-[170px] md:h-[170px]"/> : otherDisplayname(chatData)?.charAt(0).toUpperCase()}</AvatarFallback>
                                 </Avatar>
                                 <AlertDialogTitle></AlertDialogTitle>
                                 <AlertDialogDescription></AlertDialogDescription>
@@ -293,23 +302,35 @@ export default function Chat({chatId, userData, onlineUsersList, onBack}){
                         </AlertDialogContent>
                     </AlertDialog>
                 </ItemMedia>    
-                <ItemContent>
-                    <ItemTitle className={"text-xl ml-[1vw]"}>{chatData?.isGroup ? chatData.name : otherDisplayname(chatData) }</ItemTitle>
-                    <ItemDescription className={`ml-[1vw] truncate ${isOnline(chatData) ? "text-blue-400" : ""}`}>{chatData?.isGroup ? otherUsernameList(chatData) : isOnline(chatData) ? `${otherUsername(chatData)} is online` : `${otherUsername(chatData)} is offline` }</ItemDescription>
+                <ItemContent className={"min-w-0"}>
+                    <ItemTitle className={"text-xl ml-4 text-white truncate"}>{chatData?.isGroup ? chatData.name : otherDisplayname(chatData) }</ItemTitle>
+                    <ItemDescription className={`ml-4 truncate ${isOnline(chatData) ? "text-accent" : "text-gray-400"}`}>{chatData?.isGroup ? otherUsernameList(chatData) : isOnline(chatData) ? `${otherUsername(chatData)} is online` : `${otherUsername(chatData)} is offline` }</ItemDescription>
                 </ItemContent>
-                <ItemContent>
+                <ItemContent className="hidden sm:block">
                     <ItemDescription>socket status: {socketStatus ? "connected" : "disconnected"}</ItemDescription>
                 </ItemContent>
-                <ItemActions>
+                <ItemActions className="hidden sm:flex">
                     <Button variant="outline" onClick={toggleConnection}>
                     {socketStatus ? "disconnect from socket" : "connect to socket"}
                     </Button>
                 </ItemActions>
+                </div>
+
+                <div className="mt-2 flex items-center justify-between gap-3 sm:hidden">
+                <ItemDescription className="text-sm">
+                    socket: {socketStatus ? "connected" : "disconnected"}
+                </ItemDescription>
+
+                <Button size="sm" variant="outline" onClick={toggleConnection}>
+                    {socketStatus ? "Disconnect" : "Connect"}
+                </Button>
+                </div>
+
             </Item>
-            <div ref={messages} className={"h-[450px] overflow-y-scroll"} >
+            <div ref={messages} className={" overflow-y-scroll px-2 md:px-0"} >
                 {msgData.map((data, idx)=>(
-                    <div key={idx} className={`flex ${userData.username === data.name ? "justify-end" : "justify-start"}`}>
-                        <Messages key={idx} sendBy={data.name} data={data.content} time={data.time} avatarUrl={data.avatarUrl}/>
+                    <div key={idx} className={`flex my-1.5 ${userData.username === data.name ? "justify-end" : "justify-start"}`}>
+                        <Messages sendBy={data.name} data={data.content} time={data.time} avatarUrl={data.avatarUrl} isSender={data.name === userData.username}/>
                     </div>
                 ))}
                 {typingUser && typingUser !== userData.username && (
@@ -317,11 +338,14 @@ export default function Chat({chatId, userData, onlineUsersList, onBack}){
                     {typingUser} is typing...
                 </p>
                 )}
+                <div ref={bottomInChat} />
             </div>
-            <div className={"flex"}>
+            <div className={"flex px-2 md:px-0 mb-2"}>
                 <Textarea type="text" placeholder="Type your message here." className={""} ref={input} onKeyDown={handleKeyDown} onChange={handleChange}/>
                 <Button onClick={submit} variant="outline" className={"my-auto mx-2"}>Send</Button>
             </div>
+
+        </div>
         </>
     )
 }

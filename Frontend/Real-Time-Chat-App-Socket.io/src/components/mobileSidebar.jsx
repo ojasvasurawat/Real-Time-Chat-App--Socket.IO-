@@ -41,24 +41,24 @@ export default function MobileSidebar({passingDataToHome, passingProfileStatusTo
     if (!userData) return null;
 
   return (
-    <Card className={"w-screen max-w-none h-screen"}>
-      <CardHeader>
-        <CardTitle className={"text-xl "}>REAL TIME CHAT APP</CardTitle>
+    <Card className={"w-screen max-w-none h-screen gap-0 rounded-none border-0 py-0 shadow-none grid grid-rows-[auto_1fr_auto] gap-2 bg-surface text-white"}>
+      <CardHeader className={"self-start px-4 mt-2 border-b border-white/10"}>
+        <CardTitle className={"text-xl text-primary"}>REAL TIME CHAT APP</CardTitle>
         <Field orientation="horizontal" className={"flex justify-between"}>
-          <h2 className={"text-lg"}>HI {userData?.displayName}!</h2>
-          <CreateGroupButton/>
+          <h2 className={"text-lg text-gray-200"}>HI {userData?.displayName}!</h2>
+          <CreateGroupButton />
         </Field>
-        <AddChatButton />
+        <AddChatButton/>
       </CardHeader>
-      <CardContent >
-            <CardDescription className={"text-lg"}>CHATS</CardDescription>
-            <div className={"overflow-y-scroll"}>
+      <CardContent className={"px-4"}>
+            <CardDescription className={"text-lg text-gray-300"}>CHATS</CardDescription>
+            <div className={"overflow-y-scroll bg-surface"}>
                 <ChatList userData={userData} sendDataToParent={handleChatId} onlineUsersList={onlineUsersList}/>
             </div>
       </CardContent >
-      <CardFooter >
+      <CardFooter className={"self-end px-4 gap-x-[25vw] mb-3  border-t border-white/10"}>
             <ProfileButton userData={userData} sendProfileStatusToSidebar={handleProfileStatus}/>
-            <LogoutButton/>
+            <LogoutButton className="text-danger hover:bg-danger/10"/>
       </CardFooter > 
     </Card >
   );

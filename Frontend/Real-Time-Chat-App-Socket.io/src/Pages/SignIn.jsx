@@ -34,7 +34,6 @@ export default function SignIn(){
 
         console.log(backendUrl);
         console.log(signinEmail);
-        console.log(signinEmail.type);
 
         const response = await axios.post(`${backendUrl}/signin`, {
             email: signinEmail,
@@ -54,48 +53,70 @@ export default function SignIn(){
 
     return(
         <>
-        <div className="flex items-center justify-center h-screen">
-            <Card className="w-full max-w-sm">
-            <CardHeader>
-                <CardTitle>Welcome Back</CardTitle>
-                <CardDescription>
-                Enter your details to start chatting in real time
-                </CardDescription>
-            </CardHeader>
-            <form   >
-                <CardContent>
-                    <div className="grid gap-2 mb-2">
-                        <Label>Email</Label>
-                        <Input 
-                            id="email"
-                            type="email"
-                            value={signinEmail}
-                            onChange={(e)=>{setSigninEmail(e.target.value)}}
-                            placeholder="Enter your email"
-                        />
-                    </div>
-                    <div className="grid gap-2 mb-2">
-                        <Label>Password</Label>
-                        <Input 
-                            id="password"
-                            type="password"
-                            value={signinPassword}
-                            onChange={(e)=>{setSigninPassword(e.target.value)}}
-                            placeholder="Enter your password"
-                        />
-                    </div>
-                </CardContent>
-                <CardFooter className="flex-col gap-2">
-                    <Button onClick={handleSignin} variant="outline" type="submit" className="w-full mx-2" disabled={buttonLoading}>
-                        {buttonLoading? "Wait" : "Sign In"}
-                    </Button>
-                    <Button variant="outline" className="w-full" asChild>
-                        <Link to="/signin">Don't have an account? Signup</Link>
-                    </Button>
-                </CardFooter>
-            </form>
-            </Card>
-        </div>
+            <div className="min-h-screen flex items-center justify-center bg-background px-4 py-8">
+      <Card className="w-full max-w-md shadow-2xl border border-border bg-surface/95 backdrop-blur-md rounded-xl">
+        <CardHeader className="text-center">
+          <CardTitle className="text-3xl font-bold text-white">
+            Welcome Back
+          </CardTitle>
+          <CardDescription className="text-gray-300 mt-2">
+            Sign in to continue chatting in real time
+          </CardDescription>
+        </CardHeader>
+
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSignin();
+          }}
+          className="space-y-5 mt-4"
+        >
+          <CardContent className="space-y-4">
+            <div className="space-y-1">
+              <Label className="text-gray-200">Email</Label>
+              <Input
+                type="email"
+                value={signinEmail}
+                onChange={(e) => setSigninEmail(e.target.value)}
+                placeholder="Enter your email"
+                className="bg-background/80 text-white border-border focus:border-accent focus:ring-accent"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <Label className="text-gray-200">Password</Label>
+              <Input
+                type="password"
+                value={signinPassword}
+                onChange={(e) => setSigninPassword(e.target.value)}
+                placeholder="Enter your password"
+                className="bg-background/80 text-white border-border focus:border-accent focus:ring-accent"
+              />
+            </div>
+          </CardContent>
+
+          <CardFooter className="flex flex-col gap-4">
+            <Button
+              type="submit"
+              className="w-full bg-accent hover:bg-accent/90 text-white font-semibold"
+              disabled={buttonLoading}
+            >
+              {buttonLoading ? "Signing in..." : "Sign In"}
+            </Button>
+
+            <p className="text-sm text-gray-400 text-center">
+              Don’t have an account?{" "}
+              <Link
+                to="/signup"
+                className="text-accent underline hover:text-accent/80"
+              >
+                Sign up
+              </Link>
+            </p>
+          </CardFooter>
+        </form>
+      </Card>
+    </div>
         </>
     )
 }

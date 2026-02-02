@@ -75,92 +75,88 @@ export default function SignUp(){
 
     return(
         <>
-        <div className="flex items-center justify-center h-screen">
-            <Card className="w-full max-w-sm">
-            <CardHeader>
-                <CardTitle>Create an account</CardTitle>
-                <CardDescription>
-                Enter your details to start chatting in real time
-                </CardDescription>
-            </CardHeader>
-            <form onSubmit={handleSignup}>
-                <CardContent>
-                    <div className="grid gap-2 mb-2">
-                            <Label>Display Name</Label>
-                            <Input 
-                                className="border-1 rounded-sm p-1.5"
-                                id="displayName" 
-                                type="displayName" 
-                                value={formData.displayName} 
-                                onChange={(e)=>{
-                                    setFormData({
-                                        ...formData,
-                                        displayName: e.target.value
-                                    })
-                                }}
-                                placeholder="enter your display name"
-                            />
-                    </div>
-                    <div className="grid gap-2 mb-2">
-                        <Label>Username</Label>
-                        <Input 
-                            className="border-1 rounded-sm p-1.5"
-                            id="username" 
-                            type="username" 
-                            value={formData.username} 
-                            onChange={(e)=>{
-                                setFormData({
-                                    ...formData,
-                                    username: e.target.value
-                                })
-                            }}
-                            placeholder="enter your username"
-                        />
-                    </div>
-                    <div className="grid gap-2 mb-2">
-                        <Label>Email</Label>
-                        <Input 
-                            className="border-1 rounded-sm p-1.5"
-                            id="email" 
-                            type="email" 
-                            value={formData.email} 
-                            onChange={(e)=>{
-                                setFormData({
-                                    ...formData,
-                                    email: e.target.value
-                                })
-                            }}
-                            placeholder="enter your email"
-                        />
-                    </div>
-                    <div className="grid gap-2 mb-2">
-                        <Label>Password</Label>
-                        <Input 
-                            className="border-1 rounded-sm p-1.5"
-                            id="password"
-                            type="password" 
-                            value={formData.password} 
-                            onChange={(e)=>{
-                                setFormData({
-                                    ...formData,
-                                    password: e.target.value
-                                })
-                            }}
-                            placeholder="enter your password"
-                        />
-                    </div>
-                </CardContent>
-                <CardFooter className="flex-col gap-2">
-                    <Button variant="outline" type="submit" className="w-full mx-2" disabled={buttonLoading}>
-                        {buttonLoading ? "Creating account..." : "Sign Up"}
-                    </Button>
-                    <Button variant="outline" className="w-full" asChild>
-                        <Link to="/signin">Already have an account? Login</Link>
-                    </Button>
-                </CardFooter>
-            </form>
-            </Card>
-        </div>
+        <div className="min-h-screen flex items-center justify-center bg-background px-4 py-8">
+      <Card className="w-full max-w-md shadow-2xl border border-border bg-surface/95 backdrop-blur-md rounded-xl">
+        <CardHeader className="text-center">
+          <CardTitle className="text-3xl font-bold text-white">
+            Create an Account
+          </CardTitle>
+          <CardDescription className="text-gray-300 mt-2">
+            Start chatting in real-time with friends and teams
+          </CardDescription>
+        </CardHeader>
+
+        <form onSubmit={handleSignup} className="space-y-5 mt-4">
+          <CardContent className="space-y-4">
+            <div className="space-y-1">
+              <Label className="text-gray-200">Display Name</Label>
+              <Input
+                value={formData.displayName}
+                onChange={(e) =>
+                  setFormData({ ...formData, displayName: e.target.value })
+                }
+                placeholder="Enter your display name"
+                className="bg-background/80 text-white border-border focus:border-accent focus:ring-accent"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <Label className="text-gray-200">Username</Label>
+              <Input
+                value={formData.username}
+                onChange={(e) =>
+                  setFormData({ ...formData, username: e.target.value })
+                }
+                placeholder="Enter your username"
+                className="bg-background/80 text-white border-border focus:border-accent focus:ring-accent"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <Label className="text-gray-200">Email</Label>
+              <Input
+                value={formData.email}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
+                placeholder="Enter your email"
+                className="bg-background/80 text-white border-border focus:border-accent focus:ring-accent"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <Label className="text-gray-200">Password</Label>
+              <Input
+                type="password"
+                value={formData.password}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
+                placeholder="Enter your password"
+                className="bg-background/80 text-white border-border focus:border-accent focus:ring-accent"
+              />
+            </div>
+          </CardContent>
+
+          <CardFooter className="flex flex-col gap-4 mt-2">
+            <Button
+              type="submit"
+              className="w-full bg-accent hover:bg-accent/90 text-white font-semibold"
+              disabled={buttonLoading}
+            >
+              {buttonLoading ? "Creating account..." : "Sign Up"}
+            </Button>
+
+            <p className="text-sm text-gray-400 text-center">
+              Already have an account?{" "}
+              <Link to="/signin" className="text-accent underline hover:text-accent/80">
+                Sign in
+              </Link>
+            </p>
+          </CardFooter>
+        </form>
+      </Card>
+    </div>
         </>
     )
 }

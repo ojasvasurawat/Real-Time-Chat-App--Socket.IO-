@@ -48,28 +48,26 @@ export default function AppSidebar({passingDataToLayout, passingProfileStatusToL
     }
 
   return (
-    <Sidebar collapsible={false}>
-      <SidebarHeader>
-        <h1 className={"text-xl "}>REAL TIME CHAT APP</h1>
-        <Field orientation="horizontal" className={"flex justify-between"}>
-          <h2 className={"text-lg"}>HI {userData?.displayName}!</h2>
+    <Sidebar collapsible={false} className="bg-surface text-white  flex flex-col" >
+      <SidebarHeader className="px-4 py-3 flex flex-col gap-3">
+        <h1 className={"text-xl font-bold"}>REAL TIME CHAT APP</h1>
+        <Field orientation="horizontal" className={"flex justify-between items-center"}>
+          <h2 className={"text-lg font-medium"}>HI {userData?.displayName}!</h2>
           <CreateGroupButton/>
         </Field>
         <AddChatButton />
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="flex-1 overflow-y-auto px-2">
         <SidebarGroup>
-            <SidebarGroupLabel className={"text-lg"}>CHATS</SidebarGroupLabel>
-            <SidebarGroupContent className={"overflow-y-scroll"}>
+            <SidebarGroupLabel className={"text-lg font-semibold mb-2"}>CHATS</SidebarGroupLabel>
+            <SidebarGroupContent className={"overflow-y-scroll gap-1"}>
                 <ChatList userData={userData} sendDataToParent={handleChatId} onlineUsersList={onlineUsersList}/>
             </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter>
-          <SidebarMenuItem>
-            <ProfileButton userData={userData} sendProfileStatusToSidebar={handleProfileStatus}/>
-            <LogoutButton/>
-          </SidebarMenuItem>
+      <SidebarFooter className="px-4 py-3 flex gap-2 justify-between border-t border-border">  
+          <ProfileButton userData={userData} sendProfileStatusToSidebar={handleProfileStatus}/>
+          <LogoutButton/>
       </SidebarFooter> 
     </Sidebar>
   )

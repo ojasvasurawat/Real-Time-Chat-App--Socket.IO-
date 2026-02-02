@@ -44,7 +44,7 @@ export default function LogoutButton(){
 
     return(
         <>
-            <Button varient="ghost" asChild className={"h-[5vh] m-0"} onClick={handleLogout}>
+            <Button varient="ghost" asChild className={"h-[7vh] m-0 text-danger hover:bg-danger/10 "} onClick={handleLogout}>
               <Item>
                 <ItemMedia>
                   <Avatar className={"h-[4vh] w-[4vh]"}>
