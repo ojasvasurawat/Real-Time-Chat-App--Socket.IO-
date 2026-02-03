@@ -45,11 +45,11 @@ export default function Messages({sendBy, data, time, avatarUrl, isSender}){
     return(
     <>
 
-        <Card className={`min-w-[140px] max-w-[75%] sm:max-w-[60%] md:max-w-[45%] px-3 py-2 rounded-2xl shadow-sm gap-1 ${isSender ? "bg-primary/80 text-white self-end" : "bg-surface text-white self-start"} rounded-lg`}>
+        <Card className={`min-w-[140px] max-w-[75%] sm:max-w-[60%] md:max-w-[45%] px-3 py-2 rounded-2xl shadow-sm gap-1 ${isSender ? "bg-primary/80  self-end" : "bg-surface  self-start"} rounded-lg`}>
         <CardHeader className={"px-0 flex items-center gap-2"}>
             <Avatar className={"h-5 w-5 flex-none"}>
                 <AvatarImage src={avatarUrl} />
-                <AvatarFallback className={"bg-gray-600 text-white flex items-center justify-center font-semibold text-xs"}>{avatarUrl}</AvatarFallback>
+                <AvatarFallback className={"bg-gray-600 flex items-center justify-center font-semibold text-xs"}>{avatarUrl}</AvatarFallback>
             </Avatar>
             <CardTitle className="text-sm font-semibold">{sendBy}</CardTitle>
         </CardHeader>

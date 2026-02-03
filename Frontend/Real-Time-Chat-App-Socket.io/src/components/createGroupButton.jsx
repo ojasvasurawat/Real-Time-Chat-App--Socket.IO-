@@ -63,7 +63,7 @@ export default function CreateGroupButton(){
             <AlertDialogTrigger asChild>
                 <Button variant="outline" className={"border-primary text-primary hover:bg-primary/10"}>Create Group</Button>
             </AlertDialogTrigger>
-            <AlertDialogContent className={"bg-surface text-white border border-white/10"}>
+            <AlertDialogContent className={""}>
                 <AlertDialogHeader>
                 <AlertDialogTitle>Enter usernames of users to add in group</AlertDialogTitle>
                 <AlertDialogDescription>
@@ -84,7 +84,7 @@ export default function CreateGroupButton(){
                             placeholder="Type a username to add in group"
                             ref={chatUsernameInput}
                         />
-                        <Button variant="outline" className="border-primary text-primary hover:bg-primary/10" onClick={handleAddUsername} >Add</Button>
+                        <Button variant="outline" className="" onClick={handleAddUsername} >Add</Button>
                     </Field>
                     <Label className={"my-2"}>Members including you</Label>
                     <Field ref={usernameListDiv} className={"overflow-y-auto h-[20vh] bg-background rounded-md p-2"}>
@@ -95,8 +95,8 @@ export default function CreateGroupButton(){
                 </div>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                    <AlertDialogAction className="bg-primary hover:bg-primary/90 text-white" onClick={handleCreateGroup}>Create Group</AlertDialogAction>    
-                    <AlertDialogCancel onClick={handelCancel} className="border border-white/20 text-gray-300 hover:bg-white/10">Cancel</AlertDialogCancel>
+                    <AlertDialogAction variant="outline" className="" onClick={handleCreateGroup}>Create Group</AlertDialogAction>    
+                    <AlertDialogCancel onClick={handelCancel} className="">Cancel</AlertDialogCancel>
                 </AlertDialogFooter>
             </AlertDialogContent>
             </AlertDialog>

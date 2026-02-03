@@ -63,19 +63,11 @@ export default function AppSidebar({passingDataToLayout, passingProfileStatusToL
     }
 
   return (
-<<<<<<< HEAD
-    <Sidebar collapsible={false} className="bg-surface text-white  flex flex-col" >
-      <SidebarHeader className="px-4 py-3 flex flex-col gap-3">
-        <h1 className={"text-xl font-bold"}>REAL TIME CHAT APP</h1>
-        <Field orientation="horizontal" className={"flex justify-between items-center"}>
-          <h2 className={"text-lg font-medium"}>HI {userData?.displayName}!</h2>
-=======
     <Sidebar>
       <SidebarHeader>
         <h1 className={"text-xl "}>REAL TIME CHAT APP</h1>
         <Field orientation="horizontal" className={"flex justify-between"}>
           <h2 className={"text-lg"}>HI {userData?.displayName}!</h2>
->>>>>>> parent of f64b16e (mobile sidebar added)
           <CreateGroupButton/>
         </Field>
         <AddChatButton />
@@ -88,7 +80,7 @@ export default function AppSidebar({passingDataToLayout, passingProfileStatusToL
             </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="px-4 py-3 flex gap-2 justify-between border-t border-border">  
+      <SidebarFooter className="px-4 py-3 flex gap-2 justify-between ">  
           <ProfileButton userData={userData} sendProfileStatusToSidebar={handleProfileStatus}/>
           <LogoutButton/>
       </SidebarFooter> 

@@ -10,6 +10,12 @@ async function createGroup(req,res){
             username: { $in: participantUsernames}
         });
         const participantIds = participants.map(user => user._id);
+
+        if (participantIds.some(id => id.toString() === userId.toString())) {
+            return res.json({
+                message: "plz remove your name from list"
+            });
+        }
         participantIds.push(userId);
 
         const groupChat = await ChatModel.create({

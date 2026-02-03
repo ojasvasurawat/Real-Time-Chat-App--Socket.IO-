@@ -62,22 +62,10 @@ export default function Home(){
 
     return(
         <>
-<<<<<<< HEAD
-            <div className="h-screen w-max-screen bg-background text-white">
-                {mobileScreen === "sidebar" && (<MobileSidebar passingDataToHome={handleDataFromLayout} passingProfileStatusToHome={handleProfileStatusFromLayout} onlineUsersList={onlineUsersList} chatList={chatList}/>)}
-                {mobileScreen !== "sidebar" && (
-                    <main className={"flex-1 overflow-auto"}>
-                        {mobileScreen === "chat" && (<Chat chatId={chatId} userData={userData} onlineUsersList={onlineUsersList} onBack={()=> setMobileScreen("sidebar")} />)}
-                        {mobileScreen === "profile" && (<Profile onBack={()=> setMobileScreen("sidebar")} />)}
-                    </main>
-                )}
-            </div>
-=======
             <SidebarLayout passingDataToHome={handleDataFromLayout} passingProfileStatusToHome={handleProfileStatusFromLayout} onlineUsersList={onlineUsersList}>
                 {chatState && <Chat chatId={chatId} userData={userData} onlineUsersList={onlineUsersList}/>}
                 {profileState && <Profile/>}
             </SidebarLayout>
->>>>>>> parent of f64b16e (mobile sidebar added)
         </>
     )
 }
