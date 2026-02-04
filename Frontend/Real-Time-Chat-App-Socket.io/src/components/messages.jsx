@@ -45,7 +45,7 @@ export default function Messages({sendBy, data, time, avatarUrl, isSender}){
     return(
     <>
 
-        <Card className={`min-w-[140px] max-w-[75%] sm:max-w-[60%] md:max-w-[45%] px-3 py-2 rounded-2xl shadow-sm gap-1 ${isSender ? "bg-primary/80  self-end" : "bg-surface  self-start"} rounded-lg`}>
+        <Card className={`min-w-[140px] max-w-[75%] sm:max-w-[60%] md:max-w-[45%] px-1 py-1 rounded-xl shadow-sm gap-1 ${isSender ? "bg-orange-200  self-end" : "bg-green-200  self-start"} `}>
         <CardHeader className={"px-0 flex items-center gap-2"}>
             <Avatar className={"h-5 w-5 flex-none"}>
                 <AvatarImage src={avatarUrl} />
@@ -53,12 +53,13 @@ export default function Messages({sendBy, data, time, avatarUrl, isSender}){
             </Avatar>
             <CardTitle className="text-sm font-semibold">{sendBy}</CardTitle>
         </CardHeader>
-        <CardContent className={"px-0 ml-2"}>
+        <CardContent className={"px-0 ml-1"}>
             <p className={"whitespace-pre-wrap break-words"}>{data}</p>
+            <CardFooter className={"px-0 justify-end text-xs"}>
+                <CardDescription>{formatMessageTime(time)}</CardDescription>
+            </CardFooter>
         </CardContent>
-        <CardFooter className={"px-0 flex justify-end text-xs text-gray-300"}>
-            <CardDescription>{formatMessageTime(time)}</CardDescription>
-        </CardFooter>
+        
         </Card>
     </>
     )

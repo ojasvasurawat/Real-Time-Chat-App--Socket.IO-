@@ -52,7 +52,7 @@ export default function Home(){
             console.log(response.data.chats);
             setChatList(response.data.chats);
         }
-        fetchChatList();
+        // fetchChatList();
 
         return ()=>{
             socket.off('online users', handleOnlineUsers);

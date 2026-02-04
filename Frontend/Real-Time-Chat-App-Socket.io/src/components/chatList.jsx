@@ -56,7 +56,7 @@ export default function ChatList({sendDataToParent, userData, onlineUsersList}){
                     'authorization': localStorage.getItem('authorization')
                 }
             });
-            console.log(response.data.chats);
+            // console.log(response.data.chats);
             setChatList(response.data.chats);
         }
         fetchChatList();
@@ -73,6 +73,7 @@ export default function ChatList({sendDataToParent, userData, onlineUsersList}){
     const otherUserAvatarUrl = (chat)=>{
         if(chat.isGroup) return;
         const otherusername = otherUsername(chat);
+        // console.log(otherusername);
         return chat.participants[0].username === otherusername ? chat.participants[0].avatarUrl : chat.participants[1].avatarUrl;
     }
 

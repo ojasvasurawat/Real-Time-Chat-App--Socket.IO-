@@ -75,13 +75,13 @@ export default function SignUp(){
 
     return(
         <>
-        <div className="min-h-screen flex items-center justify-center bg-background px-4 py-8">
-      <Card className="w-full max-w-md shadow-2xl border border-border bg-surface/95 backdrop-blur-md rounded-xl">
+        <div className="min-h-screen flex items-center justify-center px-4 py-8">
+      <Card className="w-full max-w-md rounded-xl">
         <CardHeader className="text-center">
-          <CardTitle className="text-3xl font-bold text-white">
+          <CardTitle className="text-3xl font-bold ">
             Create an Account
           </CardTitle>
-          <CardDescription className="text-gray-300 mt-2">
+          <CardDescription className=" mt-2">
             Start chatting in real-time with friends and teams
           </CardDescription>
         </CardHeader>
@@ -89,43 +89,43 @@ export default function SignUp(){
         <form onSubmit={handleSignup} className="space-y-5 mt-4">
           <CardContent className="space-y-4">
             <div className="space-y-1">
-              <Label className="text-gray-200">Display Name</Label>
+              <Label className="">Display Name</Label>
               <Input
                 value={formData.displayName}
                 onChange={(e) =>
                   setFormData({ ...formData, displayName: e.target.value })
                 }
                 placeholder="Enter your display name"
-                className="bg-background/80 text-white border-border focus:border-accent focus:ring-accent"
+                className=""
               />
             </div>
 
             <div className="space-y-1">
-              <Label className="text-gray-200">Username</Label>
+              <Label className="">Username</Label>
               <Input
                 value={formData.username}
                 onChange={(e) =>
                   setFormData({ ...formData, username: e.target.value })
                 }
                 placeholder="Enter your username"
-                className="bg-background/80 text-white border-border focus:border-accent focus:ring-accent"
+                className=""
               />
             </div>
 
             <div className="space-y-1">
-              <Label className="text-gray-200">Email</Label>
+              <Label className="">Email</Label>
               <Input
                 value={formData.email}
                 onChange={(e) =>
                   setFormData({ ...formData, email: e.target.value })
                 }
                 placeholder="Enter your email"
-                className="bg-background/80 text-white border-border focus:border-accent focus:ring-accent"
+                className=""
               />
             </div>
 
             <div className="space-y-1">
-              <Label className="text-gray-200">Password</Label>
+              <Label className="">Password</Label>
               <Input
                 type="password"
                 value={formData.password}
@@ -133,23 +133,24 @@ export default function SignUp(){
                   setFormData({ ...formData, password: e.target.value })
                 }
                 placeholder="Enter your password"
-                className="bg-background/80 text-white border-border focus:border-accent focus:ring-accent"
+                className=""
               />
             </div>
           </CardContent>
 
           <CardFooter className="flex flex-col gap-4 mt-2">
             <Button
+            variant="outline"
               type="submit"
-              className="w-full bg-accent hover:bg-accent/90 text-white font-semibold"
+              className="w-full font-semibold"
               disabled={buttonLoading}
             >
               {buttonLoading ? "Creating account..." : "Sign Up"}
             </Button>
 
-            <p className="text-sm text-gray-400 text-center">
+            <p className="text-sm  text-center">
               Already have an account?{" "}
-              <Link to="/signin" className="text-accent underline hover:text-accent/80">
+              <Link to="/signin" className=" underline ">
                 Sign in
               </Link>
             </p>

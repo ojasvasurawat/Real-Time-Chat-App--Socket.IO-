@@ -27,7 +27,7 @@ export default function Chats(){
 
     const [dataFromChild, setDataFromChild] = useState("");
     const [userData, setUserData] = useState(null);
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     // Callback function to receive data from the child
     const handleChildData = (childData) => {

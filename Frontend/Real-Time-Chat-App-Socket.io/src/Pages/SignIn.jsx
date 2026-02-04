@@ -53,13 +53,13 @@ export default function SignIn(){
 
     return(
         <>
-            <div className="min-h-screen flex items-center justify-center bg-background px-4 py-8">
-      <Card className="w-full max-w-md shadow-2xl border border-border bg-surface/95 backdrop-blur-md rounded-xl">
+            <div className="min-h-screen flex items-center justify-center px-4 py-8">
+      <Card className="w-full max-w-md rounded-xl">
         <CardHeader className="text-center">
-          <CardTitle className="text-3xl font-bold text-white">
+          <CardTitle className="text-3xl font-bold ">
             Welcome Back
           </CardTitle>
-          <CardDescription className="text-gray-300 mt-2">
+          <CardDescription className="mt-2">
             Sign in to continue chatting in real time
           </CardDescription>
         </CardHeader>
@@ -73,42 +73,43 @@ export default function SignIn(){
         >
           <CardContent className="space-y-4">
             <div className="space-y-1">
-              <Label className="text-gray-200">Email</Label>
+              <Label className="">Email</Label>
               <Input
                 type="email"
                 value={signinEmail}
                 onChange={(e) => setSigninEmail(e.target.value)}
                 placeholder="Enter your email"
-                className="bg-background/80 text-white border-border focus:border-accent focus:ring-accent"
+                className=""
               />
             </div>
 
             <div className="space-y-1">
-              <Label className="text-gray-200">Password</Label>
+              <Label className="">Password</Label>
               <Input
                 type="password"
                 value={signinPassword}
                 onChange={(e) => setSigninPassword(e.target.value)}
                 placeholder="Enter your password"
-                className="bg-background/80 text-white border-border focus:border-accent focus:ring-accent"
+                className=""
               />
             </div>
           </CardContent>
 
           <CardFooter className="flex flex-col gap-4">
             <Button
+              variant="outline"
               type="submit"
-              className="w-full bg-accent hover:bg-accent/90 text-white font-semibold"
+              className="w-full font-semibold"
               disabled={buttonLoading}
             >
               {buttonLoading ? "Signing in..." : "Sign In"}
             </Button>
 
-            <p className="text-sm text-gray-400 text-center">
+            <p className="text-sm text-center">
               Don’t have an account?{" "}
               <Link
                 to="/signup"
-                className="text-accent underline hover:text-accent/80"
+                className=" underline "
               >
                 Sign up
               </Link>
