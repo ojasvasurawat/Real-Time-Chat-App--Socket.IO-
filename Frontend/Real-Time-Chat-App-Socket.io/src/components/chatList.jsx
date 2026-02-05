@@ -85,7 +85,7 @@ export default function ChatList({sendDataToParent, userData, onlineUsersList}){
     const otherUsernameList = (chat)=>{
         return(
             <>
-            <span className={"text-blue-400"}>
+            <span className={"text-primary"}>
                 {otherOnlineUsernameList(chat)}
             </span>
             <span className={""}>
@@ -128,24 +128,24 @@ export default function ChatList({sendDataToParent, userData, onlineUsersList}){
     return(
         <>
 
-            <SidebarMenu>
+            <div>
                 {chatList.map((chat) => (
-                <SidebarMenuItem key={chat._id}>
-                    <SidebarMenuButton asChild className={"h-[10vh] m-0"} onClick={()=>handleChat(chat._id)}>
-                        <Item>
+                <div key={chat._id} >
+                    <div className={"h-[10vh] m-0"} onClick={()=>handleChat(chat._id)}>
+                        <Item className={"rounded-xl hover:bg-surface"}>
                             <ItemMedia>
                                 <AlertDialog>
                                     <AlertDialogTrigger>
                                         <Avatar className={"h-[7vh] w-[7vh]"}>
                                             <AvatarImage src={otherUserAvatarUrl(chat)} />
-                                            <AvatarFallback className={chat.isGroup ? "bg-gray-400  flex items-center justify-center font-semibold text-xl" : "bg-gray-600  flex items-center justify-center font-semibold text-xl"}>{chat.isGroup ? <UsersRound/> : otherDisplayname(chat).charAt(0).toUpperCase()}</AvatarFallback>
+                                            <AvatarFallback className={chat.isGroup ? "bg-border  flex items-center justify-center font-semibold text-xl" : "bg-border  flex items-center justify-center font-semibold text-xl"}>{chat.isGroup ? <UsersRound/> : otherDisplayname(chat).charAt(0).toUpperCase()}</AvatarFallback>
                                         </Avatar>
                                     </AlertDialogTrigger>
                                     <AlertDialogContent className="bg-surface ">
                                         <AlertDialogHeader >
                                             <Avatar className="w-50 h-50 md:w-100 md:h-100 rounded-full mx-auto">
                                                 <AvatarImage src={otherUserAvatarUrl(chat)} />
-                                                <AvatarFallback className={chat.isGroup ? "bg-gray-400  flex items-center justify-center font-semibold text-8xl md:text-[200px]" : "bg-gray-600  flex items-center justify-center font-semibold text-8xl md:text-[200px]"}>{chat.isGroup ? <UsersRound className="w-[94px] h-[94px] md:w-[170px] md:h-[170px]"/> : otherDisplayname(chat).charAt(0).toUpperCase()}</AvatarFallback>
+                                                <AvatarFallback className={chat.isGroup ? "bg-border  flex items-center justify-center font-semibold text-8xl md:text-[200px]" : "bg-border  flex items-center justify-center font-semibold text-8xl md:text-[200px]"}>{chat.isGroup ? <UsersRound className="w-[94px] h-[94px] md:w-[170px] md:h-[170px]"/> : otherDisplayname(chat).charAt(0).toUpperCase()}</AvatarFallback>
                                             </Avatar>
                                             <AlertDialogTitle></AlertDialogTitle>
                                             <AlertDialogDescription></AlertDialogDescription>
@@ -157,14 +157,14 @@ export default function ChatList({sendDataToParent, userData, onlineUsersList}){
                                 </AlertDialog>
                             </ItemMedia>    
                             <ItemContent>
-                                <ItemTitle className={"text-xl ml-4 "}>{chat.isGroup ? chat.name : otherDisplayname(chat) }</ItemTitle>
-                                <ItemDescription className={`ml-4 truncate ${isOnline(chat) ? "text-blue-400" : ""}`}>{chat.isGroup ? otherUsernameList(chat) : isOnline(chat) ? `${otherUsername(chat)} is online` : `${otherUsername(chat)} is offline` }</ItemDescription>
+                                <ItemTitle className={"text-xl ml-4 text-text"}>{chat.isGroup ? chat.name : otherDisplayname(chat) }</ItemTitle>
+                                <ItemDescription className={`ml-4 truncate ${isOnline(chat) ? "text-primary" : ""}`}>{chat.isGroup ? otherUsernameList(chat) : isOnline(chat) ? `${otherUsername(chat)} is online` : `${otherUsername(chat)} is offline` }</ItemDescription>
                             </ItemContent>
                         </Item>
-                    </SidebarMenuButton>
-                </SidebarMenuItem>
+                    </div>
+                </div>
                 ))}
-            </SidebarMenu>
+            </div>
         </>
     )
 }

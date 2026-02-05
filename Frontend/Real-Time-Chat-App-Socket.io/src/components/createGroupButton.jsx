@@ -16,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "./ui/label";
 import { Field } from "./ui/field";
+import { Users } from "lucide-react";
 
 
 export default function CreateGroupButton(){
@@ -61,9 +62,9 @@ export default function CreateGroupButton(){
         <>
             <AlertDialog>
             <AlertDialogTrigger asChild>
-                <Button variant="outline" className={"border-primary text-primary hover:bg-primary/10"}>Create Group</Button>
+                <Button variant="ghost" className={"bg-primary/70 border border-primary  hover:bg-primary/90 hover:shadow-md"} >Create Group</Button>
             </AlertDialogTrigger>
-            <AlertDialogContent className={""}>
+            <AlertDialogContent className={"bg-orange-200"}>
                 <AlertDialogHeader>
                 <AlertDialogTitle>Enter usernames of users to add in group</AlertDialogTitle>
                 <AlertDialogDescription>

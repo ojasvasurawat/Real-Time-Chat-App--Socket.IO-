@@ -4,6 +4,8 @@ import SidebarLayout from "@/Layout/sidebarLayout";
 import { useEffect, useState } from "react";
 import { socket } from "../socket";
 import Profile from './Profile';
+import { useIsMobile } from '@/hooks/use-mobile';
+import MobileSidebar from '@/components/mobileSidebar';
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 
@@ -16,6 +18,9 @@ export default function Home(){
     const [onlineUsersList, setOnlineUsersList] = useState([]);
     const [chatList, setChatList] = useState([]);
 
+    const isMobile = useIsMobile();
+    const [mobileState, setMobileState] = useState("sidebar");
+
     const handleDataFromLayout = (chatId, userData)=>{
         // console.log("the chat id form deep of the deep is : ",chatId);
         // console.log("the userData form deep is : ",userData);
@@ -23,12 +28,14 @@ export default function Home(){
         setUserData(userData);
         setChatState(true);
         setProfileState(false);
+        setMobileState("chat");
     }
 
     const handleProfileStatusFromLayout = (profileStatus)=>{
         console.log("the profile status from the deep of the deep is :", profileStatus);
         setProfileState(profileStatus);
         setChatState(false);
+        setMobileState("profile");
     }
 
     useEffect(()=>{
@@ -60,12 +67,22 @@ export default function Home(){
         };
     },[])
 
+    if(!isMobile){
+        return(
+            <>
+                <SidebarLayout passingDataToHome={handleDataFromLayout} passingProfileStatusToHome={handleProfileStatusFromLayout} onlineUsersList={onlineUsersList}>
+                    {chatState && <Chat chatId={chatId} userData={userData} onlineUsersList={onlineUsersList}/>}
+                    {profileState && <Profile/>}
+                </SidebarLayout>
+            </>
+        )
+    }
     return(
         <>
-            <SidebarLayout passingDataToHome={handleDataFromLayout} passingProfileStatusToHome={handleProfileStatusFromLayout} onlineUsersList={onlineUsersList}>
-                {chatState && <Chat chatId={chatId} userData={userData} onlineUsersList={onlineUsersList}/>}
-                {profileState && <Profile/>}
-            </SidebarLayout>
+            {mobileState==="sidebar" && <MobileSidebar passingDataToHome={handleDataFromLayout} passingProfileStatusToHome={handleProfileStatusFromLayout} onlineUsersList={onlineUsersList}/>}
+            {mobileState==="chat" && <Chat chatId={chatId} userData={userData} onlineUsersList={onlineUsersList} onBack={()=> setMobileState("sidebar")}/>}
+            {mobileState==="profile" && <Profile onBack={()=> setMobileState("sidebar")}/>}
         </>
     )
+    
 }

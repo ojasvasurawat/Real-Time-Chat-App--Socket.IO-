@@ -15,6 +15,7 @@ import {
   AvatarFallback
 } from "@/components/ui/avatar"
 import { useNavigate } from "react-router-dom";
+import { Button } from "./ui/button";
 
 export default function LogoutButton(){
 
@@ -45,7 +46,7 @@ export default function LogoutButton(){
 
     return(
         <>
-            <SidebarMenuButton asChild className={"h-[5vh] m-0"} onClick={handleLogout}>
+            <Button asChild variant="ghost" className={"h-[5vh] m-0 "} onClick={handleLogout}>
               <Item>
                 <ItemMedia>
                   <Avatar className={"h-[4vh] w-[4vh]"}>
@@ -56,7 +57,7 @@ export default function LogoutButton(){
                   <ItemTitle className={"text-lg font-normal"}>Logout</ItemTitle>
                 </ItemContent>
               </Item>
-            </SidebarMenuButton>
+            </Button>
         </>
     )
 }

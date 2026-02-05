@@ -63,27 +63,27 @@ export default function AppSidebar({passingDataToLayout, passingProfileStatusToL
     }
 
   return (
-    <Sidebar>
+    <Sidebar className={"bg-background"}>
       <SidebarHeader>
-        <h1 className={"text-xl "}>REAL TIME CHAT APP</h1>
+        <h1 className={"text-xl text-text"}>REAL TIME CHAT APP</h1>
         <Field orientation="horizontal" className={"flex justify-between"}>
-          <h2 className={"text-lg"}>HI {userData?.displayName}!</h2>
+          <h2 className={"text-lg text-text"}>HI {userData?.displayName}!</h2>
           <CreateGroupButton/>
         </Field>
         <AddChatButton />
       </SidebarHeader>
       <SidebarContent className="flex-1 overflow-y-auto px-2">
         <SidebarGroup>
-            <SidebarGroupLabel className={"text-lg font-semibold mb-2"}>CHATS</SidebarGroupLabel>
+            <SidebarGroupLabel className={"text-lg font-semibold mb-2 text-text"}>CHATS</SidebarGroupLabel>
             <SidebarGroupContent className={"overflow-y-scroll gap-1"}>
                 <ChatList userData={userData} sendDataToParent={handleChatId} onlineUsersList={onlineUsersList}/>
             </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="px-4 py-3 flex gap-2 justify-between ">  
-          <ProfileButton userData={userData} sendProfileStatusToSidebar={handleProfileStatus}/>
-          <LogoutButton/>
-      </SidebarFooter> 
+        <SidebarFooter className="px-2  flex gap-2 justify-between ">  
+            <ProfileButton userData={userData} sendProfileStatusToSidebar={handleProfileStatus}/>
+            <LogoutButton/>
+        </SidebarFooter> 
     </Sidebar>
   )
 }

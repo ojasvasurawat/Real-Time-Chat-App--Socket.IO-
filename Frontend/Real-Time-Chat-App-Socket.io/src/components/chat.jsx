@@ -21,14 +21,15 @@ import {
     AvatarFallback
 } from "@/components/ui/avatar"
 
-import { UsersRound } from 'lucide-react';
+import { ArrowLeft, UsersRound } from 'lucide-react';
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { AlertDialog, AlertDialogContent, AlertDialogTrigger, AlertDialogFooter, AlertDialogCancel, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription } from '@/components/ui/alert-dialog';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 
 
-export default function Chat({ chatId, userData, onlineUsersList }) {
+export default function Chat({ chatId, userData, onlineUsersList, onBack }) {
 
     // const location = useLocation();
     // const {name} = location.state || {};
@@ -45,6 +46,8 @@ export default function Chat({ chatId, userData, onlineUsersList }) {
     const [messageText, setMessageText] = useState("");
 
     const bottomInChat = useRef(null);
+
+    const isMobile = useIsMobile();
 
 
     function handleKeyDown(event) {
@@ -223,7 +226,7 @@ export default function Chat({ chatId, userData, onlineUsersList }) {
     const otherUsernameList = (chat) => {
         return (
             <>
-                <span className={"text-blue-400"}>
+                <span className={"text-primary"}>
                     {otherOnlineUsernameList(chat)}
                 </span>
                 <span className={""}>
@@ -269,14 +272,15 @@ export default function Chat({ chatId, userData, onlineUsersList }) {
     return (
         <>
 
-    <div >
-            <Item>
-                    <ItemMedia>
+    <div className={"h-screen gap-0 grid grid-rows-[auto_1fr_auto]"}>
+            <Item className={"py-1 max-sm:grid max-sm:grid-rows-2 max-sm:grid-cols-4 "}>
+                    <ItemMedia className={"max-sm:col-span-1"}>
+                        {isMobile && <Button variant='ghost' onClick={onBack}><ArrowLeft/></Button>}
                         <AlertDialog>
                             <AlertDialogTrigger>
                                 <Avatar className={"h-[7vh] w-[7vh]"}>
                                     <AvatarImage src={otherUserAvatarUrl(chatData)} />
-                                    <AvatarFallback className={chatData?.isGroup ? "bg-gray-400  flex items-center justify-center font-semibold text-xl" : "bg-gray-600 flex items-center justify-center font-semibold text-xl"}>{chatData?.isGroup ? <UsersRound /> : otherDisplayname(chatData)?.charAt(0).toUpperCase()}</AvatarFallback>
+                                    <AvatarFallback className={chatData?.isGroup ? "bg-border  flex items-center justify-center font-semibold text-xl" : "bg-border flex items-center justify-center font-semibold text-xl"}>{chatData?.isGroup ? <UsersRound /> : otherDisplayname(chatData)?.charAt(0).toUpperCase()}</AvatarFallback>
                                 </Avatar>
                             </AlertDialogTrigger>
                             <AlertDialogContent className="bg-surface">
@@ -294,29 +298,18 @@ export default function Chat({ chatId, userData, onlineUsersList }) {
                             </AlertDialogContent>
                         </AlertDialog>
                     </ItemMedia>
-                    <ItemContent className={"min-w-0"}>
+                    <ItemContent className={"max-sm:col-span-3"}>
                         <ItemTitle className={"text-xl ml-4  truncate"}>{chatData?.isGroup ? chatData.name : otherDisplayname(chatData)}</ItemTitle>
                         <ItemDescription className={`ml-4 truncate ${isOnline(chatData) ? "text-blue-400" : ""}`}>{chatData?.isGroup ? otherUsernameList(chatData) : isOnline(chatData) ? `${otherUsername(chatData)} is online` : `${otherUsername(chatData)} is offline`}</ItemDescription>
                     </ItemContent>
-                    <ItemContent className="hidden sm:block">
+                    <ItemContent className="max-sm:col-span-2">
                         <ItemDescription>socket status: {socketStatus ? "connected" : "disconnected"}</ItemDescription>
                     </ItemContent>
-                    <ItemActions className="hidden sm:flex">
+                    <ItemActions className="max-sm:col-span-2">
                         <Button variant="outline" onClick={toggleConnection}>
                             {socketStatus ? "disconnect from socket" : "connect to socket"}
                         </Button>
                     </ItemActions>
-            
-
-            <div className="mt-2 flex items-center justify-between gap-3 sm:hidden">
-                <ItemDescription className="text-sm">
-                    socket: {socketStatus ? "connected" : "disconnected"}
-                </ItemDescription>
-
-                <Button size="sm" variant="outline" onClick={toggleConnection}>
-                    {socketStatus ? "Disconnect" : "Connect"}
-                </Button>
-            </div>
 
         </Item>
         <div ref={messages} className={" overflow-y-scroll px-2 md:px-0"} >

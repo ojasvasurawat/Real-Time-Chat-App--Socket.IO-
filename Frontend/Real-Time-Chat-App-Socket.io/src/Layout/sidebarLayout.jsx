@@ -13,7 +13,7 @@ export default function SidebarLayout({passingDataToHome, passingProfileStatusTo
   return (
     <SidebarProvider defaultOpen>
       <AppSidebar passingDataToLayout={handleDataFromSidebar} passingProfileStatusToLayout={hadleProfileStatusFromSidebar} onlineUsersList={onlineUsersList}/>
-      <main className={"grow mr-[1vw]"}>
+      <main className={"grow px-2 bg-background"}>
         {children}
       </main>
     </SidebarProvider>
