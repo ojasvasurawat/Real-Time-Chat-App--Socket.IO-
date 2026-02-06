@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Field } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Plus } from "lucide-react";
+import { toast } from "react-toastify";
 
 
 export default function AddChatButton(){
@@ -14,17 +15,30 @@ export default function AddChatButton(){
 
 
     const handleAddChat = async()=>{
-        const response = await axios.post(`${backendUrl}/add-chat`,{
-            chatUsername: chatUsername
-        },{
-            headers:{
-                'Content-Type': 'application/json',
-                'authorization': localStorage.getItem('authorization')
-            }
-        });
 
-        if(response){
-            chatUsernameInput.current.value=""
+        try{
+            const response = await axios.post(`${backendUrl}/add-chat`,{
+                chatUsername: chatUsername
+            },{
+                headers:{
+                    'Content-Type': 'application/json',
+                    'authorization': localStorage.getItem('authorization')
+                }
+            });
+
+            console.log(response);
+
+            if(response.data.message){
+                chatUsernameInput.current.value=""
+                toast.warning(response.data.message);
+                return;
+            }
+            else if(response.data.chat){
+                chatUsernameInput.current.value=""
+                window.location.reload();
+            }
+        }catch(error){
+            
         }
     }
     return(

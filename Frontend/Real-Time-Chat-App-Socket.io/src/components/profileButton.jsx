@@ -24,10 +24,11 @@ export default function ProfileButton({sendProfileStatusToSidebar, userData}){
 
     return(
         <>
-            <Button asChild variant="ghost" className={"h-[5vh] m-0"} onClick={handleProfileClick}>
+        <div className="max-sm:bg-surface hover:bg-surface rounded-xl">
+            <Button asChild variant="ghost" className={"h-[5vh] m-0 w-full"} onClick={handleProfileClick}>
               <Item>
                 <ItemMedia>
-                  <Avatar className={"h-[4vh] w-[4vh]"}>
+                  <Avatar className={"h-[4vh] w-[4vh] object-cover"}>
                     <AvatarImage src={userData?.avatarUrl} />
                     <AvatarFallback ><User/></AvatarFallback>
                   </Avatar>
@@ -37,6 +38,7 @@ export default function ProfileButton({sendProfileStatusToSidebar, userData}){
                 </ItemContent>
               </Item>
             </Button>
+        </div>
         </>
     )
 }

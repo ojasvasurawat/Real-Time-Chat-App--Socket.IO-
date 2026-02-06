@@ -26,8 +26,8 @@ export default function SignIn(){
 
     const handleSignin = async()=>{
         setButtonLoading(true);
-        if (signinPassword === "" || signinEmail === "" ) {
-            toast.warning("Enter the details");
+        if (signinEmail === "" || signinPassword === "") {
+            toast.warning("Please fill in all required fields.");
             setButtonLoading(false);
             return;
         }
@@ -35,31 +35,46 @@ export default function SignIn(){
         console.log(backendUrl);
         console.log(signinEmail);
 
-        const response = await axios.post(`${backendUrl}/signin`, {
-            email: signinEmail,
-            password: signinPassword
-        })
+        try{
+          const response = await axios.post(`${backendUrl}/signin`, {
+              email: signinEmail,
+              password: signinPassword
+          })
 
-        if(response.data.token){
-            localStorage.setItem("authorization", response.data.token);
-            toast.success(`Welcome, ${response.data.user.name}`);
-            navigate("/");
-        }
-        else{
-            setButtonLoading(false);
-            toast.error("Login Failed");
+          if(response.data.token){
+              localStorage.setItem("authorization", response.data.token);
+              console.log(response.data);
+              toast.success(`Welcome, ${response.data.user.displayName}`);
+              setTimeout(()=>{
+                navigate("/");
+              },5000);
+          }
+          else{
+              setButtonLoading(false);
+              toast.error("Login Failed");
+          }
+        }catch(error){
+          console.error("Login failed:", error);
+            if (error.response?.data) {
+                setButtonLoading(false)
+                toast.error(`Login failed: ${error.response.data}`);
+            } else {
+                setButtonLoading(false)
+                toast.error("Login failed: Unknown error occurred");
+            }
         }
     }
 
     return(
         <>
-            <div className="min-h-screen flex items-center justify-center px-4 py-8">
-      <Card className="w-full max-w-md rounded-xl">
+            <div className="min-h-screen flex items-center justify-center px-4 py-8 bg-background">
+              <ToastContainer/>
+      <Card className="w-full max-w-md rounded-xl bg-surface">
         <CardHeader className="text-center">
-          <CardTitle className="text-3xl font-bold ">
+          <CardTitle className="text-3xl font-bold text-text">
             Welcome Back
           </CardTitle>
-          <CardDescription className="mt-2">
+          <CardDescription className="mt-2 text-muted">
             Sign in to continue chatting in real time
           </CardDescription>
         </CardHeader>
@@ -73,24 +88,24 @@ export default function SignIn(){
         >
           <CardContent className="space-y-4">
             <div className="space-y-1">
-              <Label className="">Email</Label>
+              <Label className="text-text">Email</Label>
               <Input
                 type="email"
                 value={signinEmail}
                 onChange={(e) => setSigninEmail(e.target.value)}
                 placeholder="Enter your email"
-                className=""
+                className={"mb-2 focus:border-primary/60 focus:ring-0 focus-visible:ring-1"}
               />
             </div>
 
             <div className="space-y-1">
-              <Label className="">Password</Label>
+              <Label className="text-text">Password</Label>
               <Input
                 type="password"
                 value={signinPassword}
                 onChange={(e) => setSigninPassword(e.target.value)}
                 placeholder="Enter your password"
-                className=""
+                className={"mb-2 focus:border-primary/60 focus:ring-0 focus-visible:ring-1"}
               />
             </div>
           </CardContent>
@@ -99,17 +114,17 @@ export default function SignIn(){
             <Button
               variant="outline"
               type="submit"
-              className="w-full font-semibold"
+              className="w-full font-semibold bg-primary/70 border border-primary  hover:bg-primary/90 hover:shadow-md"
               disabled={buttonLoading}
             >
-              {buttonLoading ? "Signing in..." : "Sign In"}
+              {buttonLoading ? "Loging in..." : "Log In"}
             </Button>
 
-            <p className="text-sm text-center">
+            <p className="text-sm text-center text-text">
               Don’t have an account?{" "}
               <Link
                 to="/signup"
-                className=" underline "
+                className=" underline text-primary"
               >
                 Sign up
               </Link>

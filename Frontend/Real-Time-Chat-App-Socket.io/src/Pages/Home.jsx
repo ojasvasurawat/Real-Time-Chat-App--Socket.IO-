@@ -6,6 +6,7 @@ import { socket } from "../socket";
 import Profile from './Profile';
 import { useIsMobile } from '@/hooks/use-mobile';
 import MobileSidebar from '@/components/mobileSidebar';
+import { ToastContainer } from 'react-toastify';
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 
@@ -70,6 +71,7 @@ export default function Home(){
     if(!isMobile){
         return(
             <>
+            <ToastContainer/>
                 <SidebarLayout passingDataToHome={handleDataFromLayout} passingProfileStatusToHome={handleProfileStatusFromLayout} onlineUsersList={onlineUsersList}>
                     {chatState && <Chat chatId={chatId} userData={userData} onlineUsersList={onlineUsersList}/>}
                     {profileState && <Profile/>}
@@ -79,6 +81,7 @@ export default function Home(){
     }
     return(
         <>
+        <ToastContainer/>
             {mobileState==="sidebar" && <MobileSidebar passingDataToHome={handleDataFromLayout} passingProfileStatusToHome={handleProfileStatusFromLayout} onlineUsersList={onlineUsersList}/>}
             {mobileState==="chat" && <Chat chatId={chatId} userData={userData} onlineUsersList={onlineUsersList} onBack={()=> setMobileState("sidebar")}/>}
             {mobileState==="profile" && <Profile onBack={()=> setMobileState("sidebar")}/>}

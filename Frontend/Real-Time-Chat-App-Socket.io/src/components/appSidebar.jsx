@@ -63,24 +63,24 @@ export default function AppSidebar({passingDataToLayout, passingProfileStatusToL
     }
 
   return (
-    <Sidebar className={"bg-background"}>
+    <Sidebar className={"bg-background "} >
       <SidebarHeader>
         <h1 className={"text-xl text-text"}>REAL TIME CHAT APP</h1>
         <Field orientation="horizontal" className={"flex justify-between"}>
           <h2 className={"text-lg text-text"}>HI {userData?.displayName}!</h2>
-          <CreateGroupButton/>
+          {userData && <CreateGroupButton userData={userData} />}
         </Field>
         <AddChatButton />
       </SidebarHeader>
-      <SidebarContent className="flex-1 overflow-y-auto px-2">
+      <SidebarContent className="px-2 overflow-hidden">
         <SidebarGroup>
             <SidebarGroupLabel className={"text-lg font-semibold mb-2 text-text"}>CHATS</SidebarGroupLabel>
-            <SidebarGroupContent className={"overflow-y-scroll gap-1"}>
+            <SidebarGroupContent className={"overflow-y-scroll  gap-1"}>
                 <ChatList userData={userData} sendDataToParent={handleChatId} onlineUsersList={onlineUsersList}/>
             </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-        <SidebarFooter className="px-2  flex gap-2 justify-between ">  
+        <SidebarFooter className="gap-0">  
             <ProfileButton userData={userData} sendProfileStatusToSidebar={handleProfileStatus}/>
             <LogoutButton/>
         </SidebarFooter> 

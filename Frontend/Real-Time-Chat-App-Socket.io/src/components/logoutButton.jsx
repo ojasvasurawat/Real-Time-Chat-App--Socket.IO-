@@ -46,11 +46,12 @@ export default function LogoutButton(){
 
     return(
         <>
-            <Button asChild variant="ghost" className={"h-[5vh] m-0 "} onClick={handleLogout}>
+        <div className="max-sm:bg-danger/60 hover:bg-surface rounded-lg pb-1">
+            <Button asChild variant="ghost" className={"h-[5vh] m-0 w-full "} onClick={handleLogout}>
               <Item>
                 <ItemMedia>
-                  <Avatar className={"h-[4vh] w-[4vh]"}>
-                    <AvatarFallback ><LogOut/></AvatarFallback>
+                  <Avatar className={"h-[4vh] w-[4vh] object-cover"}>
+                    <AvatarFallback className={"bg-transparent"}><LogOut/></AvatarFallback>
                   </Avatar>
                 </ItemMedia>    
                 <ItemContent >
@@ -58,6 +59,7 @@ export default function LogoutButton(){
                 </ItemContent>
               </Item>
             </Button>
+        </div>
         </>
     )
 }

@@ -32,13 +32,70 @@ export default function SignUp(){
         e.preventDefault();
         setButtonLoading(true);
         if (formData.displayName === "" || formData.username === "" || formData.email === "" || formData.password === "") {
-            toast.warning("Enter the details");
+            toast.warning("Please fill in all required fields.");
             setButtonLoading(false);
             return;
         }
-        if (formData.password.length < 8 ) {
+        
+        
+        if (formData.displayName.length < 3) {
+            toast.warning("Display name is too short.");
+            setButtonLoading(false);
+            return;
+        }
+
+        if (formData.displayName.length > 50) {
+            toast.warning("Display name is too long.");
+            setButtonLoading(false);
+            return;
+        }
+
+
+        if (formData.username.length < 3) {
+            toast.warning("Username must be at least 3 characters.");
+            setButtonLoading(false);
+            return;
+        }
+
+        if (formData.username.length > 20) {
+            toast.warning("Username cannot be longer than 20 characters.");
+            setButtonLoading(false);
+            return;
+        }
+        if (!/^[a-zA-Z0-9_]+$/.test(formData.username)) {
+            toast.warning("Username can only contain letters, numbers, and underscores.");
+            setButtonLoading(false);
+            return;
+        }
+
+
+        if (formData.email.length < 3) {
+            toast.warning("Email is too short.");
+            setButtonLoading(false);
+            return;
+        }
+
+        if (formData.email.length > 320) {
+            toast.warning("Email is too long.");
+            setButtonLoading(false);
+            return;
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+            toast.warning("Please enter a valid email address.");
+            setButtonLoading(false);
+            return;
+        }
+
+
+        if (formData.password.length < 8) {
             toast.warning("Password must be at least 8 characters long.");
-            setButtonLoading(false)
+            setButtonLoading(false);
+            return;
+        }
+
+        if (formData.password.length > 20) {
+            toast.warning("Password cannot be longer than 20 characters.");
+            setButtonLoading(false);
             return;
         }
 
@@ -54,7 +111,9 @@ export default function SignUp(){
 
             if(response.data){
                 toast.success("Account created successfully");
-                navigate("/signin");
+                setTimeout(()=>{
+                  navigate("/signin");
+                },5000);
             }
             else{
                 setButtonLoading(false);
@@ -63,7 +122,16 @@ export default function SignUp(){
         }
         catch(error){
             console.error("Signup failed:", error);
-            if (error.response?.data?.message) {
+            if(error.response?.data?.errorMessage){
+              setButtonLoading(false)
+              const parsed = JSON.parse(error.response.data.errorMessage);
+              // console.log(parsed);
+              for(const data of parsed){
+                console.log(data.message);
+                toast.error(`Signup failed: ${data.message}`);
+              }
+            }
+            else if (error.response?.data?.message) {
                 setButtonLoading(false)
                 toast.error(`Signup failed: ${error.response.data.message}`);
             } else {
@@ -75,13 +143,14 @@ export default function SignUp(){
 
     return(
         <>
-        <div className="min-h-screen flex items-center justify-center px-4 py-8">
-      <Card className="w-full max-w-md rounded-xl">
+        <div className="min-h-screen flex items-center justify-center px-4 py-8 bg-background">
+          <ToastContainer/>
+      <Card className="w-full max-w-md rounded-xl bg-surface">
         <CardHeader className="text-center">
-          <CardTitle className="text-3xl font-bold ">
+          <CardTitle className="text-3xl font-bold text-text">
             Create an Account
           </CardTitle>
-          <CardDescription className=" mt-2">
+          <CardDescription className=" mt-2 text-muted">
             Start chatting in real-time with friends and teams
           </CardDescription>
         </CardHeader>
@@ -89,43 +158,43 @@ export default function SignUp(){
         <form onSubmit={handleSignup} className="space-y-5 mt-4">
           <CardContent className="space-y-4">
             <div className="space-y-1">
-              <Label className="">Display Name</Label>
+              <Label className="text-text">Display Name</Label>
               <Input
                 value={formData.displayName}
                 onChange={(e) =>
                   setFormData({ ...formData, displayName: e.target.value })
                 }
-                placeholder="Enter your display name"
-                className=""
+                placeholder="John Doe"
+                className={"mb-2 focus:border-primary/60 focus:ring-0 focus-visible:ring-1"}
               />
             </div>
 
             <div className="space-y-1">
-              <Label className="">Username</Label>
+              <Label className="text-text">Username</Label>
               <Input
                 value={formData.username}
                 onChange={(e) =>
                   setFormData({ ...formData, username: e.target.value })
                 }
-                placeholder="Enter your username"
-                className=""
+                placeholder="John_Doe_01"
+                className={"mb-2 focus:border-primary/60 focus:ring-0 focus-visible:ring-1"}
               />
             </div>
 
             <div className="space-y-1">
-              <Label className="">Email</Label>
+              <Label className="text-text">Email</Label>
               <Input
                 value={formData.email}
                 onChange={(e) =>
                   setFormData({ ...formData, email: e.target.value })
                 }
-                placeholder="Enter your email"
-                className=""
+                placeholder="johndoe@gmail.com"
+                className={"mb-2 focus:border-primary/60 focus:ring-0 focus-visible:ring-1"}
               />
             </div>
 
             <div className="space-y-1">
-              <Label className="">Password</Label>
+              <Label className="text-text">Password</Label>
               <Input
                 type="password"
                 value={formData.password}
@@ -133,7 +202,7 @@ export default function SignUp(){
                   setFormData({ ...formData, password: e.target.value })
                 }
                 placeholder="Enter your password"
-                className=""
+                className={"mb-2 focus:border-primary/60 focus:ring-0 focus-visible:ring-1"}
               />
             </div>
           </CardContent>
@@ -142,15 +211,15 @@ export default function SignUp(){
             <Button
             variant="outline"
               type="submit"
-              className="w-full font-semibold"
+              className="w-full font-semibold bg-primary/70 border border-primary  hover:bg-primary/90 hover:shadow-md"
               disabled={buttonLoading}
             >
               {buttonLoading ? "Creating account..." : "Sign Up"}
             </Button>
 
-            <p className="text-sm  text-center">
+            <p className="text-sm  text-center text-text">
               Already have an account?{" "}
-              <Link to="/signin" className=" underline ">
+              <Link to="/signin" className=" underline text-primary">
                 Sign in
               </Link>
             </p>

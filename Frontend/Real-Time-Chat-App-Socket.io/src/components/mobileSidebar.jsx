@@ -46,7 +46,7 @@ export default function MobileSidebar({passingDataToHome, passingProfileStatusTo
         <CardTitle className={"text-xl "}>REAL TIME CHAT APP</CardTitle>
         <Field orientation="horizontal" className={"flex justify-between"}>
           <h2 className={"text-lg "}>HI {userData?.displayName}!</h2>
-          <CreateGroupButton />
+          {userData && <CreateGroupButton userData={userData} />}
         </Field>
         <AddChatButton/>
       </CardHeader>

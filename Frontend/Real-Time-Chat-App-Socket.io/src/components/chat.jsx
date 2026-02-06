@@ -278,16 +278,16 @@ export default function Chat({ chatId, userData, onlineUsersList, onBack }) {
                         {isMobile && <Button variant='ghost' onClick={onBack}><ArrowLeft/></Button>}
                         <AlertDialog>
                             <AlertDialogTrigger>
-                                <Avatar className={"h-[7vh] w-[7vh]"}>
+                                <Avatar className={"h-[7vh] w-[7vh] object-cover"}>
                                     <AvatarImage src={otherUserAvatarUrl(chatData)} />
                                     <AvatarFallback className={chatData?.isGroup ? "bg-border  flex items-center justify-center font-semibold text-xl" : "bg-border flex items-center justify-center font-semibold text-xl"}>{chatData?.isGroup ? <UsersRound /> : otherDisplayname(chatData)?.charAt(0).toUpperCase()}</AvatarFallback>
                                 </Avatar>
                             </AlertDialogTrigger>
                             <AlertDialogContent className="bg-surface">
                                 <AlertDialogHeader className="flex items-center">
-                                    <Avatar className="w-50 h-50 md:w-100 md:h-100 rounded-full mx-auto">
+                                    <Avatar className="w-50 h-50 md:w-100 md:h-100 object-cover rounded-full mx-auto">
                                         <AvatarImage src={otherUserAvatarUrl(chatData)} />
-                                        <AvatarFallback className={chatData?.isGroup ? "bg-gray-400  flex items-center justify-center font-semibold text-8xl md:text-[200px]" : "bg-gray-600 flex items-center justify-center font-semibold text-8xl md:text-[200px]"}>{chatData?.isGroup ? <UsersRound className="w-[94px] h-[94px] md:w-[170px] md:h-[170px]" /> : otherDisplayname(chatData)?.charAt(0).toUpperCase()}</AvatarFallback>
+                                        <AvatarFallback className={chatData?.isGroup ? "bg-border  flex items-center justify-center font-semibold text-8xl md:text-[200px]" : "bg-border flex items-center justify-center font-semibold text-8xl md:text-[200px]"}>{chatData?.isGroup ? <UsersRound className="w-[94px] h-[94px] md:w-[170px] md:h-[170px]" /> : otherDisplayname(chatData)?.charAt(0).toUpperCase()}</AvatarFallback>
                                     </Avatar>
                                     <AlertDialogTitle></AlertDialogTitle>
                                     <AlertDialogDescription></AlertDialogDescription>
@@ -299,14 +299,14 @@ export default function Chat({ chatId, userData, onlineUsersList, onBack }) {
                         </AlertDialog>
                     </ItemMedia>
                     <ItemContent className={"max-sm:col-span-3"}>
-                        <ItemTitle className={"text-xl ml-4  truncate"}>{chatData?.isGroup ? chatData.name : otherDisplayname(chatData)}</ItemTitle>
-                        <ItemDescription className={`ml-4 truncate ${isOnline(chatData) ? "text-blue-400" : ""}`}>{chatData?.isGroup ? otherUsernameList(chatData) : isOnline(chatData) ? `${otherUsername(chatData)} is online` : `${otherUsername(chatData)} is offline`}</ItemDescription>
+                        <ItemTitle className={"text-xl ml-4 text-text  truncate"}>{chatData?.isGroup ? chatData.name : otherDisplayname(chatData)}</ItemTitle>
+                        <ItemDescription className={`ml-4 truncate ${isOnline(chatData) ? "text-primary" : ""}`}>{chatData?.isGroup ? otherUsernameList(chatData) : isOnline(chatData) ? `${otherUsername(chatData)} is online` : `${otherUsername(chatData)} is offline`}</ItemDescription>
                     </ItemContent>
                     <ItemContent className="max-sm:col-span-2">
-                        <ItemDescription>socket status: {socketStatus ? "connected" : "disconnected"}</ItemDescription>
+                        <ItemDescription >socket status: <span className={`${socketStatus ? "text-primary/80" : "text-danger/70"}`}>{socketStatus ? "connected" : "disconnected"}</span></ItemDescription>
                     </ItemContent>
                     <ItemActions className="max-sm:col-span-2">
-                        <Button variant="outline" onClick={toggleConnection}>
+                        <Button variant="outline" className={`${socketStatus ? "bg-danger/70" : "bg-primary/80"}`} onClick={toggleConnection}>
                             {socketStatus ? "disconnect from socket" : "connect to socket"}
                         </Button>
                     </ItemActions>
@@ -319,15 +319,15 @@ export default function Chat({ chatId, userData, onlineUsersList, onBack }) {
                 </div>
             ))}
             {typingUser && typingUser !== userData.username && (
-                <p className="text-sm text-blue-400 px-2">
+                <p className="text-sm text-primary px-2 pb-2">
                     {typingUser} is typing...
                 </p>
             )}
             <div ref={bottomInChat} />
         </div>
         <div className={"flex px-2 md:px-0 mb-2"}>
-            <Textarea type="text" placeholder="Type your message here." className={""} ref={input} onKeyDown={handleKeyDown} onChange={handleChange} />
-            <Button onClick={submit} variant="outline" className={"my-auto mx-2"}>Send</Button>
+            <Textarea type="text" placeholder="Type your message here." className={"mb-2 focus:border-primary/60 focus:ring-0 focus-visible:ring-1"} ref={input} onKeyDown={handleKeyDown} onChange={handleChange} />
+            <Button onClick={submit} variant="ghost" className={"my-auto mx-2 bg-primary/60 hover:bg-primary/80"}>Send</Button>
         </div>
 
     </div>

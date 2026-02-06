@@ -1,12 +1,31 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Check, Pencil } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-export default function Profile({onBack}) {
+import { Button } from "@/components/ui/button"
+import {
+    Card,
+    CardAction,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+
+import {
+    HoverCard,
+    HoverCardContent,
+    HoverCardTrigger,
+} from "@/components/ui/hover-card"
+
+
+export default function Profile({ onBack }) {
 
     const [currentDisplayName, setCurrentDisplayName] = useState("");
     const [currentUsername, setCurrentUsername] = useState("");
@@ -21,31 +40,33 @@ export default function Profile({onBack}) {
     const [buttonLoadingUpdate, setButtonLoadingUpdate] = useState(false);
     const [buttonLoadingAvatar, setButtonLoadingAvatar] = useState(false);
 
+    const [displayNameInputState, setDisplayNameInputState] = useState(false);
+
     const isMobile = useIsMobile();
 
 
-    useEffect(()=>{
-        axios(`${backendUrl}/info`,{
-            headers:{
+    useEffect(() => {
+        axios(`${backendUrl}/info`, {
+            headers: {
                 'Content-Type': 'application/json',
                 'authorization': localStorage.getItem('authorization')
             }
-        }).then((response)=>{
+        }).then((response) => {
             console.log(response);
             setCurrentDisplayName(response.data.user.displayName);
             setCurrentUsername(response.data.user.username);
             setCurrentEmail(response.data.user.email);
             setOldAvatarUrl(response.data.user.avatarUrl);
-        }).catch((e)=>{
-            if(e){
-              navigate("/signin");
+        }).catch((e) => {
+            if (e) {
+                navigate("/signin");
             }
         })
-    },[])
+    }, [])
 
 
     const handleButtonClick = () => {
-        fileInputRef.current.click(); 
+        fileInputRef.current.click();
     };
 
     const handleAvatarChange = async (e) => {
@@ -65,13 +86,13 @@ export default function Profile({onBack}) {
         console.log('Preview URL:', previewUrl);
 
         const toBase64 = async (file) => {
-        const reader = new FileReader();
+            const reader = new FileReader();
 
-        return new Promise((resolve, reject) => {
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = reject;
-            reader.readAsDataURL(file);
-        });
+            return new Promise((resolve, reject) => {
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
         };
 
 
@@ -80,8 +101,8 @@ export default function Profile({onBack}) {
         try {
             const response = await axios.post(`${backendUrl}/add-profile-picture`, {
                 avatarUrl: base64
-            },{
-                headers:{
+            }, {
+                headers: {
                     'Content-Type': 'application/json',
                     'authorization': localStorage.getItem('authorization')
                 }
@@ -90,6 +111,7 @@ export default function Profile({onBack}) {
             if (response.data) {
                 // toast.success("Avatar uploaded successfully");
                 setButtonLoadingAvatar(false);
+                window.location.reload();
             }
         } catch (error) {
             console.error("Upload failed:", error);
@@ -101,31 +123,33 @@ export default function Profile({onBack}) {
                 setButtonLoadingAvatar(false);
             }
         }
-        
 
 
-        
+
+
     };
 
     const handleDisplayNameUpdate = async () => {
         setButtonLoadingUpdate(true)
 
-        if (changedDisplayName === "" ) {
+        if (changedDisplayName === "") {
             // toast.warning("Enter the details");
             setButtonLoadingUpdate(false)
+            setDisplayNameInputState(false)
             return;
         }
-        if (changedDisplayName.length < 3 ) {
+        if (changedDisplayName.length < 3) {
             // toast.warning("Password must be at least 8 characters long.");
             setButtonLoadingUpdate(false)
+            setDisplayNameInputState(false)
             return;
         }
 
         try {
             const response = await axios.post(`${backendUrl}/update-displayname`, {
                 displayName: changedDisplayName,
-            },{
-                headers:{
+            }, {
+                headers: {
                     'Content-Type': 'application/json',
                     'authorization': localStorage.getItem('authorization')
                 }
@@ -146,6 +170,8 @@ export default function Profile({onBack}) {
                 setButtonLoadingUpdate(false)
             }
         }
+
+        displayNameInputState(false);
     };
 
     const handlePasswordUpdate = async () => {
@@ -156,7 +182,7 @@ export default function Profile({onBack}) {
             setButtonLoadingUpdate(false)
             return;
         }
-        if (changedPassword.length < 8 ) {
+        if (changedPassword.length < 8) {
             // toast.warning("Password must be at least 8 characters long.");
             setButtonLoadingUpdate(false)
             return;
@@ -166,8 +192,8 @@ export default function Profile({onBack}) {
             const response = await axios.post(`${backendUrl}/update-password`, {
                 // name: changedName,
                 password: changedPassword
-            },{
-                headers:{
+            }, {
+                headers: {
                     'Content-Type': 'application/json',
                     'authorization': localStorage.getItem('authorization')
                 }
@@ -190,166 +216,172 @@ export default function Profile({onBack}) {
         }
     };
 
-    const handleLogout = async()=>{
-                setButtonLoadingLogout(true)
-        try{const response = await axios.post(`${backendUrl}/logout`,{
-                
-            },{
-                headers:{
+    const handleLogout = async () => {
+        setButtonLoadingLogout(true)
+        try {
+            const response = await axios.post(`${backendUrl}/logout`, {
+
+            }, {
+                headers: {
                     'Content-Type': 'application/json',
                     'authorization': localStorage.getItem('authorization')
                 }
             })
-        if (response) {
-            localStorage.setItem("authorization", "");
-            setButtonLoadingLogout(false)
-            // toast.success("Logout successfully");
-            navigate("/");
-        }
-        else{
-            // toast.error("Logout Failed")
-            setButtonLoadingLogout(false)
-        }
-        }catch(e){
-            console.log("the error is :",e);
+            if (response) {
+                localStorage.setItem("authorization", "");
+                setButtonLoadingLogout(false)
+                // toast.success("Logout successfully");
+                navigate("/");
+            }
+            else {
+                // toast.error("Logout Failed")
+                setButtonLoadingLogout(false)
+            }
+        } catch (e) {
+            console.log("the error is :", e);
             setButtonLoadingLogout(false)
         }
     }
 
-   
+
+    const handleDisplayNameInputState = () => {
+        setDisplayNameInputState(true);
+    }
+
+    const handleKeyDownEsc = (event) => {
+        if (event.key === 'Escape') {
+            setDisplayNameInputState(false);
+        }
+        else {
+            return;
+        }
+    }
+
+
     return (
         <>
             <div>
-                {isMobile && <Button variant='ghost' onClick={onBack}><ArrowLeft/></Button>}        
-                <h1 className="text-center font-bold text-4xl font-sans text-indigo-500 pt-7">Profile</h1>
-                <div className="  mt-10 grid md:grid-cols-2 gap-5">
-                    <div className="space-y-6 mx-5 md:mr-5 md:ml-10">
-                        <h2 className="text-center text-3xl font-bold text-gray-900">Account Details</h2>
+                {isMobile && <Button variant='ghost' onClick={onBack}><ArrowLeft /></Button>}
 
-                        <div className="space-y-4">
-                            <div>
-                                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                                    Username
-                                </label>
-                                <div className="w-full px-4 py-3 border border-white rounded-lg focus:ring-blue-500 focus:border-blue-500">{currentUsername}</div>
-                            </div>
-
-                            <div>
-                                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                                    Display Name
-                                </label>
-                                <div className="w-full px-4 py-3 border border-white rounded-lg focus:ring-blue-500 focus:border-blue-500">{currentDisplayName}</div>
-                            </div>
-
-                            <div>
-                                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                                    Email
-                                </label>
-                                <div className="w-full px-4 py-3 border border-white rounded-lg focus:ring-blue-500 focus:border-blue-500">{currentEmail}</div>
-                            </div>
-                        </div>
-                        
-                        <button
-                            onClick={handleLogout}
-                            className={`w-full py-3 px-4 rounded-lg transition duration-200 text-white font-medium  ${buttonLoadingLogout ? ("bg-red-100 hover:bg-red-100") : ("bg-red-400 hover:bg-red-600 ")}`}
-                        >
-                            {buttonLoadingLogout ? ("Wait") : ("logout")}
-                        </button>
-
-                    </div>
-
-                    <div className="space-y-6 mx-5 md:ml-5 md:mr-10 ">
-                        <h2 className="text-center text-3xl font-bold text-gray-900">Update Your Profile</h2>
-
-                        <div className="space-y-4">
-                            <div>
-                                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                                    New Display Name
-                                </label>
-                                <input
-                                    id="name"
-                                    type="name"
-                                    value={changedDisplayName}
-                                    onChange={(e) => setChangedDisplayName(e.target.value)}
-                                    className="w-full px-4 py-3 border border-white rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                                    placeholder="Enter your new display name"
-                                />
-                            </div>
-
-                            <button
-                                onClick={handleDisplayNameUpdate}
-                                className={`w-full py-3 px-4 text-white font-medium rounded-lg transition duration-200 ${buttonLoadingUpdate ? ("bg-blue-100 hover:bg-blue-100") : ("bg-blue-600 hover:bg-blue-900")}`}
-                            >
-                                {buttonLoadingUpdate ? ("Wait") : ("Update")}
-                            </button>
-
-                            <div>
-                                <div className="flex justify-between mb-1">
-                                    <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                                        New Password
-                                    </label>
+                <div className="">
+                    <Card className="w-full max-w-sm mx-auto border-none shadow-none">
+                        <CardHeader>
+                            <CardTitle className={"text-2xl text-text"}>Account Details</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="flex flex-col gap-6">
+                                <div className="grid gap-2">
+                                    <Label className={"text-lg text-text"}>Username</Label>
+                                    <Label className={"border border-border rounded-lg p-2 text-md"}>{currentUsername}</Label>
                                 </div>
-                                <input
-                                    id="password"
-                                    type="password"
-                                    value={changedPassword}
-                                    onChange={(e) => setChangedPassword(e.target.value)}
-                                    className="w-full px-4 py-3 border border-white rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                                    placeholder="Enter your new password"
-                                />
+                                <div className="grid gap-2">
+                                    <Label className={"text-lg text-text"}>Email</Label>
+                                    <Label className={"border border-border rounded-lg p-2 text-md"}>{currentEmail}</Label>
+                                </div>
+                                <div className="grid gap-2">
+                                    <Label className={"text-lg text-text"}>Display Name</Label>
+                                    {!displayNameInputState ?
+                                        <div className="flex">
+                                            <Label className={"border border-border rounded-lg p-2 w-full text-md"}>{currentDisplayName}</Label>
+                                            <HoverCard>
+                                                <HoverCardTrigger>
+                                                    <Button variant="ghost" onClick={handleDisplayNameInputState}><Pencil /></Button>
+                                                </HoverCardTrigger>
+                                                <HoverCardContent className="bg-surface">
+                                                    <div>Click to edit display name</div>
+                                                </HoverCardContent>
+                                            </HoverCard>
+                                        </div>
+                                        :
+                                        <div className="flex">
+                                            <Input
+                                                type="name"
+                                                value={changedDisplayName}
+                                                onChange={(e) => setChangedDisplayName(e.target.value)}
+                                                onKeyDown={handleKeyDownEsc}
+                                                className={"border border-border rounded-lg p-2 w-full focus:border-primary/60 focus:ring-0 focus-visible:ring-0"} />
+                                            <HoverCard>
+                                                <HoverCardTrigger>
+                                                    <Button variant="ghost" className={"hover:bg-primary/60"} onClick={handleDisplayNameUpdate}><Check /></Button>
+                                                </HoverCardTrigger>
+                                                <HoverCardContent className="bg-surface">
+                                                    <div>Click to save display name, press Esc in input box to cancle</div>
+                                                </HoverCardContent>
+                                            </HoverCard>
+                                        </div>
+                                    }
+                                </div>
+                                <div className="grid gap-2">
+                                    <Label className={"text-lg text-text"}>Enter new password</Label>
+                                    <div className="flex">
+                                        <Input
+                                            id="password"
+                                            type="text"
+                                            value={changedPassword}
+                                            onChange={(e) => setChangedPassword(e.target.value)}
+                                            className="w-full p-2 border border-border rounded-lg focus:border-primary/60 focus:ring-0 focus-visible:ring-0"
+                                            placeholder="Enter your new password"
+                                        />
+                                        <Button
+                                            variant="ghost"
+                                            onClick={handlePasswordUpdate}
+                                            className={"max-sm:bg-primary/60 hover:bg-primary/60 mx-2 text-md"}
+                                        >
+                                            {buttonLoadingUpdate ? ("Wait") : ("Update")}
+                                        </Button>
+                                    </div>
+                                </div>
                             </div>
+                        </CardContent>
+                        <CardFooter className="flex-col gap-2">
+                            <Button className="w-full bg-danger/80 hover:bg-danger text-md p-2" onClick={handleLogout}>
+                                {buttonLoadingLogout ? ("Wait") : ("Logout")}
+                            </Button>
+                        </CardFooter>
+                    </Card>
 
-                            <button
-                                onClick={handlePasswordUpdate}
-                                className={`w-full py-3 px-4 text-white font-medium rounded-lg transition duration-200 ${buttonLoadingUpdate ? ("bg-blue-100 hover:bg-blue-100") : ("bg-blue-600 hover:bg-blue-900")}`}
-                            >
-                                {buttonLoadingUpdate ? ("Wait") : ("Update")}
-                            </button>
+                    {/* <div className="w-full mx-auto flex justify-center my-5"> */}
+                        <Card className="border-none shadow-none w-full max-w-sm mx-auto flex justify-center my-5 h-50vh">
+                            <CardHeader>
+                                <CardTitle>
+                                    {avatarUrl ? (
+                                        <div className="justify-items-center border-none font-bold text-2xl text-text text-center">
+                                            New Avatar
+                                            <img className="mt-5 w-30 h-30 object-cover rounded-full" src={avatarUrl} />
+                                        </div>
+                                    ) : (
 
-                        </div>
-
-                        {/* <button
-                            onClick={handleUpdate}
-                            className={`w-full py-3 px-4 text-white font-medium rounded-lg transition duration-200 ${buttonLoadingUpdate ? ("bg-blue-100 hover:bg-blue-100") : ("bg-blue-600 hover:bg-blue-900")}`}
-                        >
-                            {buttonLoadingUpdate ? ("Wait") : ("Update")}
-                        </button> */}
-                        
-
-                    </div>
-
-                
-                    <div className="grid justify-items-center md:col-span-2">
-                        {avatarUrl ? (
-                                <div className="h-50 w-100  md:w-1/4 border rounded-xl justify-items-center">
-                                    New Avatar
-                                    <img className="mt-5 w-30 h-30 object-cover rounded-full" src={avatarUrl}/>
-                                </div>                           
-                                ) : (
-                                    
                                         oldAvatarUrl ? (
-                                            <div className="h-50 w-90  md:w-1/4 border rounded-xl justify-items-center">
+                                            <div className="justify-items-center border-none text-2xl text-text text-center">
                                                 Old Avatar
-                                                <img className="mt-5 w-30 h-30 object-cover rounded-full" src={oldAvatarUrl}/>
+                                                <img className="mt-5 w-30 h-30 object-cover rounded-full" src={oldAvatarUrl} />
                                             </div>
                                         ) : (
-                                            <div className="h-50 w-90  md:w-1/4 border rounded-xl justify-items-center">
+                                            <div className="justify-items-center border-none text-2xl text-text text-center">
                                                 No Avatar
                                             </div>
                                         )
-                                    
-                                
-                            )}
-                            <button className={` mt-3 py-2 px-4  text-white font-medium rounded-lg transition duration-200 ${buttonLoadingAvatar ? ("bg-blue-100 hover:bg-blue-100") : ("bg-blue-600 hover:bg-blue-900")}`} onClick={handleButtonClick}>{buttonLoadingAvatar ? ("Wait") : ("Upload Avatar")}</button>
-                            <input  
-                                type="file"
-                                ref={fileInputRef}
-                                style={{ display: 'none' }}
-                                onChange={handleAvatarChange}
-                                accept="image/*"
-                            />
-                    </div>
+
+
+                                    )}
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent className={"mx-auto"}>
+                                    <button className={` mt-3 py-2 px-4 rounded-lg transition duration-200 ${buttonLoadingAvatar ? ("bg-primary/50") : ("bg-primary/70 hover:bg-primary/80")}`} onClick={handleButtonClick}>{buttonLoadingAvatar ? ("Wait") : ("Upload Avatar")}</button>
+                                    <input
+                                        type="file"
+                                        ref={fileInputRef}
+                                        style={{ display: 'none' }}
+                                        onChange={handleAvatarChange}
+                                        accept="image/*"
+                                    />
+                            </CardContent>
+                        
+                        </Card>
+                    {/* </div> */}
+
                 </div>
+
             </div>
         </>
     );

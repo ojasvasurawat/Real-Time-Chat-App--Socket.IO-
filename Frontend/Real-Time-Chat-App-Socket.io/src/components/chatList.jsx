@@ -128,7 +128,7 @@ export default function ChatList({sendDataToParent, userData, onlineUsersList}){
     return(
         <>
 
-            <div>
+            <div className=''>
                 {chatList.map((chat) => (
                 <div key={chat._id} >
                     <div className={"h-[10vh] m-0"} onClick={()=>handleChat(chat._id)}>
@@ -136,14 +136,14 @@ export default function ChatList({sendDataToParent, userData, onlineUsersList}){
                             <ItemMedia>
                                 <AlertDialog>
                                     <AlertDialogTrigger>
-                                        <Avatar className={"h-[7vh] w-[7vh]"}>
+                                        <Avatar className={"h-[7vh] w-[7vh] object-cover"}>
                                             <AvatarImage src={otherUserAvatarUrl(chat)} />
                                             <AvatarFallback className={chat.isGroup ? "bg-border  flex items-center justify-center font-semibold text-xl" : "bg-border  flex items-center justify-center font-semibold text-xl"}>{chat.isGroup ? <UsersRound/> : otherDisplayname(chat).charAt(0).toUpperCase()}</AvatarFallback>
                                         </Avatar>
                                     </AlertDialogTrigger>
                                     <AlertDialogContent className="bg-surface ">
                                         <AlertDialogHeader >
-                                            <Avatar className="w-50 h-50 md:w-100 md:h-100 rounded-full mx-auto">
+                                            <Avatar className="w-50 h-50 md:w-100 md:h-100 object-cover rounded-full mx-auto">
                                                 <AvatarImage src={otherUserAvatarUrl(chat)} />
                                                 <AvatarFallback className={chat.isGroup ? "bg-border  flex items-center justify-center font-semibold text-8xl md:text-[200px]" : "bg-border  flex items-center justify-center font-semibold text-8xl md:text-[200px]"}>{chat.isGroup ? <UsersRound className="w-[94px] h-[94px] md:w-[170px] md:h-[170px]"/> : otherDisplayname(chat).charAt(0).toUpperCase()}</AvatarFallback>
                                             </Avatar>
