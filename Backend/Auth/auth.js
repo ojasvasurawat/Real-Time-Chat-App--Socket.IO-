@@ -36,7 +36,8 @@ async function signUp(req,res){
     if(!check.success){
         res.status(400).json({
             message: "incorrect format",
-            error: check.error
+            error: check.error,
+            errorMessage: check.error.message
         });
         return;
     }

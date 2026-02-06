@@ -12,13 +12,13 @@ async function addChat(req,res){
 
         if(!chatUser){
             return res.json({
-                message: "User not found"
+                message: "User does not exist"
             })
         }
 
         if (chatUser._id.equals(userId)) {
             return res.json({
-                message: "Cannot chat with yourself" 
+                message: "You cannot start a conversation with yourself" 
             });
         }
 
@@ -28,7 +28,7 @@ async function addChat(req,res){
         });
 
         if (existingChat) {
-            return res.json({ chat: existingChat });
+            return res.json({ message: "A conversation with this user already exists" });
         }
 
         const chat = await ChatModel.create({

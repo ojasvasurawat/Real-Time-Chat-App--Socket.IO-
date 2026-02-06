@@ -9,11 +9,18 @@ async function createGroup(req,res){
         const participants = await UserModel.find({
             username: { $in: participantUsernames}
         });
+
+        if(participants.length !== participantUsernames.length){
+            return res.json({
+                message: "Some usernames are invalid"
+            })
+        }
+
         const participantIds = participants.map(user => user._id);
 
         if (participantIds.some(id => id.toString() === userId.toString())) {
             return res.json({
-                message: "plz remove your name from list"
+                message: "Please remove your name from list"
             });
         }
         participantIds.push(userId);
