@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef } from "react"
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 import { Button } from "@/components/ui/button";
 import {
@@ -16,8 +16,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "./ui/label";
 import { Field } from "./ui/field";
-import { Users } from "lucide-react";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 
 export default function CreateGroupButton({userData}){
@@ -27,6 +27,7 @@ export default function CreateGroupButton({userData}){
     const chatUsernameInput = useRef(null);
     const usernameListDiv = useRef(null);
     const groupNameInput = useRef(null);
+    const navigate = useNavigate();
 
     const handleAddUsername = ()=>{
         if(chatUsernameInput.current.value === "") return;
@@ -43,10 +44,14 @@ export default function CreateGroupButton({userData}){
     const handleCreateGroup = async ()=>{
         if(groupName === ""){ 
             toast.warning("Please enter a group name");
+            setChatUsernameList([userData?.username]);
+            setGroupName("");
             return;
         }
         if(chatUsernameList.length === 1){
             toast.warning("Add at least one participant to the group");
+            setChatUsernameList([userData?.username]);
+            setGroupName("");
             return;
         }
         
@@ -59,11 +64,17 @@ export default function CreateGroupButton({userData}){
                     'Content-Type': 'application/json',
                     'authorization': localStorage.getItem('authorization')
                 }
-            });
+            }).catch((e)=>{
+            if(e){
+              navigate("/signin");
+            }
+        });
 
             console.log(response);
             if(response.data.message){
                 toast.warning(response.data.message);
+                setChatUsernameList([userData?.username]);
+                setGroupName("");
                 return;
             }
             else if(response.data.chat){
@@ -75,7 +86,7 @@ export default function CreateGroupButton({userData}){
             handelCancel();
             
         }catch(error){
-
+      
         }
 
 

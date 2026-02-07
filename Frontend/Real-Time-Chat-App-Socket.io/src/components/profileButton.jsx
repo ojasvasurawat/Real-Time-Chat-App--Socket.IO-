@@ -1,6 +1,4 @@
-import {
-  SidebarMenuButton
-} from "@/components/ui/sidebar"
+
 import { User } from 'lucide-react';
 import {
     Item,

@@ -1,11 +1,11 @@
 import axios from "axios";
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef } from "react"
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 import { Button } from "@/components/ui/button"
 import { Field } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { Plus } from "lucide-react";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 
 export default function AddChatButton(){
@@ -13,6 +13,7 @@ export default function AddChatButton(){
     const [chatUsername, setChatUsername] = useState("");
     const chatUsernameInput = useRef(null);
 
+    const navigate = useNavigate();
 
     const handleAddChat = async()=>{
 
@@ -24,7 +25,11 @@ export default function AddChatButton(){
                     'Content-Type': 'application/json',
                     'authorization': localStorage.getItem('authorization')
                 }
-            });
+            }).catch((e)=>{
+            if(e){
+              navigate("/signin");
+            }
+        });
 
             console.log(response);
 
@@ -35,10 +40,13 @@ export default function AddChatButton(){
             }
             else if(response.data.chat){
                 chatUsernameInput.current.value=""
-                window.location.reload();
+                toast.success("Chat created successfully 🎉");
+                setTimeout(()=>{
+                    window.location.reload();
+                },5000)
             }
         }catch(error){
-            
+        
         }
     }
     return(

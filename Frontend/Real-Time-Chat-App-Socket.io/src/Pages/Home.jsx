@@ -1,13 +1,11 @@
-import axios from 'axios';
-import Chat from "@/components/chat";
 import SidebarLayout from "@/Layout/sidebarLayout";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+const Chat = React.lazy(()=> import("@/components/chat"))
 import { socket } from "../socket";
 import Profile from './Profile';
 import { useIsMobile } from '@/hooks/use-mobile';
 import MobileSidebar from '@/components/mobileSidebar';
-import { ToastContainer } from 'react-toastify';
-const backendUrl = import.meta.env.VITE_BACKEND_URL;
+import {  ToastContainer } from 'react-toastify';
 
 
 export default function Home(){
@@ -49,18 +47,6 @@ export default function Home(){
         }
 
         socket.on("online users", handleOnlineUsers);
-
-        async function fetchChatList(){
-            const response = await axios.get(`${backendUrl}/chat-list`,{
-                headers:{
-                    'Content-Type': 'application/json',
-                    'authorization': localStorage.getItem('authorization')
-                }
-            });
-            console.log(response.data.chats);
-            setChatList(response.data.chats);
-        }
-        // fetchChatList();
 
         return ()=>{
             socket.off('online users', handleOnlineUsers);

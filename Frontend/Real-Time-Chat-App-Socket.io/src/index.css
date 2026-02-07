@@ -1,43 +1,6 @@
 @config "../tailwind.config.js";
 @import "tailwindcss";
 
-/* globals.css or index.css */
-
-/* Mobile-first (default) */
-[data-layout="sidebar"] {
-  width: var(--sidebar-width);
-  flex-shrink: 0;
-}
-
-/* Medium screens */
-@media (min-width: 768px) {
-  [data-layout="sidebar"] {
-    --sidebar-width: 20rem;
-  }
-}
-
-/* Large screens */
-@media (min-width: 1024px) {
-  [data-layout="sidebar"] {
-    --sidebar-width: 27rem;
-  }
-}
-
-/* Push main content on desktop */
-@media (min-width: 768px) {
-  [data-layout="sidebar"] + main {
-    margin-left: var(--sidebar-width);
-  }
-}
-
-/* On small screens, content overlays (no margin) */
-@media (max-width: 767px) {
-  [data-layout="sidebar"] + main {
-    margin-left: 0;
-  }
-}
-
-
 /* @import "tw-animate-css"; */
 
 /* @custom-variant dark (&:is(.dark *)); */

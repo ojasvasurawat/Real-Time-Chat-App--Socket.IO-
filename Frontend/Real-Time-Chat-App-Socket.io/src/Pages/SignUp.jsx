@@ -7,7 +7,6 @@ const backendUrl = import.meta.env.VITE_BACKEND_URL;
 import { Button } from "@/components/ui/button"
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
   CardFooter,

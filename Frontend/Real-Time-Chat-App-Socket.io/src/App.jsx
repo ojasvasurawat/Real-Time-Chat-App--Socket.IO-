@@ -1,11 +1,10 @@
 import './App.css'
 
 import { Route, Routes } from "react-router-dom";
-import Chat from "./components/chat";
 import SignIn from "./Pages/Signin";
 import SignUp from "./Pages/SignUp";
-import Chats from "./Pages/Chats";
 import Home from './Pages/Home';
+import Landing from './Pages/Landing';
 
 function App() {
   return (
@@ -14,7 +13,7 @@ function App() {
       <Routes>
         <Route path="/signin" element={<SignIn/>}/>
         <Route path="/signup" element={<SignUp/>}/>
-        {/* <Route path="/chats" element={<Chats/>}/> */}
+        <Route path="/landing" element={<Landing/>}/>
         <Route path="/" element={<Home/>}/>
       </Routes>
     </>

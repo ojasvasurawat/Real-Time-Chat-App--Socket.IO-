@@ -3,7 +3,6 @@ import { useRef } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { socket } from "../socket";
-import { useLocation } from "react-router-dom";
 import Messages from "./messages";
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 import {
@@ -146,7 +145,11 @@ export default function Chat({ chatId, userData, onlineUsersList, onBack }) {
                     'Content-Type': 'application/json',
                     'authorization': localStorage.getItem('authorization')
                 }
-            })
+            }).catch((e)=>{
+            if(e){
+              navigate("/signin");
+            }
+        })
             const messagesData = response.data.messages;
             const chatData = response.data.chat;
             // console.log(messagesData);

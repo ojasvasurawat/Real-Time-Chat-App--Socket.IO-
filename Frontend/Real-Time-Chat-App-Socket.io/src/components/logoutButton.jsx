@@ -1,8 +1,5 @@
 import axios from "axios";
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
-import {
-  SidebarMenuButton
-} from "@/components/ui/sidebar"
 import { LogOut } from 'lucide-react';
 import {
     Item,

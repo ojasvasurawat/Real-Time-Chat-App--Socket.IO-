@@ -1,16 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { ArrowLeft, Check, Pencil } from "lucide-react";
+import { ArrowLeft, Check,  Pencil } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 import { Button } from "@/components/ui/button"
 import {
     Card,
-    CardAction,
     CardContent,
-    CardDescription,
     CardFooter,
     CardHeader,
     CardTitle,
@@ -23,6 +21,9 @@ import {
     HoverCardContent,
     HoverCardTrigger,
 } from "@/components/ui/hover-card"
+import { toast } from "react-toastify";
+
+import { Eye, EyeOff } from "lucide-react"
 
 
 export default function Profile({ onBack }) {
@@ -41,6 +42,7 @@ export default function Profile({ onBack }) {
     const [buttonLoadingAvatar, setButtonLoadingAvatar] = useState(false);
 
     const [displayNameInputState, setDisplayNameInputState] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     const isMobile = useIsMobile();
 
@@ -109,9 +111,11 @@ export default function Profile({ onBack }) {
             });
 
             if (response.data) {
-                // toast.success("Avatar uploaded successfully");
+                toast.success("Avatar uploaded successfully");
                 setButtonLoadingAvatar(false);
-                window.location.reload();
+                setTimeout(()=>{
+                    window.location.reload();
+                },5000)
             }
         } catch (error) {
             console.error("Upload failed:", error);
@@ -133,15 +137,21 @@ export default function Profile({ onBack }) {
         setButtonLoadingUpdate(true)
 
         if (changedDisplayName === "") {
-            // toast.warning("Enter the details");
+            toast.warning("Enter the details");
             setButtonLoadingUpdate(false)
             setDisplayNameInputState(false)
             return;
         }
+
         if (changedDisplayName.length < 3) {
-            // toast.warning("Password must be at least 8 characters long.");
-            setButtonLoadingUpdate(false)
-            setDisplayNameInputState(false)
+            toast.warning("Display name is too short.");
+            setButtonLoading(false);
+            return;
+        }
+
+        if (changedDisplayName.length > 50) {
+            toast.warning("Display name is too long.");
+            setButtonLoading(false);
             return;
         }
 
@@ -156,9 +166,13 @@ export default function Profile({ onBack }) {
             });
 
             if (response.data) {
-                setButtonLoadingUpdate(false)
+                setButtonLoadingUpdate(false);
                 console.log("display name updated successfully")
-                // toast.success("Account updated successfully");
+                toast.success("Display Name updated successfully");
+
+                setTimeout(()=>{
+                    window.location.reload();
+                },5000)
             }
         } catch (error) {
             console.error("Update failed:", error);
@@ -166,7 +180,7 @@ export default function Profile({ onBack }) {
                 // toast.error(`Signup failed: ${error.response.data.message}`);
                 setButtonLoadingUpdate(false)
             } else {
-                // toast.error("Update failed: Unknown error occurred");
+                toast.error("Update failed: Unknown error occurred");
                 setButtonLoadingUpdate(false)
             }
         }
@@ -202,7 +216,10 @@ export default function Profile({ onBack }) {
             if (response.data) {
                 setButtonLoadingUpdate(false)
                 console.log("password updated successfully")
-                // toast.success("Account updated successfully");
+                toast.success("Password updated successfully");
+                setTimeout(()=>{
+                    window.location.reload();
+                },5000)
             }
         } catch (error) {
             console.error("Update failed:", error);
@@ -231,7 +248,7 @@ export default function Profile({ onBack }) {
                 localStorage.setItem("authorization", "");
                 setButtonLoadingLogout(false)
                 // toast.success("Logout successfully");
-                navigate("/");
+                navigate("/signin");
             }
             else {
                 // toast.error("Logout Failed")
@@ -316,12 +333,24 @@ export default function Profile({ onBack }) {
                                     <div className="flex">
                                         <Input
                                             id="password"
-                                            type="text"
+                                            type={showPassword ? "text" : "password"}
                                             value={changedPassword}
                                             onChange={(e) => setChangedPassword(e.target.value)}
                                             className="w-full p-2 border border-border rounded-lg focus:border-primary/60 focus:ring-0 focus-visible:ring-0"
                                             placeholder="Enter your new password"
                                         />
+                                        <Button
+                                            type="button"
+                                            variant="ghost"
+                                            size="icon"
+                                            onClick={() => setShowPassword(!showPassword)}
+                                        >
+                                            {showPassword ? (
+                                            <EyeOff className="h-4 w-4" />
+                                            ) : (
+                                            <Eye className="h-4 w-4" />
+                                            )}
+                                        </Button>
                                         <Button
                                             variant="ghost"
                                             onClick={handlePasswordUpdate}

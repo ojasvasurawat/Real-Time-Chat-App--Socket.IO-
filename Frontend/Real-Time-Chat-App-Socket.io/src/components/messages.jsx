@@ -2,7 +2,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -33,7 +32,7 @@ export default function Messages({sendBy, data, time, avatarUrl, isSender}){
         })
 
         if (isToday) return time
-        if (isYesterday) return `Yesterday · ${time}`
+        if (isYesterday) return `1d ago · ${time}`
 
         return date.toLocaleDateString([], {
             month: "short",

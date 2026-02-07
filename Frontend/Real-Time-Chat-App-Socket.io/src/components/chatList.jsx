@@ -4,11 +4,6 @@ import { useEffect } from 'react';
 import { socket } from '../socket';
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-import {SidebarMenu,
-    SidebarMenuItem,
-    SidebarMenuButton 
-} from "@/components/ui/sidebar"
-
 import {
     Item,
   ItemContent,
@@ -25,12 +20,14 @@ import {
 
 import { UsersRound } from 'lucide-react';
 import { AlertDialog, AlertDialogContent, AlertDialogTrigger, AlertDialogFooter, AlertDialogCancel, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription } from '@/components/ui/alert-dialog';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function ChatList({sendDataToParent, userData, onlineUsersList}){
 
     const [chatList, setChatList] = useState([]);
     const [currentRoom, setCurrentRoom] = useState(null);
+    const navigate = useNavigate()
     
 
     const handleChat = async(chatId)=>{
@@ -49,25 +46,34 @@ export default function ChatList({sendDataToParent, userData, onlineUsersList}){
     }
 
     useEffect(()=>{
-        async function fetchChatList(){
-            const response = await axios.get(`${backendUrl}/chat-list`,{
-                headers:{
-                    'Content-Type': 'application/json',
-                    'authorization': localStorage.getItem('authorization')
-                }
-            });
-            // console.log(response.data.chats);
-            setChatList(response.data.chats);
+
+        try{
+            async function fetchChatList(){
+                const response = await axios.get(`${backendUrl}/chat-list`,{
+                    headers:{
+                        'Content-Type': 'application/json',
+                        'authorization': localStorage.getItem('authorization')
+                    }
+                }).catch((e)=>{
+            if(e){
+              navigate("/signin");
+            }
+        });
+                // console.log(response.data.chats);
+                setChatList(response.data.chats);
+            }
+            fetchChatList();
+        }catch(error){
+            
         }
-        fetchChatList();
-        
+
     },[])
 
     const otherUsername = (chat)=>{
         const chatName = chat.name;
         // console.log(chat);
         const names = chatName.split("-");
-        return names[0] == userData.username ? names[1] : names[0];
+        return names[0] == userData?.username ? names[1] : names[0];
     }
 
     const otherUserAvatarUrl = (chat)=>{

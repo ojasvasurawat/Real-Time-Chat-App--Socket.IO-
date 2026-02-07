@@ -7,51 +7,49 @@ import {
   SidebarHeader,
   SidebarGroupContent,
   SidebarGroupLabel,
-  SidebarMenuItem,
-  SidebarMenuButton
 } from "@/components/ui/sidebar"
 import { useEffect, useState } from "react"
 import AddChatButton from './addChatButton';
 import { Field } from './ui/field';
-import { Button } from './ui/button';
 import CreateGroupButton from './createGroupButton';
-import { Label } from './ui/label';
 import ChatList from './chatList';
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
-import { User, LogOut } from 'lucide-react';
-import {
-    Item,
-  ItemContent,
-  ItemMedia,
-  ItemTitle,
-} from "@/components/ui/item"
-import {
-  Avatar,
-  AvatarImage,
-  AvatarFallback
-} from "@/components/ui/avatar"
 import ProfileButton from './profileButton';
 import LogoutButton from './logoutButton';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function AppSidebar({passingDataToLayout, passingProfileStatusToLayout, onlineUsersList}) {
 
     const [userData, setUserData] = useState(null);
+    const navigate = useNavigate()
 
     useEffect(()=>{
+
+      try{
         const userData = async ()=>{
             const response = await axios.get(`${backendUrl}/info`,{
                 headers:{
                     'Content-Type': 'application/json',
                     'authorization': localStorage.getItem('authorization')
                 }
-            })
+            }).catch((e)=>{
+            if(e){
+              navigate("/signin");
+            }
+        })
             // console.log("response is: ",response);
             // console.log("data is: ",response.data);
+            if(response.data.message === "no token found"){
+              navigate("/signin");
+            }
             setUserData(response.data.user);
         }
 
-        userData()
+        userData();
+      }catch(e){
+      
+      }
     },[])
 
     const handleChatId = (chatId)=>{

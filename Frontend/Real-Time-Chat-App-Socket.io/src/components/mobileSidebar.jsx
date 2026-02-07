@@ -8,26 +8,36 @@ const backendUrl = import.meta.env.VITE_BACKEND_URL;
 import ProfileButton from './profileButton';
 import LogoutButton from './logoutButton';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter, CardDescription } from "@/components/ui/card";
+import { useNavigate } from 'react-router-dom';
 
 
 export default function MobileSidebar({passingDataToHome, passingProfileStatusToHome, onlineUsersList}) {
 
     const [userData, setUserData] = useState(null);
+    const navigate = useNavigate()
 
     useEffect(()=>{
+      try{
         const userData = async ()=>{
             const response = await axios.get(`${backendUrl}/info`,{
                 headers:{
                     'Content-Type': 'application/json',
                     'authorization': localStorage.getItem('authorization')
                 }
-            })
+            }).catch((e)=>{
+            if(e){
+              navigate("/signin");
+            }
+        })
             // console.log("response is: ",response);
             // console.log("data is: ",response.data);
             setUserData(response.data.user);
         }
 
         userData()
+      }catch(error){
+      
+      }
     },[])
 
     const handleChatId = (chatId)=>{
