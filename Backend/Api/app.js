@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
-const {auth} = require("../middleware/middleware");
-const {server, app} = require("../socket/socket");
+const {auth} = require("../Middleware/middleware");
+const {server, app} = require("../Socket/socket");
 const { getChatList } = require("../Functions/getChatList");
 const { addChat } = require("../Functions/addChat");
 const { getChatMessages } = require("../Functions/getChatMessages");
