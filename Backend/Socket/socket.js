@@ -9,7 +9,7 @@ app.use(cors({
 const {Server} = require('socket.io');
 
 const {createServer} = require('node:http'); // or const http = require('node:http');
-const { sktMdw } = require('../middleware/middleware');
+const { sktMdw } = require('../Middleware/middleware');
 const { UserModel, MessageModel } = require('../db/db');
 const server = createServer(app); // const server = http.createServer(...);
 
