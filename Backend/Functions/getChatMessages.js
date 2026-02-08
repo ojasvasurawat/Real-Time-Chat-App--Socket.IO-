@@ -22,7 +22,7 @@ async function getChatMessages(req,res){
 
         const messages = await MessageModel.find({
             chat: chatId
-        }).populate("sender", "username displayName avatarUrl").sort({ createAt: 1});
+        }).populate("sender", "username displayName avatarUrl").sort({ createdAt: 1});
 
         res.json({
             chat,
