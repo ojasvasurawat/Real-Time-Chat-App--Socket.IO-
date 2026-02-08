@@ -2,7 +2,7 @@ const {z} = require("zod");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
-const { UserModel } = require("../db/db");
+const { UserModel } = require("../DB/db");
 
 
 

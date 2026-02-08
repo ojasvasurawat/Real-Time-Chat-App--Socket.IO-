@@ -10,7 +10,7 @@ const {Server} = require('socket.io');
 
 const {createServer} = require('node:http'); // or const http = require('node:http');
 const { sktMdw } = require('../Middleware/middleware');
-const { UserModel, MessageModel } = require('../db/db');
+const { UserModel, MessageModel } = require('../DB/db');
 const server = createServer(app); // const server = http.createServer(...);
 
 // const {join} = require('node:path');

@@ -1,4 +1,4 @@
-const { UserModel, ChatModel, MessageModel } = require("../db/db");
+const { UserModel, ChatModel, MessageModel } = require("../DB/db");
 const mongoose = require("mongoose");
 
 async function getInfo(req, res){
