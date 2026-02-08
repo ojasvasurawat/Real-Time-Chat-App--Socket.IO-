@@ -18,7 +18,7 @@ const server = createServer(app); // const server = http.createServer(...);
 const io = new Server(server, {
   connectionStateRecovery: {},
   cors:{
-    origin:"http://localhost:5173",
+    origin:["http://localhost:5173", "https://real-time-chat-app-socket-io-eight.vercel.app"],
     methods:["GET","POST"],
     credentials:true
   },

@@ -16,10 +16,27 @@ require("dotenv").config();
 
 const SOCKET_PORT = process.env.SOCKET_PORT;
 
+const allowedOrigins = [
+  "https://real-time-chat-app-socket-io-eight.vercel.app",
+  // add custom domain later if you have one
+  "http://localhost:5173"
+];
 
 const mainApp = app;
 
-mainApp.use(cors());
+mainApp.use(cors({
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true); // server-to-server, Postman
+
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("CORS not allowed"));
+      }
+    },
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true
+  }));
 mainApp.use(express.json({limit: '10mb'}));
 
 mainApp.post("/signup", signUp);
