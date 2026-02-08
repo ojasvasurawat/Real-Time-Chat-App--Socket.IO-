@@ -3,7 +3,10 @@ const app = express();
 
 const cors = require('cors');
 app.use(cors({
-    origin: 'http://localhost:5173'
+    origin: [
+        // 'http://localhost:5173',
+        "https://real-time-chat-app-socket-io-eight.vercel.app"
+    ]
 }));
 
 const {Server} = require('socket.io');
