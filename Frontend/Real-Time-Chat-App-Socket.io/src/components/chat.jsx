@@ -25,6 +25,7 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { AlertDialog, AlertDialogContent, AlertDialogTrigger, AlertDialogFooter, AlertDialogCancel, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription } from '@/components/ui/alert-dialog';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -47,6 +48,7 @@ export default function Chat({ chatId, userData, onlineUsersList, onBack }) {
     const bottomInChat = useRef(null);
 
     const isMobile = useIsMobile();
+    const navigate = useNavigate();
 
 
     function handleKeyDown(event) {

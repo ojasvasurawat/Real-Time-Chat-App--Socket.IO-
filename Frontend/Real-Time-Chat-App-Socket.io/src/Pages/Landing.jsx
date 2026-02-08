@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function Landing(){
 
-    const navgate = useNavigate();
+    const navigate = useNavigate();
 
     return(
         <>
@@ -17,7 +17,7 @@ export default function Landing(){
                             <br></br>
                             Stay connected in the moment.
                         </div>
-                        <Button variant="ghost" className={"bg-primary/70 hover:bg-primary"} size="lg" onClick={()=>navgate("/signup")}>Get Started</Button>
+                        <Button variant="ghost" className={"bg-primary/70 hover:bg-primary"} size="lg" onClick={()=>navigate("/signup")}>Get Started</Button>
                     </div>
                 </div>
                 <div className="relative flex justify-center items-center h-screen max-sm:mx-7">

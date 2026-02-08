@@ -45,7 +45,7 @@ export default function SignIn(){
               console.log(response.data);
               toast.success(`Welcome, ${response.data.user.displayName}`);
               setTimeout(()=>{
-                navigate("/");
+                navigate("/home");
               },5000);
           }
           else{
