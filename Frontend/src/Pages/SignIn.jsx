@@ -16,11 +16,14 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
+import { Eye, EyeOff } from "lucide-react"
+
 export default function SignIn(){
 
     const [signinEmail, setSigninEmail] = useState("");
     const [signinPassword, setSigninPassword] = useState("");
     const [buttonLoading, setButtonLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
 
     const handleSignin = async()=>{
@@ -99,13 +102,27 @@ export default function SignIn(){
 
             <div className="space-y-1">
               <Label className="text-text">Password</Label>
+              <div className="flex">
               <Input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 value={signinPassword}
                 onChange={(e) => setSigninPassword(e.target.value)}
                 placeholder="Enter your password"
                 className={"mb-2 focus:border-primary/60 focus:ring-0 focus-visible:ring-1"}
               />
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
+              </Button>
+              </div>
             </div>
           </CardContent>
 

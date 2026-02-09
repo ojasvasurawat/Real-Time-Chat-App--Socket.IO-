@@ -138,11 +138,11 @@ export default function ChatList({sendDataToParent, userData, onlineUsersList}){
                 {chatList.map((chat) => (
                 <div key={chat._id} >
                     <div className={"h-[10vh] m-0"} onClick={()=>handleChat(chat._id)}>
-                        <Item className={"rounded-xl hover:bg-surface"}>
+                        <Item className={"rounded-xl hover:bg-surface cursor-pointer"}>
                             <ItemMedia>
                                 <AlertDialog>
                                     <AlertDialogTrigger>
-                                        <Avatar className={"h-[7vh] w-[7vh] object-cover"}>
+                                        <Avatar className={"h-[7vh] w-[7vh] object-cover cursor-pointer"}>
                                             <AvatarImage src={otherUserAvatarUrl(chat)} />
                                             <AvatarFallback className={chat.isGroup ? "bg-border  flex items-center justify-center font-semibold text-xl" : "bg-border  flex items-center justify-center font-semibold text-xl"}>{chat.isGroup ? <UsersRound/> : otherDisplayname(chat).charAt(0).toUpperCase()}</AvatarFallback>
                                         </Avatar>
@@ -162,8 +162,8 @@ export default function ChatList({sendDataToParent, userData, onlineUsersList}){
                                     </AlertDialogContent>
                                 </AlertDialog>
                             </ItemMedia>    
-                            <ItemContent>
-                                <ItemTitle className={"text-xl ml-4 text-text"}>{chat.isGroup ? chat.name : otherDisplayname(chat) }</ItemTitle>
+                            <ItemContent className={"truncate"}>
+                                <ItemTitle className={"text-xl ml-4 text-text truncate"}>{chat.isGroup ? chat.name : otherDisplayname(chat) }</ItemTitle>
                                 <ItemDescription className={`ml-4 truncate ${isOnline(chat) ? "text-primary" : ""}`}>{chat.isGroup ? otherUsernameList(chat) : isOnline(chat) ? `${otherUsername(chat)} is online` : `${otherUsername(chat)} is offline` }</ItemDescription>
                             </ItemContent>
                         </Item>

@@ -277,13 +277,13 @@ export default function Chat({ chatId, userData, onlineUsersList, onBack }) {
     return (
         <>
 
-    <div className={"h-screen gap-0 grid grid-rows-[auto_1fr_auto]"}>
+    <div className={"h-screen gap-0 grid grid-rows-[auto_1fr_auto] max-sm:max-w-[100vw]"}>
             <Item className={"py-1 max-sm:grid max-sm:grid-rows-2 max-sm:grid-cols-4 "}>
                     <ItemMedia className={"max-sm:col-span-1"}>
                         {isMobile && <Button variant='ghost' onClick={onBack}><ArrowLeft/></Button>}
                         <AlertDialog>
                             <AlertDialogTrigger>
-                                <Avatar className={"h-[7vh] w-[7vh] object-cover"}>
+                                <Avatar className={"h-[7vh] w-[7vh] object-cover cursor-pointer"}>
                                     <AvatarImage src={otherUserAvatarUrl(chatData)} />
                                     <AvatarFallback className={chatData?.isGroup ? "bg-border  flex items-center justify-center font-semibold text-xl" : "bg-border flex items-center justify-center font-semibold text-xl"}>{chatData?.isGroup ? <UsersRound /> : otherDisplayname(chatData)?.charAt(0).toUpperCase()}</AvatarFallback>
                                 </Avatar>
@@ -303,7 +303,7 @@ export default function Chat({ chatId, userData, onlineUsersList, onBack }) {
                             </AlertDialogContent>
                         </AlertDialog>
                     </ItemMedia>
-                    <ItemContent className={"max-sm:col-span-3"}>
+                    <ItemContent className={"max-sm:col-span-3 truncate"}>
                         <ItemTitle className={"text-xl ml-4 text-text  truncate"}>{chatData?.isGroup ? chatData.name : otherDisplayname(chatData)}</ItemTitle>
                         <ItemDescription className={`ml-4 truncate ${isOnline(chatData) ? "text-primary" : ""}`}>{chatData?.isGroup ? otherUsernameList(chatData) : isOnline(chatData) ? `${otherUsername(chatData)} is online` : `${otherUsername(chatData)} is offline`}</ItemDescription>
                     </ItemContent>
@@ -330,9 +330,15 @@ export default function Chat({ chatId, userData, onlineUsersList, onBack }) {
             )}
             <div ref={bottomInChat} />
         </div>
-        <div className={"flex px-2 md:px-0 mb-2"}>
-            <Textarea type="text" placeholder="Type your message here." className={"mb-2 focus:border-primary/60 focus:ring-0 focus-visible:ring-1"} ref={input} onKeyDown={handleKeyDown} onChange={handleChange} />
-            <Button onClick={submit} variant="ghost" className={"my-auto mx-2 bg-primary/60 hover:bg-primary/80"}>Send</Button>
+        <div className={"flex items-end px-2 md:px-0 mb-2 w-full min-w-0"}>
+            <Textarea rows={1} placeholder="Type your message here." className={"flex-1 resize-none overflow-y-auto whitespace-pre-wrap break-words mb-2 focus:border-primary/60 focus:ring-0 focus-visible:ring-1"} ref={input} onKeyDown={handleKeyDown} onChange={(e) => {
+      handleChange(e);
+
+      // auto-grow
+      e.target.style.height = "auto";
+      e.target.style.height = `${Math.min(e.target.scrollHeight, 70)}px`;
+    }} />
+            <Button onClick={submit} variant="ghost" className={"my-auto self-end mx-2 bg-primary/60 hover:bg-primary/80"}>Send</Button>
         </div>
 
     </div>
