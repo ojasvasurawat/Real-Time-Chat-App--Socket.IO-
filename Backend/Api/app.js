@@ -19,7 +19,7 @@ const SOCKET_PORT = process.env.SOCKET_PORT;
 const allowedOrigins = [
   "https://real-time-chat-app-socket-io-eight.vercel.app",
   // add custom domain later if you have one
-//   "http://localhost:5173"
+  // "http://localhost:5173"
 ];
 
 const mainApp = app;
@@ -37,6 +37,10 @@ mainApp.use(cors({
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true
   }));
+
+// mainApp.use(cors()); // only for dev env
+
+
 mainApp.use(express.json({limit: '10mb'}));
 
 mainApp.post("/signup", signUp);

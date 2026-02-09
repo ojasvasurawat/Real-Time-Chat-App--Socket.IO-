@@ -23,7 +23,8 @@ const io = new Server(server, {
   cors:{
     origin:[
         // "http://localhost:5173", 
-        "https://real-time-chat-app-socket-io-eight.vercel.app"],
+        "https://real-time-chat-app-socket-io-eight.vercel.app"
+    ],
     methods:["GET","POST"],
     credentials:true
   },
