@@ -8,10 +8,10 @@ export default function Landing(){
 
     return(
         <>
-            <div className=" lg:grid lg:grid-cols-2 bg-background">
-                <div className="flex justify-center items-center lg:h-screen">
-                    <div>
-                        <div className="text-text/70 text-5xl mt-50 lg:text-7xl font-bold mb-10"><span className="text-primary underline">Real Time</span> <br></br> Chat App</div>
+            <div className="grid lg:grid-cols-2 bg-background">
+                <div className="flex justify-center items-center h-[60vh] lg:h-screen">
+                    <div className="mt-10">
+                        <div className="text-text/70 text-5xl  lg:text-7xl font-bold mb-10"><span className="text-primary underline">Real Time</span> <br></br> Chat App</div>
                         <div className="text-muted text-xl lg:text-xl mb-10">
                             Instant messaging, made simple.
                             <br></br>
@@ -20,7 +20,7 @@ export default function Landing(){
                         <Button variant="ghost" className={"bg-primary/70 hover:bg-primary"} size="lg" onClick={()=>navigate("/signup")}>Get Started</Button>
                     </div>
                 </div>
-                <div className="relative flex justify-center items-center h-screen max-sm:mx-7">
+                <div className="relative flex justify-center items-center lg:h-screen max-sm:mx-7">
                     <div className=" absolute top-[45%] left-1/2 w-1/2 h-1/4 -translate-x-1/2 -translate-y-1/2 rounded-3xl bg-primary/70 bg-opacity-30 blur-[110px] z-0"></div>
                     <div className="grid lg:grid-cols-2 gap-10 lg:gap-2 z-10">
                         <div className="lg:absolute lg:w-[37.5%] lg:left-[8%] lg:top-[10%]  grid lg:grid-rows-3 gap-10">

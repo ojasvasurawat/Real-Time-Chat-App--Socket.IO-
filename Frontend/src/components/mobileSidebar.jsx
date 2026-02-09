@@ -60,9 +60,9 @@ export default function MobileSidebar({passingDataToHome, passingProfileStatusTo
         </Field>
         <AddChatButton/>
       </CardHeader>
-      <CardContent className={"px-4"}>
+      <CardContent className={"px-4 overflow-y-scroll "}>
             <CardDescription className={"text-lg "}>CHATS</CardDescription>
-            <div className={"overflow-y-scroll "}>
+            <div className={""}>
                 <ChatList userData={userData} sendDataToParent={handleChatId} onlineUsersList={onlineUsersList}/>
             </div>
       </CardContent >

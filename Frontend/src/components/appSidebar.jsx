@@ -70,10 +70,10 @@ export default function AppSidebar({passingDataToLayout, passingProfileStatusToL
         </Field>
         <AddChatButton />
       </SidebarHeader>
-      <SidebarContent className="px-2 overflow-hidden">
+      <SidebarContent className="px-2 overflow-y-scroll">
         <SidebarGroup>
             <SidebarGroupLabel className={"text-lg font-semibold mb-2 text-text"}>CHATS</SidebarGroupLabel>
-            <SidebarGroupContent className={"overflow-y-scroll  gap-1"}>
+            <SidebarGroupContent className={"  gap-1"}>
                 <ChatList userData={userData} sendDataToParent={handleChatId} onlineUsersList={onlineUsersList}/>
             </SidebarGroupContent>
         </SidebarGroup>

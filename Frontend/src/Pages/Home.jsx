@@ -27,6 +27,7 @@ export default function Home(){
         setUserData(userData);
         setChatState(true);
         setProfileState(false);
+        window.history.pushState({ page: "chat" }, "");
         setMobileState("chat");
     }
 
@@ -34,12 +35,26 @@ export default function Home(){
         console.log("the profile status from the deep of the deep is :", profileStatus);
         setProfileState(profileStatus);
         setChatState(false);
+        window.history.pushState({ page: "profile" }, "");
         setMobileState("profile");
     }
+
+
+    const handleBack = () => {
+        setMobileState((prev) => {
+            if (prev === "chat" || prev === "profile") {
+            return "sidebar";
+            }
+            return prev; // sidebar stays sidebar
+        });
+    };
+
 
     useEffect(()=>{
 
         socket.connect();
+
+        window.history.replaceState({ page: "sidebar" }, "");
 
         const handleOnlineUsers = (onlineUserList)=>{
             console.log("online user list is",onlineUserList);
@@ -48,9 +63,21 @@ export default function Home(){
 
         socket.on("online users", handleOnlineUsers);
 
+
+
+        const handlePopState = () => {
+            handleBack();
+        };
+
+        window.addEventListener("popstate", handlePopState);
+
+
+
+
         return ()=>{
             socket.off('online users', handleOnlineUsers);
             socket.disconnect();
+            window.removeEventListener("popstate", handlePopState);
         };
     },[])
 
@@ -69,8 +96,8 @@ export default function Home(){
         <>
         <ToastContainer/>
             {mobileState==="sidebar" && <MobileSidebar passingDataToHome={handleDataFromLayout} passingProfileStatusToHome={handleProfileStatusFromLayout} onlineUsersList={onlineUsersList}/>}
-            {mobileState==="chat" && <Chat chatId={chatId} userData={userData} onlineUsersList={onlineUsersList} onBack={()=> setMobileState("sidebar")}/>}
-            {mobileState==="profile" && <Profile onBack={()=> setMobileState("sidebar")}/>}
+            {mobileState==="chat" && <Chat chatId={chatId} userData={userData} onlineUsersList={onlineUsersList} onBack={handleBack}/>}
+            {mobileState==="profile" && <Profile onBack={handleBack}/>}
         </>
     )
     
