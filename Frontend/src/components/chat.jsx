@@ -26,6 +26,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { AlertDialog, AlertDialogContent, AlertDialogTrigger, AlertDialogFooter, AlertDialogCancel, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription } from '@/components/ui/alert-dialog';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useNavigate } from 'react-router-dom';
+import { Skeleton } from './ui/skeleton';
 
 
 
@@ -303,10 +304,18 @@ export default function Chat({ chatId, userData, onlineUsersList, onBack }) {
                             </AlertDialogContent>
                         </AlertDialog>
                     </ItemMedia>
-                    <ItemContent className={"max-sm:col-span-3 truncate"}>
-                        <ItemTitle className={"text-xl ml-4 text-text  truncate"}>{chatData?.isGroup ? chatData.name : otherDisplayname(chatData)}</ItemTitle>
-                        <ItemDescription className={`ml-4 truncate ${isOnline(chatData) ? "text-primary" : ""}`}>{chatData?.isGroup ? otherUsernameList(chatData) : isOnline(chatData) ? `${otherUsername(chatData)} is online` : `${otherUsername(chatData)} is offline`}</ItemDescription>
-                    </ItemContent>
+                    {
+                        chatData ?
+                        <ItemContent className={"max-sm:col-span-3 truncate"}>
+                            <ItemTitle className={"text-xl ml-4 text-text  truncate"}>{chatData?.isGroup ? chatData.name : otherDisplayname(chatData)}</ItemTitle>
+                            <ItemDescription className={`ml-4 truncate ${isOnline(chatData) ? "text-primary" : ""}`}>{chatData?.isGroup ? otherUsernameList(chatData) : isOnline(chatData) ? `${otherUsername(chatData)} is online` : `${otherUsername(chatData)} is offline`}</ItemDescription>
+                        </ItemContent>
+                        :
+                        <div className={"max-sm:col-span-3 truncate"}>
+                            <Skeleton className="max-sm:ml-4 max-sm:mb-1 ml-4 h-7 w-[250px] bg-surface" />
+                            <Skeleton className={"max-sm:ml-4 mt-2 ml-4 h-4 w-[150px] bg-surface"}/>
+                        </div>
+                    }
                     <ItemContent className="max-sm:col-span-2">
                         <ItemDescription >socket status: <span className={`${socketStatus ? "text-primary/80" : "text-danger/70"}`}>{socketStatus ? "connected" : "disconnected"}</span></ItemDescription>
                     </ItemContent>
