@@ -101,7 +101,7 @@ export default function SignUp(){
             return;
         }
 
-        console.log(backendUrl);
+        // console.log(backendUrl);
 
         try{
             const response = await axios.post(`${backendUrl}/signup`, {
@@ -113,9 +113,10 @@ export default function SignUp(){
 
             if(response.data){
                 toast.success("Account created successfully");
-                setTimeout(()=>{
-                  navigate("/signin");
-                },5000);
+                // setTimeout(()=>{
+                //   navigate("/signin");
+                // },5000);
+                navigate("/signin");
             }
             else{
                 setButtonLoading(false);
@@ -129,7 +130,7 @@ export default function SignUp(){
               const parsed = JSON.parse(error.response.data.errorMessage);
               // console.log(parsed);
               for(const data of parsed){
-                console.log(data.message);
+                // console.log(data.message);
                 toast.error(`Signup failed: ${data.message}`);
               }
             }

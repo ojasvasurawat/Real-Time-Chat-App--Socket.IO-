@@ -31,7 +31,7 @@ export default function CreateGroupButton({userData}){
 
     const handleAddUsername = ()=>{
         if(chatUsernameInput.current.value === "") return;
-        console.log(chatUsernameList);
+        // console.log(chatUsernameList);
         setChatUsernameList([...chatUsernameList, chatUsernameInput.current.value]);
         chatUsernameInput.current.value = "";
     }
@@ -70,7 +70,7 @@ export default function CreateGroupButton({userData}){
             }
         });
 
-            console.log(response);
+            // console.log(response);
             if(response.data.message){
                 toast.warning(response.data.message);
                 setChatUsernameList([userData?.username]);
@@ -79,9 +79,10 @@ export default function CreateGroupButton({userData}){
             }
             else if(response.data.chat){
                 toast.success(`Group ${response.data.chat.name} created successfully 🎉`)
-                setTimeout(()=>{
-                    window.location.reload();
-                },5000);
+                // setTimeout(()=>{
+                //     window.location.reload();
+                // },5000);
+                window.location.reload();
             }
             handelCancel();
             

@@ -34,8 +34,8 @@ export default function SignIn(){
             return;
         }
 
-        console.log(backendUrl);
-        console.log(signinEmail);
+        // console.log(backendUrl);
+        // console.log(signinEmail);
 
         try{
           const response = await axios.post(`${backendUrl}/signin`, {
@@ -45,11 +45,12 @@ export default function SignIn(){
 
           if(response.data.token){
               localStorage.setItem("authorization", response.data.token);
-              console.log(response.data);
+              // console.log(response.data);
               toast.success(`Welcome, ${response.data.user.displayName}`);
-              setTimeout(()=>{
-                navigate("/home");
-              },5000);
+              // setTimeout(()=>{
+              //   navigate("/home");
+              // },5000);
+              navigate("/home");
           }
           else{
               setButtonLoading(false);

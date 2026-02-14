@@ -31,7 +31,7 @@ export default function AddChatButton(){
             }
         });
 
-            console.log(response);
+            // console.log(response);
 
             if(response.data.message){
                 chatUsernameInput.current.value=""
@@ -41,9 +41,10 @@ export default function AddChatButton(){
             else if(response.data.chat){
                 chatUsernameInput.current.value=""
                 toast.success("Chat created successfully 🎉");
-                setTimeout(()=>{
-                    window.location.reload();
-                },5000)
+                // setTimeout(()=>{
+                //     window.location.reload();
+                // },5000)
+                window.location.reload();
             }
         }catch(error){
         

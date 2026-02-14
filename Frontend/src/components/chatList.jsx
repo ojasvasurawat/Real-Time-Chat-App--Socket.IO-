@@ -32,12 +32,12 @@ export default function ChatList({sendDataToParent, userData, onlineUsersList}){
 
     const handleChat = async(chatId)=>{
 
-        console.log("handle chat",chatId);
+        // console.log("handle chat",chatId);
 
         if (currentRoom) {
             socket.emit('leave', {currentRoom});
         }
-        console.log(chatId);
+        // console.log(chatId);
 
         socket.emit('join', {chatId});
         setCurrentRoom(chatId);

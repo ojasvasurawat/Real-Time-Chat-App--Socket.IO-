@@ -37,7 +37,7 @@ export default function LogoutButton(){
             // toast.error("Logout Failed")
         }
         }catch(e){
-            console.log("the error is :",e);
+            // console.log("the error is :",e);
         }
     }
 

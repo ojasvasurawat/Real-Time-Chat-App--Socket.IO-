@@ -32,7 +32,7 @@ export default function Home(){
     }
 
     const handleProfileStatusFromLayout = (profileStatus)=>{
-        console.log("the profile status from the deep of the deep is :", profileStatus);
+        // console.log("the profile status from the deep of the deep is :", profileStatus);
         setProfileState(profileStatus);
         setChatState(false);
         window.history.pushState({ page: "profile" }, "");
@@ -57,7 +57,7 @@ export default function Home(){
         window.history.replaceState({ page: "sidebar" }, "");
 
         const handleOnlineUsers = (onlineUserList)=>{
-            console.log("online user list is",onlineUserList);
+            // console.log("online user list is",onlineUserList);
             setOnlineUsersList(onlineUserList);
         }
 

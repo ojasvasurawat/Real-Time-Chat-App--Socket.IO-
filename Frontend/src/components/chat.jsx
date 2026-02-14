@@ -65,9 +65,9 @@ export default function Chat({ chatId, userData, onlineUsersList, onBack }) {
     function submit() {
 
         let content = input.current.value;
-        console.log(chatId);
+        // console.log(chatId);
         const time = new Date().toISOString();
-        console.log(time);
+        // console.log(time);
         if (!content || !content.trim()) return;
 
         const avatarUrl = userData?.avatarUrl ? userData?.avatarUrl : userData?.username.toUpperCase().charAt(0);
@@ -75,13 +75,13 @@ export default function Chat({ chatId, userData, onlineUsersList, onBack }) {
         content = content.replace(/^\n+/, "");
         socket.emit('chat msg', { chatId, content, time, avatarUrl });
         setMsgData((prevData) => [...prevData, { content: content, name: userData.username, time: time, avatarUrl: avatarUrl }]);//----------------------------
-        console.log(socket.id);
-        console.log("msg emmited");
+        // console.log(socket.id);
+        // console.log("msg emmited");
         input.current.value = "";
     }
 
     function handleChange(event) {
-        console.log("handleChange running...");
+        // console.log("handleChange running...");
         setMessageText(event.target.value);
 
         if (!isTyping && chatId) {
@@ -93,12 +93,12 @@ export default function Chat({ chatId, userData, onlineUsersList, onBack }) {
     function toggleConnection() {
         if (socketStatus) {
             socket.disconnect();
-            console.log("status:", socket.connected);
+            // console.log("status:", socket.connected);
             setSocketStatus(false);
         }
         else {
             socket.connect();
-            console.log("status:", socket.connected);
+            // console.log("status:", socket.connected);
             setSocketStatus(true);
         }
     }
@@ -156,7 +156,7 @@ export default function Chat({ chatId, userData, onlineUsersList, onBack }) {
             const messagesData = response.data.messages;
             const chatData = response.data.chat;
             // console.log(messagesData);
-            console.log("the chat data is :", chatData);
+            // console.log("the chat data is :", chatData);
             messagesData?.map((message) => {
                 setMsgData(
                     (prevData) => ([...prevData, { content: message.content, name: message.sender.username, time: message.createdAt, avatarUrl: message.avatarUrl }])
@@ -175,12 +175,12 @@ export default function Chat({ chatId, userData, onlineUsersList, onBack }) {
 
         socket.connect();
 
-        console.log(socket.id);
+        // console.log(socket.id);
 
         const handleChatMessage = ({ chatId, content, sender, time, avatarUrl }) => {
-            console.log(socket.id);
-            console.log("the broadcasted message is : ", content);
-            msgData.map((data) => { console.log(data) });
+            // console.log(socket.id);
+            // console.log("the broadcasted message is : ", content);
+            // msgData.map((data) => { console.log(data) });
             setMsgData((prevData) => ([...prevData, { content: content, name: sender, time: time, avatarUrl: avatarUrl }]));
             // const item = document.createElement('p');
             // item.textContent = name +"-"+msg+`\n${time}`;
@@ -190,7 +190,7 @@ export default function Chat({ chatId, userData, onlineUsersList, onBack }) {
         socket.on('chat message', handleChatMessage);
 
         const handleTypingStatus = ({ username, status }) => {
-            console.log(username + " is typing...");
+            // console.log(username + " is typing...");
             if (status === "typing") {
                 setTypingUser(username);
             } else {
@@ -250,7 +250,7 @@ export default function Chat({ chatId, userData, onlineUsersList, onBack }) {
                 onlineRes.push(participant.username.toString() + " ");
             }
         }
-        console.log(onlineRes);
+        // console.log(onlineRes);
         return onlineRes;
     }
 
@@ -263,7 +263,7 @@ export default function Chat({ chatId, userData, onlineUsersList, onBack }) {
             }
         }
         offlineRes.push(userData.username);
-        console.log(offlineRes);
+        // console.log(offlineRes);
         return offlineRes;
     }
 

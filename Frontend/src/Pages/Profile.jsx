@@ -54,7 +54,7 @@ export default function Profile({ onBack }) {
                 'authorization': localStorage.getItem('authorization')
             }
         }).then((response) => {
-            console.log(response);
+            // console.log(response);
             setCurrentDisplayName(response.data.user.displayName);
             setCurrentUsername(response.data.user.username);
             setCurrentEmail(response.data.user.email);
@@ -81,11 +81,11 @@ export default function Profile({ onBack }) {
         const previewUrl = URL.createObjectURL(file);
         setAvatarUrl(previewUrl); // Assuming you're using useState
 
-        console.log('File selected:');
-        console.log('Name:', file.name);
-        console.log('Type:', file.type);
-        console.log('Size:', file.size);
-        console.log('Preview URL:', previewUrl);
+        // console.log('File selected:');
+        // console.log('Name:', file.name);
+        // console.log('Type:', file.type);
+        // console.log('Size:', file.size);
+        // console.log('Preview URL:', previewUrl);
 
         const toBase64 = async (file) => {
             const reader = new FileReader();
@@ -113,9 +113,10 @@ export default function Profile({ onBack }) {
             if (response.data) {
                 toast.success("Avatar uploaded successfully");
                 setButtonLoadingAvatar(false);
-                setTimeout(()=>{
-                    window.location.reload();
-                },5000)
+                // setTimeout(()=>{
+                //     window.location.reload();
+                // },5000)
+                window.location.reload();
             }
         } catch (error) {
             console.error("Upload failed:", error);
@@ -167,12 +168,13 @@ export default function Profile({ onBack }) {
 
             if (response.data) {
                 setButtonLoadingUpdate(false);
-                console.log("display name updated successfully")
+                // console.log("display name updated successfully")
                 toast.success("Display Name updated successfully");
 
-                setTimeout(()=>{
-                    window.location.reload();
-                },5000)
+                // setTimeout(()=>{
+                //     window.location.reload();
+                // },5000)
+                window.location.reload();
             }
         } catch (error) {
             console.error("Update failed:", error);
@@ -215,11 +217,12 @@ export default function Profile({ onBack }) {
 
             if (response.data) {
                 setButtonLoadingUpdate(false)
-                console.log("password updated successfully")
+                // console.log("password updated successfully")
                 toast.success("Password updated successfully");
-                setTimeout(()=>{
-                    window.location.reload();
-                },5000)
+                // setTimeout(()=>{
+                //     window.location.reload();
+                // },5000)
+                window.location.reload();
             }
         } catch (error) {
             console.error("Update failed:", error);
@@ -255,7 +258,7 @@ export default function Profile({ onBack }) {
                 setButtonLoadingLogout(false)
             }
         } catch (e) {
-            console.log("the error is :", e);
+            // console.log("the error is :", e);
             setButtonLoadingLogout(false)
         }
     }
