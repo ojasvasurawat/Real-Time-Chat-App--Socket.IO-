@@ -8,7 +8,6 @@ const User = new Schema({
     email: {type: String, required: true, unique: true},
     password: {type: String, required: true},
     avatarUrl: String,
-    chatList: {type:[Object], default:[]}
 })
 
 const Chat = new Schema({
@@ -22,6 +21,7 @@ const Message = new Schema({
     sender: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
     content: String,
     avatarUrl: String,
+    // readBy: [{type: mongoose.Schema.Types.ObjectId, ref: 'users'}]
 },{ timestamps: true });
 
 const userModel = mongoose.model('users', User);

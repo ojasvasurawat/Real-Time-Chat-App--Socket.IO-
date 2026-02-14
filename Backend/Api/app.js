@@ -18,7 +18,6 @@ const SOCKET_PORT = process.env.SOCKET_PORT;
 
 const allowedOrigins = [
   "https://real-time-chat-app-socket-io-eight.vercel.app",
-  // add custom domain later if you have one
   // "http://localhost:5173"
 ];
 
