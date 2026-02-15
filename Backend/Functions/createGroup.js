@@ -36,7 +36,7 @@ async function createGroup(req,res){
         })
     }
     catch(err){
-        console.log(err);
+        // console.log(err);
         res.json({
             message: "error in creating group",
             error: err

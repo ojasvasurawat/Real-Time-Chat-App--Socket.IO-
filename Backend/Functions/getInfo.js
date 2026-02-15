@@ -10,7 +10,7 @@ async function getInfo(req, res){
         })
     }
     catch(err){
-        console.log(err);
+        // console.log(err);
         res.json({
             message: "errorn in get profile",
             error: err

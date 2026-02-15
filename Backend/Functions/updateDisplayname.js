@@ -7,7 +7,7 @@ const { UserModel } = require("../DB/db");
 
 async function updateDisplayname(req, res){
     const ObjectId = req.ObjectId;
-    console.log(ObjectId);
+    // console.log(ObjectId);
     const user = await UserModel.findOne({_id: ObjectId});
     // console.log(user);
 

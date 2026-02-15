@@ -30,7 +30,7 @@ async function getChatMessages(req,res){
         })
     }
     catch(err){
-        console.log(err)
+        // console.log(err)
         res.json({
             message: "Error occure while fetching messages",
             error: err

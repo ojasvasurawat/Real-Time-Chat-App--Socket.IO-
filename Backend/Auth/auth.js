@@ -98,7 +98,7 @@ async function signIn(req, res){
 async function logout(req, res){
     const ObjectId = req.ObjectId;
     // console.log('i am in profile');
-    console.log(ObjectId);
+    // console.log(ObjectId);
     const user = await UserModel.findOne({_id: ObjectId});
 
     if(user){

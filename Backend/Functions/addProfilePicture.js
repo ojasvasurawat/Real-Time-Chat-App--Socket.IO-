@@ -36,7 +36,7 @@ const uploadImage = async (imagePath) => {
       // Upload the image
       const result = await cloudinary.uploader.upload(imagePath, { 
         use_filename: true});
-      console.log(result);
+      // console.log(result);
       return result.public_id;
     } catch (error) {
       console.error("the error is:",error);
@@ -47,9 +47,9 @@ const uploadImage = async (imagePath) => {
 async function addProfilePicture(req, res){
     const ObjectId = req.ObjectId;
     // console.log('i am in profile');
-    console.log(ObjectId);
+    // console.log(ObjectId);
     const user = await UserModel.findOne({_id: ObjectId});
-    console.log(user);
+    // console.log(user);
 
     const {avatarUrl} = req.body; 
 

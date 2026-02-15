@@ -14,7 +14,7 @@ function auth(req, res, next){
         if(user){
             req.userId = user.id;
             const userId = user.id;
-            console.log(userId);
+            // console.log(userId);
             req.ObjectId = userId;
             next();
         }

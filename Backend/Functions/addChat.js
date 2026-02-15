@@ -42,7 +42,7 @@ async function addChat(req,res){
         })
     }
     catch(err){
-        console.log(err);
+        // console.log(err);
         res.status(500).json({
             message: "Failed to create chat"
         });

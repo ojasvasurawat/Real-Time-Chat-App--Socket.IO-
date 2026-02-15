@@ -11,7 +11,7 @@ async function getChatList(req,res){
         });
     }
     catch(err){
-        console.log(err)
+        // console.log(err)
         res.json({
             message:"Failed to fetch chat list.", 
             error: err

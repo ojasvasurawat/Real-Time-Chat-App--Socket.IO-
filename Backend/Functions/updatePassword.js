@@ -8,7 +8,7 @@ const { UserModel } = require("../DB/db");
 
 async function updatePassword(req, res){
     const ObjectId = req.ObjectId;
-    console.log(ObjectId);
+    // console.log(ObjectId);
     const user = await UserModel.findOne({_id: ObjectId});
 
     const bodyContent = z.object({

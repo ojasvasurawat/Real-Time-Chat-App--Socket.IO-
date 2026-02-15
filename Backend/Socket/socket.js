@@ -40,8 +40,8 @@ io.of("/chat").on('connection', async (socket)=>{
 
     const userId = socket.ObjectId;
     // socket.broadcast.emit('hi');
-    console.log(socket.id);
-    console.log('a user connected');
+    // console.log(socket.id);
+    // console.log('a user connected');
 
     const user = await UserModel.findById(userId);
 
@@ -50,24 +50,24 @@ io.of("/chat").on('connection', async (socket)=>{
     }
     onlineUsers.get(user.username).add(socket.id);
 
-    console.log("Online users:", [...onlineUsers.keys()]);
+    // console.log("Online users:", [...onlineUsers.keys()]);
 
     io.of("/chat").emit("online users", [...onlineUsers.keys()]);
 
     socket.on('join', ({chatId})=>{
         socket.join(chatId);
-        console.log("room ",chatId," joined!! by: "+socket.id);
+        // console.log("room ",chatId," joined!! by: "+socket.id);
     })
 
     socket.on('leave', ({chatId}) => {
         socket.leave(chatId);
-        console.log("room ",chatId," leaved!! by: "+socket.id);
+        // console.log("room ",chatId," leaved!! by: "+socket.id);
     });
 
 
     socket.on('chat msg', async ({chatId, content, time, avatarUrl}) => {
         try{
-            console.log('msg recived: ' + content+" in room: "+chatId);
+            // console.log('msg recived: ' + content+" in room: "+chatId);
             const message = await MessageModel.create({
                 chat: chatId,
                 sender: userId,
@@ -84,18 +84,18 @@ io.of("/chat").on('connection', async (socket)=>{
             socket.to(chatId).emit('chat message', {chatId, content, sender, time, avatarUrl});
         }
         catch(err){
-            console.log("error in chat msg listner : ", err);
+            // console.log("error in chat msg listner : ", err);
         }
     });
 
     socket.on('typing status', ({username, status, chatId})=>{
-        console.log(username+" is typing...");
+        // console.log(username+" is typing...");
         // socket.broadcast.emit('typ status', {name, status});
         socket.to(chatId).emit('typ status', {username, status});
     })
 
     socket.on('disconnect', ()=>{
-        console.log('user disconnect');
+        // console.log('user disconnect');
 
         if(!user || !user.username) return;
 
@@ -109,7 +109,7 @@ io.of("/chat").on('connection', async (socket)=>{
             }
         }
 
-        console.log("Online users:", [...onlineUsers.keys()]);
+        // console.log("Online users:", [...onlineUsers.keys()]);
 
         io.of("/chat").emit("online users", [...onlineUsers.keys()]);
         })
