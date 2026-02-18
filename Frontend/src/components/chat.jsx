@@ -32,8 +32,6 @@ import { Skeleton } from './ui/skeleton';
 
 export default function Chat({ chatId, userData, onlineUsersList, onBack }) {
 
-    // const location = useLocation();
-    // const {name} = location.state || {};
 
     let [socketStatus, setSocketStatus] = useState(true);
     let [msgData, setMsgData] = useState([]);
@@ -41,7 +39,6 @@ export default function Chat({ chatId, userData, onlineUsersList, onBack }) {
     const input = useRef(null);
     const messages = useRef(null);
     const toggleButton = useRef(null);
-    // const socket = io("http://localhost:3000/");
     const [isTyping, setIsTyping] = useState(false);
     const [typingUser, setTypingUser] = useState(null);
     const [messageText, setMessageText] = useState("");
@@ -140,7 +137,6 @@ export default function Chat({ chatId, userData, onlineUsersList, onBack }) {
     useEffect(() => {
 
 
-        // messages.current.innerHTML = "";
         setMsgData([])
         const getChatMessages = async () => {
             const response = await axios.get(`${backendUrl}/chat-messages?chatId=${chatId}`, {

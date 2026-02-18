@@ -372,7 +372,6 @@ export default function Profile({ onBack }) {
                         </CardFooter>
                     </Card>
 
-                    {/* <div className="w-full mx-auto flex justify-center my-5"> */}
                         <Card className="border-none shadow-none w-full max-w-sm mx-auto flex justify-center my-5 h-50vh">
                             <CardHeader>
                                 <CardTitle>
@@ -410,7 +409,6 @@ export default function Profile({ onBack }) {
                             </CardContent>
                         
                         </Card>
-                    {/* </div> */}
 
                 </div>
 

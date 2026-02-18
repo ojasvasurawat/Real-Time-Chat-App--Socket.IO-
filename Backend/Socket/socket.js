@@ -39,7 +39,6 @@ io.of("/chat").use(sktMdw) // insted use this for namespace middleware
 io.of("/chat").on('connection', async (socket)=>{
 
     const userId = socket.ObjectId;
-    // socket.broadcast.emit('hi');
     // console.log(socket.id);
     // console.log('a user connected');
 
@@ -115,10 +114,6 @@ io.of("/chat").on('connection', async (socket)=>{
         })
 });
 
-
-// server.listen(port, ()=>{
-//     console.log("listening on port",port);
-// });
 
 module.exports = {
     server,

@@ -12,6 +12,8 @@ const { signUp, signIn, logout } = require("../Auth/auth");
 const { updateDisplayname } = require("../Functions/updateDisplayname");
 const { updatePassword } = require("../Functions/updatePassword");
 
+const rateLimit = require('express-rate-limit');
+
 require("dotenv").config();
 
 const SOCKET_PORT = process.env.SOCKET_PORT;
@@ -22,6 +24,14 @@ const allowedOrigins = [
 ];
 
 const mainApp = app;
+
+const limiter = rateLimit({
+  windowMs: 1*60*1000,// 1 min window
+  max: 10,
+  message: 'Too many requests from this IP, please try again after a minute' 
+})
+
+mainApp.use(limiter);
 
 mainApp.use(cors({
     origin: (origin, callback) => {
