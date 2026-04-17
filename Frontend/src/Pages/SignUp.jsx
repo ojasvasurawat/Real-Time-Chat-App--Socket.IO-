@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify'
+// import { ToastContainer, toast } from 'react-toastify'
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 import { Button } from "@/components/ui/button"
@@ -17,6 +17,31 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
 import { Eye, EyeOff } from "lucide-react"
+import { 
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+ } from "@/components/ui/alert-dialog";
+
+ import { REGEXP_ONLY_DIGITS } from "input-otp"
+ import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp"
+
+import { Field, FieldLabel } from "@/components/ui/field"
+
+
+import { Toaster } from "@/components/ui/sonner"
+import { toast } from "sonner"
+
 
 export default function SignUp(){
     const [formData, setFormData] = useState({
@@ -29,6 +54,10 @@ export default function SignUp(){
     const navigate = useNavigate();
     
     const [showPassword, setShowPassword] = useState(false);
+
+    const [isOpen, setIsOpen] = useState(false);
+
+    const [code, setCode] = useState();
 
     async function handleSignup(e){
         e.preventDefault();
@@ -112,11 +141,12 @@ export default function SignUp(){
             })
 
             if(response.data){
-                toast.success("Account created successfully");
+                setIsOpen(true);
+                toast.success("Enter the code we send you on mail");
                 // setTimeout(()=>{
                 //   navigate("/signin");
                 // },5000);
-                navigate("/signin");
+                // navigate("/signin");
             }
             else{
                 setButtonLoading(false);
@@ -144,10 +174,68 @@ export default function SignUp(){
         }
     }
 
+
+    async function verifyCode(){
+      if(code === undefined){
+        toast.error("complete the code");
+      }
+      else if(code.length < 6){
+        toast.error("complete the code");
+      }
+      else{
+
+        try{
+
+          // console.log(typeof(code));
+            const response = await axios.post(`${backendUrl}/verifyCode`, {
+                displayName: formData.displayName,
+                username: formData.username,
+                email: formData.email,
+                password: formData.password,
+                code: code,
+            })
+
+            if(response.data){
+                setIsOpen(false);
+                toast.success("User created successfully");
+                // setTimeout(()=>{
+                //   navigate("/signin");
+                // },5000);
+                navigate("/signin");
+            }
+            else{
+                setButtonLoading(false);
+                setIsOpen(false);
+                toast.error("Expired or Wrong code");
+            }
+        }
+        catch(error){
+            console.error("Signup failed:", error);
+            if(error.response?.data?.errorMessage){
+              setButtonLoading(false)
+              const parsed = JSON.parse(error.response.data.errorMessage);
+              // console.log(parsed);
+              for(const data of parsed){
+                // console.log(data.message);
+                toast.error(`Signup failed: ${data.message}`);
+              }
+            }
+            else if (error.response?.data?.message) {
+                setButtonLoading(false)
+                toast.error(`Signup failed: ${error.response.data.message}`);
+            } else {
+                setButtonLoading(false)
+                toast.error("Signup failed: Unknown error occurred");
+            }
+        }
+      }
+    }
+
     return(
         <>
         <div className="min-h-screen flex items-center justify-center px-4 py-8 bg-background">
-          <ToastContainer/>
+          {/* <ToastContainer/> */}
+          <Toaster />
       <Card className="w-full max-w-md rounded-xl bg-surface">
         <CardHeader className="text-center">
           <CardTitle className="text-3xl font-bold text-text">
@@ -225,14 +313,43 @@ export default function SignUp(){
           </CardContent>
 
           <CardFooter className="flex flex-col gap-4 mt-2">
-            <Button
-            variant="outline"
-              type="submit"
-              className="w-full font-semibold bg-primary/70 border border-primary  hover:bg-primary/90 hover:shadow-md"
-              disabled={buttonLoading}
-            >
-              {buttonLoading ? "Creating account..." : "Sign Up"}
-            </Button>
+            <AlertDialog open={isOpen} onOpenChange={setIsOpen} >
+                <Button
+                variant="outline"
+                  type="submit"
+                  className="w-full font-semibold bg-primary/70 border border-primary  hover:bg-primary/90 hover:shadow-md"
+                  disabled={buttonLoading}
+                >
+                  {buttonLoading ? "Creating account..." : "Sign Up"}
+                </Button>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Enter the code we send you on mail</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    We send you the validation code on you mail, enter it below.
+                    The Code will expire in 2 minutes.
+                    <Field className="w-fit">
+                      <FieldLabel htmlFor="digits-only">Enter Code</FieldLabel>
+                      <InputOTP id="digits-only" maxLength={6} pattern={REGEXP_ONLY_DIGITS} value={code} onChange={(value)=> setCode(value)}>
+                        <InputOTPGroup>
+                          <InputOTPSlot index={0} />
+                          <InputOTPSlot index={1} />
+                          <InputOTPSlot index={2} />
+                          <InputOTPSlot index={3} />
+                          <InputOTPSlot index={4} />
+                          <InputOTPSlot index={5} />
+                        </InputOTPGroup>
+                      </InputOTP>
+                    </Field>
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel onClick={()=>{setButtonLoading(false);}}>Cancel</AlertDialogCancel>
+                  <Button onClick={verifyCode}>Validate</Button>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+            
 
             <p className="text-sm  text-center text-text">
               Already have an account?{" "}
