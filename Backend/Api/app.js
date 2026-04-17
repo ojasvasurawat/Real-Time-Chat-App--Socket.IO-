@@ -8,7 +8,7 @@ const { getChatMessages } = require("../Functions/getChatMessages");
 const { createGroup } = require("../Functions/createGroup");
 const { getInfo } = require("../Functions/getInfo");
 const { addProfilePicture } = require("../Functions/addProfilePicture");
-const { signUp, signIn, logout } = require("../Auth/auth");
+const { signUp, verifyCode, signIn, logout } = require("../Auth/auth");
 const { updateDisplayname } = require("../Functions/updateDisplayname");
 const { updatePassword } = require("../Functions/updatePassword");
 
@@ -20,18 +20,18 @@ const SOCKET_PORT = process.env.SOCKET_PORT;
 
 const allowedOrigins = [
   "https://real-time-chat-app-socket-io-eight.vercel.app",
-  // "http://localhost:5173"
+  "http://localhost:5173"
 ];
 
 const mainApp = app;
 
-const limiter = rateLimit({
-  windowMs: 1*60*1000,// 1 min window
-  max: 10,
-  message: 'Too many requests from this IP, please try again after a minute' 
-})
+// const limiter = rateLimit({
+//   windowMs: 1*60*1000,// 1 min window
+//   max: 10,
+//   message: 'Too many requests from this IP, please try again after a minute' 
+// })
 
-mainApp.use(limiter);
+// mainApp.use(limiter);
 
 mainApp.use(cors({
     origin: (origin, callback) => {
@@ -53,6 +53,7 @@ mainApp.use(cors({
 mainApp.use(express.json({limit: '10mb'}));
 
 mainApp.post("/signup", signUp);
+mainApp.post("/verifyCode", verifyCode);
 mainApp.post("/signin", signIn);
 
 mainApp.use(auth);
