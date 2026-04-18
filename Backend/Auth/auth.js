@@ -111,7 +111,8 @@ async function signUp(req,res){
 
             res.json({
                 message: "user created"
-            })
+            });
+            return;
         }
         else{
 
@@ -131,7 +132,8 @@ async function signUp(req,res){
 
                 res.json({
                     message: "we have send you a code on mail"
-                })
+                });
+                return;
                 // console.log("info is: ", info);
                 // console.log("Message sent: %s", info.messageId);
                 // // Preview URL is only available when using an Ethereal test account
@@ -141,7 +143,8 @@ async function signUp(req,res){
                 res.json({
                     message: "error occur during sending mail",
                     error: err
-                })
+                });
+                return;
             }
 
         }
@@ -221,7 +224,8 @@ async function verifyCode(req, res) {
 
             res.json({
                 message: "user created"
-            })
+            });
+            return;
         }
         
     }
@@ -244,6 +248,7 @@ async function signIn(req, res){
         res.json({
             message: "user not found"
         });
+        return;
     }
 
     if(sub !== ""){
@@ -259,9 +264,11 @@ async function signIn(req, res){
                 message: "user signed in successfully",
                 token: token
             });
+            return;
         }
         else{
             res.status(404).send("incorrect credential");
+            return;
         }
 
     }
@@ -277,9 +284,11 @@ async function signIn(req, res){
                 message: "user signed in successfully",
                 token: token
             });
+            return;
         }
         else{
             res.status(404).send("incorrect credential");
+            return;
         }
     }
 }
