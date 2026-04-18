@@ -43,6 +43,16 @@ import { Toaster } from "@/components/ui/sonner"
 import { toast } from "sonner"
 
 
+import { GoogleOAuthProvider } from '@react-oauth/google';
+
+const oauthClientId = import.meta.env.VITE_OAUTH_CLIENT_ID;
+
+import { GoogleLogin } from '@react-oauth/google';
+
+
+import {jwtDecode} from "jwt-decode"
+
+
 export default function SignUp(){
     const [formData, setFormData] = useState({
         displayName:"", 
@@ -137,7 +147,8 @@ export default function SignUp(){
                 displayName: formData.displayName,
                 username: formData.username,
                 email: formData.email,
-                password: formData.password
+                password: formData.password,
+                sub: ""
             })
 
             if(response.data){
@@ -193,6 +204,7 @@ export default function SignUp(){
                 email: formData.email,
                 password: formData.password,
                 code: code,
+                sub: ""
             })
 
             if(response.data){
@@ -231,8 +243,64 @@ export default function SignUp(){
       }
     }
 
+
+
+    const responseMessage = async (response) => {
+        // console.log(response);
+        const decoded = jwtDecode(response.credential);
+
+        // console.log("decoded data: ",decoded);
+
+        const nameArr = decoded.name.split(" ");
+        const username = nameArr[0]+decoded.sub.substring(0,4);
+
+        try{
+
+          const response = await axios.post(`${backendUrl}/signup`, {
+            displayName: decoded.name,
+            username: username,
+            email: decoded.email,
+            sub: decoded.sub,
+            password: ""
+          })
+
+          if(response.data){
+            toast.success("user created successfully")
+            navigate("/signin");
+          }
+
+        }
+        catch(error){
+            console.error("Signup failed:", error);
+            if(error.response?.data?.errorMessage){
+              setButtonLoading(false)
+              const parsed = JSON.parse(error.response.data.errorMessage);
+              // console.log(parsed);
+              for(const data of parsed){
+                // console.log(data.message);
+                toast.error(`Signup failed: ${data.message}`);
+              }
+            }
+            else if (error.response?.data?.message) {
+                setButtonLoading(false)
+                toast.error(`Signup failed: ${error.response.data.message}`);
+            } else {
+                setButtonLoading(false)
+                toast.error("Signup failed: Unknown error occurred");
+            }
+        }
+
+    };
+    const errorMessage = (error) => {
+        console.log(error);
+    };
+
+
+
+
     return(
         <>
+        <GoogleOAuthProvider clientId={oauthClientId}>
         <div className="min-h-screen flex items-center justify-center px-4 py-8 bg-background">
           {/* <ToastContainer/> */}
           <Toaster />
@@ -350,6 +418,7 @@ export default function SignUp(){
               </AlertDialogContent>
             </AlertDialog>
             
+            <GoogleLogin onSuccess={responseMessage} onError={errorMessage} />
 
             <p className="text-sm  text-center text-text">
               Already have an account?{" "}
@@ -361,6 +430,8 @@ export default function SignUp(){
         </form>
       </Card>
     </div>
+
+    </GoogleOAuthProvider>
         </>
     )
 }

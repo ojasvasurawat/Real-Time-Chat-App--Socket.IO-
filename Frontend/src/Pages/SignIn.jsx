@@ -18,6 +18,19 @@ import { Label } from "@/components/ui/label"
 
 import { Eye, EyeOff } from "lucide-react"
 
+
+
+import { GoogleOAuthProvider } from '@react-oauth/google';
+
+const oauthClientId = import.meta.env.VITE_OAUTH_CLIENT_ID;
+
+import { GoogleLogin } from '@react-oauth/google';
+
+
+import {jwtDecode} from "jwt-decode"
+
+
+
 export default function SignIn(){
 
     const [signinEmail, setSigninEmail] = useState("");
@@ -40,7 +53,8 @@ export default function SignIn(){
         try{
           const response = await axios.post(`${backendUrl}/signin`, {
               email: signinEmail,
-              password: signinPassword
+              password: signinPassword,
+              sub: ""
           })
 
           if(response.data.token){
@@ -68,8 +82,60 @@ export default function SignIn(){
         }
     }
 
+    
+
+
+    const responseMessage = async (response) => {
+        // console.log(response);
+        const decoded = jwtDecode(response.credential);
+
+        // console.log("decoded data: ",decoded);
+
+
+        try{
+
+          const response = await axios.post(`${backendUrl}/signin`, {
+            email: decoded.email,
+            sub: decoded.sub,
+            password: ""
+          })
+
+          if(response.data.token){
+              localStorage.setItem("authorization", response.data.token);
+              // console.log(response.data);
+              toast.success(`Welcome, ${response.data.user.displayName}`);
+              // setTimeout(()=>{
+              //   navigate("/home");
+              // },5000);
+              navigate("/home");
+          }
+          else{
+              setButtonLoading(false);
+              toast.error("Login Failed");
+          }
+
+        }
+        catch(error){
+            console.error("Login failed:", error);
+            if (error.response?.data) {
+                setButtonLoading(false)
+                toast.error(`Login failed: ${error.response.data}`);
+            } else {
+                setButtonLoading(false)
+                toast.error("Login failed: Unknown error occurred");
+            }
+        }
+
+    };
+    const errorMessage = (error) => {
+        console.log(error);
+    };
+
+
+
     return(
         <>
+        <GoogleOAuthProvider clientId={oauthClientId}>
             <div className="min-h-screen flex items-center justify-center px-4 py-8 bg-background">
               <ToastContainer/>
       <Card className="w-full max-w-md rounded-xl bg-surface">
@@ -137,6 +203,8 @@ export default function SignIn(){
               {buttonLoading ? "Loging in..." : "Log In"}
             </Button>
 
+            <GoogleLogin onSuccess={responseMessage} onError={errorMessage}/>
+
             <p className="text-sm text-center text-text">
               Don’t have an account?{" "}
               <Link
@@ -150,6 +218,7 @@ export default function SignIn(){
         </form>
       </Card>
     </div>
+    </GoogleOAuthProvider>
         </>
     )
 }
