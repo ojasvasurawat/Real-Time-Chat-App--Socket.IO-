@@ -4,7 +4,7 @@ const app = express();
 const cors = require('cors');
 app.use(cors({
     origin: [
-        // 'http://localhost:5173',
+        'http://localhost:5173',
         "https://real-time-chat-app-socket-io-eight.vercel.app"
     ]
 }));
@@ -22,7 +22,7 @@ const io = new Server(server, {
   connectionStateRecovery: {},
   cors:{
     origin:[
-        // "http://localhost:5173", 
+        "http://localhost:5173", 
         "https://real-time-chat-app-socket-io-eight.vercel.app"
     ],
     methods:["GET","POST"],
