@@ -3,10 +3,22 @@ const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
 
 const User = new Schema({
+
+    validator: {
+        $jsonSchema:{
+            bsonType: "object",
+            anyOf: [
+                {required: ["password"]},
+                {required: ["sub"]}
+            ]
+        }
+    },
+
     displayName:String,
     username: {type: String, required: true, unique: true},
     email: {type: String, required: true, unique: true},
-    password: {type: String, required: true},
+    password: {type: String},
+    sub: {type: String},
     avatarUrl: String,
 })
 

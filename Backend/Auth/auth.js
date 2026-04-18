@@ -76,7 +76,8 @@ async function signUp(req,res){
             message: "There is already an user with this username"
         }),
         displayName : z.string().min(3).max(50),
-        password : z.string().min(8).max(20),
+        password : z.string().min(0).max(20),
+        sub: z.string(),
     }).strict();
 
     const check = await bodyContent.safeParseAsync(req.body);
@@ -90,37 +91,59 @@ async function signUp(req,res){
         return;
     }
 
-    const {displayName, username, email, password} = req.body;
+    const {displayName, username, email, password, sub} = req.body;
 
     try{
         const hashdPassword = await bcrypt.hash(password, 5);
 
-        const validationCode = Math.floor(Math.random() * (999999 - 100000 + 1) + 100000);
 
-        try {
-            const info = await transporter.sendMail({
-                from: 'ojasva.surawat.dev@gmail.com',
-                to: email,
-                subject: "Real Time Chat App email validation code",
-                text: `Your validation code is:\n\n${validationCode}\n\nEnter this in your application`,
+        if(sub !== ""){
+
+            const hashedSub = await bcrypt.hash(sub, 5);
+            await UserModel.create({
+                displayName: displayName,
+                username: username,
+                email: email,
+                sub: hashedSub
             });
 
-            await client.set(email, validationCode, { EX: 120 });
 
 
             res.json({
-                message: "we have send you a code on mail"
+                message: "user created"
             })
-            // console.log("info is: ", info);
-            // console.log("Message sent: %s", info.messageId);
-            // // Preview URL is only available when using an Ethereal test account
-            // console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-        } catch (err) {
-            // console.error("Error while sending mail:", err);
-            res.json({
-                message: "error occur during sending mail",
-                error: err
-            })
+        }
+        else{
+
+
+            const validationCode = Math.floor(Math.random() * (999999 - 100000 + 1) + 100000);
+
+            try {
+                const info = await transporter.sendMail({
+                    from: 'ojasva.surawat.dev@gmail.com',
+                    to: email,
+                    subject: "Real Time Chat App email validation code",
+                    text: `Your validation code is:\n\n${validationCode}\n\nEnter this in your application`,
+                });
+
+                await client.set(email, validationCode, { EX: 120 });
+
+
+                res.json({
+                    message: "we have send you a code on mail"
+                })
+                // console.log("info is: ", info);
+                // console.log("Message sent: %s", info.messageId);
+                // // Preview URL is only available when using an Ethereal test account
+                // console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+            } catch (err) {
+                // console.error("Error while sending mail:", err);
+                res.json({
+                    message: "error occur during sending mail",
+                    error: err
+                })
+            }
+
         }
 
 
@@ -164,6 +187,7 @@ async function verifyCode(req, res) {
         displayName : z.string().min(3).max(50),
         password : z.string().min(8).max(20),
         code : z.string().min(6).max(6),
+        sub: z.string(),
     }).strict();
 
     const check = await bodyContent.safeParseAsync(req.body);
@@ -177,7 +201,7 @@ async function verifyCode(req, res) {
         return;
     }
 
-    const {displayName, username, email, password, code} = req.body;
+    const {displayName, username, email, password, sub, code} = req.body;
 
     try{
         const hashdPassword = await bcrypt.hash(password, 5);
@@ -212,7 +236,7 @@ async function verifyCode(req, res) {
 
 
 async function signIn(req, res){
-    const {email, password} = req.body;
+    const {email, password, sub} = req.body;
 
     const user = await UserModel.findOne({email});
 
@@ -222,20 +246,41 @@ async function signIn(req, res){
         });
     }
 
-    const compare = await bcrypt.compare(password, user.password);
+    if(sub !== ""){
 
-    if(compare){
-        const token = jwt.sign({
-            id: user._id.toString()
-        }, JWT_SECRET);
-        res.json({
-            user: user,
-            message: "user signed in successfully",
-            token: token
-        });
+        const compare = await bcrypt.compare(sub, user.sub);
+
+        if(compare){
+            const token = jwt.sign({
+                id: user._id.toString()
+            }, JWT_SECRET);
+            res.json({
+                user: user,
+                message: "user signed in successfully",
+                token: token
+            });
+        }
+        else{
+            res.status(404).send("incorrect credential");
+        }
+
     }
     else{
-        res.status(404).send("incorrect credential");
+        const compare = await bcrypt.compare(password, user.password);
+
+        if(compare){
+            const token = jwt.sign({
+                id: user._id.toString()
+            }, JWT_SECRET);
+            res.json({
+                user: user,
+                message: "user signed in successfully",
+                token: token
+            });
+        }
+        else{
+            res.status(404).send("incorrect credential");
+        }
     }
 }
 
