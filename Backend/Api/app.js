@@ -25,13 +25,15 @@ const allowedOrigins = [
 
 const mainApp = app;
 
-// const limiter = rateLimit({
-//   windowMs: 1*60*1000,// 1 min window
-//   max: 10,
-//   message: 'Too many requests from this IP, please try again after a minute' 
-// })
+const limiter = rateLimit({
+  windowMs: 15*60*1000,// 15 min window
+  max: 100,
+  message: {
+    status: 429,
+    error: 'Too many requests from this IP, please try again after 15 minutes.'} 
+})
 
-// mainApp.use(limiter);
+mainApp.use("/", limiter);
 
 mainApp.use(cors({
     origin: (origin, callback) => {
