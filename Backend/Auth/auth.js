@@ -45,7 +45,7 @@ const transporter = nodemailer.createTransport({
 
 
 const client = createClient({
-    url: `redis://${REDIS_USERNAME}:${REDIS_PASS}@redis-16841.c99.us-east-1-4.ec2.cloud.redislabs.com:16841`
+    url: `redis://${REDIS_USERNAME}:${REDIS_PASS}@redis-11947.c15.us-east-1-2.ec2.cloud.redislabs.com:11947`
 });
 
 client.on('error', err => console.log('Redis Client Error', err));
@@ -217,7 +217,7 @@ async function verifyCode(req, res) {
                 displayName: displayName,
                 username: username,
                 email: email,
-                password: hashdPassword
+                password: hashdPassword 
             });
 
 
